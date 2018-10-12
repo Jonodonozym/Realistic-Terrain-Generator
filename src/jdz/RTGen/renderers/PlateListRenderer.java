@@ -13,8 +13,8 @@ import jdz.RTGen.dataType.TectonicPlate;
 
 
 public class PlateListRenderer extends Renderer<List<TectonicPlate>> {
-	private List<Color> colors = Arrays.asList(WHITE, LIGHT_GRAY, GRAY, DARK_GRAY, BLACK, RED, PINK, ORANGE, YELLOW,
-			GREEN, MAGENTA, CYAN, BLUE);
+	private List<Color> colors = Arrays.asList(RED, ORANGE, YELLOW, GREEN, MAGENTA, CYAN, BLUE, PINK, WHITE, LIGHT_GRAY,
+			GRAY, DARK_GRAY, BLACK);
 
 	@Override
 	public String getName() {
