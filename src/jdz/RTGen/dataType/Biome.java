@@ -9,8 +9,4 @@ public enum Biome {
 	TEMPERATE_RAINFOREST, TEMPERATE_FOREST, WOODLAND, GRASSLAND, SHURBLAND,
 
 	TAIGA, TUNDRA;
-	
-	public static Biome getBiome(double precipitation, double temperature) {
-		return null;
-	}
 }
