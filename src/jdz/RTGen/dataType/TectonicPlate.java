@@ -33,11 +33,11 @@ public class TectonicPlate {
 	public final void removeFromPlate(int x, int y) {
 		mask[cellIndex(x, y)] = false;
 	}
-	
+
 	public final float getHeight(int x, int y) {
 		return heights[cellIndex(x, y)];
 	}
-	
+
 	public final void setHeight(int x, int y, float height) {
 		heights[cellIndex(x, y)] = height;
 	}
@@ -46,9 +46,9 @@ public class TectonicPlate {
 	// Wraps vertically by inverting excess y and mirroring x
 	public final int cellIndex(int x, int y) {
 		if (y < 0)
-			return cellIndex(mapWidth - x, -y);
+			return cellIndex(mapWidth - x, -1 - y);
 		if (y >= mapHeight)
-			return cellIndex(mapWidth - x, 2 * (map.getHeight() - 1) - y);
+			return cellIndex(mapWidth - x, 2 * map.getHeight() - y - 1);
 		if (x < 0)
 			return cellIndex(mapWidth + x, y);
 		if (x >= mapWidth)
@@ -94,7 +94,7 @@ public class TectonicPlate {
 		for (int x = 0; x < mapWidth; x++)
 			for (int y = 0; y < mapHeight; y++)
 				newMask[cellIndex(x + dx, y + dy)] = mask[cellIndex(x, y)];
-		
+
 		this.mask = newMask;
 	}
 }
