@@ -72,22 +72,12 @@ public class TectonicPlateTests {
 	}
 
 	@Test
-	public void testMoveOffscreen() {
-		map = new Map(3, 3);
-		
-		plateA = makePlate(map, 
-				1, 0, 0,
-				0, 0, 0,
-				0, 0, 0
-		);
-		
+	public void testMoveWrap() {
 		int[] expected = new int[] {
-				1, 1, 0,
-				1, 1, 0,
-				0, 0, 0,
+				1, 1, 0, 0
 		};
 		
-		plateA.move(1, 1);
+		plateA.move(1, 0);
 		assertEquals(expected, plateA);
 	}
 	

@@ -5,7 +5,7 @@ import lombok.Getter;
 
 public class TectonicPlate {
 	@Getter private final Map map;
-	private final int mapWidth;
+	private final int mapWidth, mapHeight;
 
 	@Getter private boolean[] mask;
 
@@ -16,6 +16,7 @@ public class TectonicPlate {
 	public TectonicPlate(Map map, boolean[] mask) {
 		this.map = map;
 		this.mapWidth = map.getWidth();
+		this.mapHeight = map.getHeight();
 		this.mask = mask;
 	}
 
@@ -31,7 +32,17 @@ public class TectonicPlate {
 		mask[cellIndex(x, y)] = false;
 	}
 
+	// Wraps horizontally with no y change
+	// Wraps vertically by inverting excess y and mirroring x
 	private final int cellIndex(int x, int y) {
+		if (y < 0)
+			return cellIndex(mapWidth - x, -y);
+		if (y >= mapHeight)
+			return cellIndex(mapWidth - x, 2 * (map.getHeight() - 1) - y);
+		if (x < 0)
+			return cellIndex(mapWidth + x, y);
+		if (x >= mapWidth)
+			return cellIndex(x - mapWidth, y);
 		return y * mapWidth + x;
 	}
 
@@ -66,51 +77,12 @@ public class TectonicPlate {
 	}
 
 	public void move(int dx, int dy) {
-		int minX = dx < 0 ? -dx : 0;
-		int maxX = dx > 0 ? map.getWidth() - dx - 1 : map.getWidth() - 1;
+		boolean[] newMask = new boolean[mask.length];
 
-		// shifting bits that are within the final mask, clipping bits that would go
-		// outside it
-		if (dx < 0)
-			for (int x = minX; x < maxX; x++)
-				for (int y = 0; y > map.getHeight(); y++)
-					mask[cellIndex(x + dx, y)] = mask[cellIndex(x, y)];
-		else
-			for (int x = maxX; x >= minX; x--)
-				for (int y = 0; y < map.getHeight(); y++)
-					mask[cellIndex(x + dx, y)] = mask[cellIndex(x, y)];
-
-		// generating new bits along empty borders of final mask by
-		// extending old mask to get off-screen bits
-		if (dx < 0)
-			for (int x = minX; x > 0; x--)
-				for (int y = 0; y < map.getHeight(); y++)
-					mask[cellIndex(x, y)] = mask[cellIndex(x + 1, y)];
-		if (dx < 0)
-			for (int x = maxX; x < map.getWidth(); x++)
-				for (int y = 0; y < map.getHeight(); y++)
-					mask[cellIndex(x, y)] = mask[cellIndex(x - 1, y)];
-
-		// now again for y axis
-		int minY = dy < 0 ? -dy : 0;
-		int maxY = dy > 0 ? map.getHeight() - dy - 1 : map.getHeight() - 1;
-
-		if (dy < 0)
-			for (int x = 0; x < map.getWidth(); x++)
-				for (int y = minY; y < maxY; y++)
-					mask[cellIndex(x, y + dy)] = mask[cellIndex(x, y)];
-		else
-			for (int x = 0; x < map.getWidth(); x++)
-				for (int y = maxY; y >= minY; y--)
-					mask[cellIndex(x, y + dy)] = mask[cellIndex(x, y)];
-
-		if (dy < 0)
-			for (int x = minX; x < maxX; x++)
-				for (int y = minY; y > 0; y--)
-					mask[cellIndex(x, y)] = mask[cellIndex(x, y + 1)];
-		if (dy < 0)
-			for (int x = minX; x < maxX; x++)
-				for (int y = maxY; x < map.getHeight(); y++)
-					mask[cellIndex(x, y)] = mask[cellIndex(x, y - 1)];
+		for (int x = 0; x < mapWidth; x++)
+			for (int y = 0; y < mapHeight; y++)
+				newMask[cellIndex(x + dx, y + dy)] = mask[cellIndex(x, y)];
+		
+		this.mask = newMask;
 	}
 }
