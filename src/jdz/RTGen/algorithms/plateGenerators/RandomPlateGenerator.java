@@ -21,9 +21,7 @@ import lombok.Data;
  *
  * @author Jaiden Baker
  */
-public class RandomPlateGenerator extends TectonicPlateGenerator{
-	private int[] indicies;
-
+public class RandomPlateGenerator extends TectonicPlateGenerator {
 	public RandomPlateGenerator(Map map) {
 		super(map, 100 * 100);
 	}
@@ -33,68 +31,57 @@ public class RandomPlateGenerator extends TectonicPlateGenerator{
 		int numPlates = (int) Math.ceil(map.getSize() / averagePlateArea);
 		List<TectonicPlate> plates = new ArrayList<TectonicPlate>();
 
-		indicies = new int[map.getWidth() * map.getHeight()];
-		for (int i = 0; i < indicies.length; i++)
-			indicies[i] = -1;
+		TectonicPlate combined = new TectonicPlate(map);
 
-		List<PlatePoint> floodQueue = getRandomPoints(numPlates);
-		floodFill(floodQueue);
+		List<PlatePoint> floodQueue = getRandomPoints(numPlates, combined);
+		floodFill(floodQueue, combined);
 
 		for (int i = 0; i < numPlates; i++)
 			plates.add(new TectonicPlate(map));
-		
-		int i = 0;
+
 		for (int y = 0; y < map.getHeight(); y++)
 			for (int x = 0; x < map.getWidth(); x++)
-				plates.get(indicies[i++]).setInPlate(x, y);
+				plates.get((int) combined.getHeight(x, y)).setInPlate(x, y);
 
 		map.resetRandom();
 		return plates;
 	}
-	
-	private List<PlatePoint> getRandomPoints(int numPlates) {
+
+	private List<PlatePoint> getRandomPoints(int numPlates, TectonicPlate combined) {
 		List<PlatePoint> randomPoints = new ArrayList<PlatePoint>();
 
 		Random random = map.getRandom();
 		for (int i = 0; i < numPlates; i++) {
 			int x = random.nextInt(map.getWidth()), y = random.nextInt(map.getHeight());
-			while (isSet(x, y)) {
+			while (combined.isInPlate(x, y)) {
 				x = random.nextInt(map.getWidth());
 				y = random.nextInt(map.getHeight());
 			}
 
 			randomPoints.add(new PlatePoint(x, y, i));
-			set(x, y, i);
+			combined.setInPlate(x, y);
+			combined.setHeight(x, y, i);
 		}
-		
+
 		return randomPoints;
 	}
-	
-	private void floodFill(List<PlatePoint> floodQueue) {
+
+	private void floodFill(List<PlatePoint> floodQueue, TectonicPlate combined) {
 		Random random = map.getRandom();
 
 		while (!floodQueue.isEmpty()) {
 			PlatePoint point = floodQueue.remove(random.nextInt(floodQueue.size()));
-			List<PlatePoint> points = getUnfilledNeighbours(point);
+			List<PlatePoint> points = getUnfilledNeighbours(point, combined);
 
 			for (PlatePoint pp : points) {
-				set(pp.getX(), pp.getY(), pp.getIndex());
+				combined.setInPlate(pp.getX(), pp.getY());
+				combined.setHeight(pp.getX(), pp.getY(), pp.getIndex());
 				floodQueue.add(pp);
 			}
 		}
 	}
 
-	private boolean isSet(int x, int y) {
-		int index = y * map.getWidth() + x;
-		return indicies[index] != -1;
-	}
-
-	private void set(int x, int y, int plate) {
-		int index = y * map.getWidth() + x;
-		indicies[index] = plate;
-	}
-
-	private List<PlatePoint> getUnfilledNeighbours(PlatePoint point) {
+	private List<PlatePoint> getUnfilledNeighbours(PlatePoint point, TectonicPlate combined) {
 		List<PlatePoint> points = new ArrayList<>();
 
 		points.add(new PlatePoint(point.getX() + 1, point.getY(), point.getIndex()));
@@ -102,9 +89,8 @@ public class RandomPlateGenerator extends TectonicPlateGenerator{
 		points.add(new PlatePoint(point.getX(), point.getY() + 1, point.getIndex()));
 		points.add(new PlatePoint(point.getX(), point.getY() - 1, point.getIndex()));
 
-		
 		points.removeIf((p) -> {
-			return !p.isInMap() || isSet(p.getX(), p.getY());
+			return combined.isInPlate(p.getX(), p.getY());
 		});
 
 		return points;
@@ -114,10 +100,6 @@ public class RandomPlateGenerator extends TectonicPlateGenerator{
 	private class PlatePoint {
 		private final int x, y;
 		private final int index;
-
-		public boolean isInMap() {
-			return x >= 0 && y >= 0 && x < map.getWidth() && y < map.getHeight();
-		}
 	}
 
 }

@@ -8,16 +8,18 @@ public class TectonicPlate {
 	private final int mapWidth, mapHeight;
 
 	@Getter private boolean[] mask;
+	@Getter private float[] heights;
 
 	public TectonicPlate(Map map) {
-		this(map, new boolean[map.getSize()]);
+		this(map, new boolean[map.getSize()], new float[map.getSize()]);
 	}
 
-	public TectonicPlate(Map map, boolean[] mask) {
+	public TectonicPlate(Map map, boolean[] mask, float[] heights) {
 		this.map = map;
 		this.mapWidth = map.getWidth();
 		this.mapHeight = map.getHeight();
 		this.mask = mask;
+		this.heights = heights;
 	}
 
 	public final boolean isInPlate(int x, int y) {
@@ -31,10 +33,18 @@ public class TectonicPlate {
 	public final void removeFromPlate(int x, int y) {
 		mask[cellIndex(x, y)] = false;
 	}
+	
+	public final float getHeight(int x, int y) {
+		return heights[cellIndex(x, y)];
+	}
+	
+	public final void setHeight(int x, int y, float height) {
+		heights[cellIndex(x, y)] = height;
+	}
 
 	// Wraps horizontally with no y change
 	// Wraps vertically by inverting excess y and mirroring x
-	private final int cellIndex(int x, int y) {
+	public final int cellIndex(int x, int y) {
 		if (y < 0)
 			return cellIndex(mapWidth - x, -y);
 		if (y >= mapHeight)
@@ -72,8 +82,10 @@ public class TectonicPlate {
 
 	public TectonicPlate clone() {
 		boolean[] newMask = new boolean[map.getSize()];
+		float[] newHeights = new float[map.getSize()];
 		System.arraycopy(mask, 0, newMask, 0, map.getSize());
-		return new TectonicPlate(map, newMask);
+		System.arraycopy(heights, 0, newHeights, 0, map.getSize());
+		return new TectonicPlate(map, newMask, newHeights);
 	}
 
 	public void move(int dx, int dy) {

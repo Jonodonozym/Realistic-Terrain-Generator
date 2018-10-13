@@ -82,7 +82,7 @@ public class TectonicPlateTests {
 	}
 	
 	private TectonicPlate makePlate(Map map, int... mask) {
-		return new TectonicPlate(map, toBoolean(mask));
+		return new TectonicPlate(map, toBoolean(mask), new float[0]);
 	}
 
 	private boolean[] toBoolean(int[] ints) {

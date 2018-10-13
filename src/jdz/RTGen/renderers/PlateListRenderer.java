@@ -1,20 +1,15 @@
 
 package jdz.RTGen.renderers;
 
-import static java.awt.Color.*;
-
 import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
 import java.util.List;
 
 import jdz.RTGen.dataType.TectonicPlate;
 
 
 public class PlateListRenderer extends Renderer<List<TectonicPlate>> {
-	private List<Color> colors = Arrays.asList(RED, ORANGE, YELLOW, GREEN, MAGENTA, CYAN, BLUE, PINK, WHITE, LIGHT_GRAY,
-			GRAY, DARK_GRAY, BLACK);
 
 	@Override
 	public String getName() {
@@ -23,24 +18,36 @@ public class PlateListRenderer extends Renderer<List<TectonicPlate>> {
 
 	@Override
 	public void render(BufferedImage image, List<TectonicPlate> plates) {
-		int i = 0;
-
-		Graphics2D g = (Graphics2D) image.getGraphics();
-
-		for (TectonicPlate plate : plates) {
-			Color plateColor = colors.get(i++ % colors.size());
-			renderPlate(image, plate, plateColor);
-		}
-
+		Graphics g = image.getGraphics();
+		g.setColor(Color.WHITE);
+		g.fillRect(0, 0, image.getWidth(), image.getHeight());
 		g.dispose();
+
+		for (TectonicPlate plate : plates)
+			renderPlate(image, plate);
 	}
 
-	private void renderPlate(BufferedImage image, TectonicPlate plate, Color color) {
-		int rgb = color.getRGB();
+	private void renderPlate(BufferedImage image, TectonicPlate plate) {
 		for (int x = 0; x < plate.getMap().getWidth(); x++)
-			for (int y = 0; y < plate.getMap().getHeight(); y++)
-				if (plate.isInPlate(x, y))
-					image.setRGB(x, y, rgb);
+			for (int y = 0; y < plate.getMap().getHeight(); y++) {
+				if (plate.isInPlate(x, y) && isOnEdge(plate, x, y))
+					invertColor(image, x, y);
+			}
+	}
+
+	private boolean isOnEdge(TectonicPlate p, int x, int y) {
+		return !p.isInPlate(x - 1, y) || !p.isInPlate(x + 1, y) || !p.isInPlate(x, y - 1) || !p.isInPlate(x, y + 1);
+	}
+
+	private void invertColor(BufferedImage image, int x, int y) {
+		image.setRGB(x, y, invert(image.getRGB(x, y)));
+	}
+
+	private int invert(int rgb) {
+		Color c = new Color(rgb);
+		float[] hsv = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), null);
+		hsv[2] = (hsv[2] + 0.5f) % 1.f;
+		return Color.HSBtoRGB(hsv[0], hsv[1], hsv[2]);
 	}
 
 }
