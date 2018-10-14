@@ -1,5 +1,5 @@
 
-package jdz.RTGen.algorithms.plateGenerators;
+package jdz.RTGen.algorithms.plateGeneration;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -9,7 +9,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import jdz.RTGen.algorithms.plateGenerators.RandomPlateGenerator;
+import jdz.RTGen.algorithms.plateGeneration.RandomPlateGenerator;
 import jdz.RTGen.dataType.Map;
 import jdz.RTGen.dataType.TectonicPlate;
 import jdz.RTGen.renderers.PlateListRenderer;
