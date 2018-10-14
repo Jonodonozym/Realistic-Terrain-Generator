@@ -27,11 +27,15 @@ public class TectonicPlate {
 	}
 
 	public final void setInPlate(int x, int y) {
-		mask[cellIndex(x, y)] = true;
+		int index = cellIndex(x, y);
+		mask[index] = true;
+		heights[index] = 0;
 	}
 
 	public final void removeFromPlate(int x, int y) {
-		mask[cellIndex(x, y)] = false;
+		int index = cellIndex(x, y);
+		mask[index] = false;
+		heights[index] = Float.MIN_VALUE;
 	}
 
 	public final float getHeight(int x, int y) {
@@ -56,45 +60,76 @@ public class TectonicPlate {
 		return y * mapWidth + x;
 	}
 
-	public void add(TectonicPlate other) {
-		int size = map.getSize();
+	public TectonicPlate getOverlap(TectonicPlate other) {
+		boolean[] newMask = new boolean[mask.length];
+		float[] newHeights = new float[mask.length];
+
 		boolean[] otherMask = other.getMask();
+		float[] otherHeights = other.getHeights();
 
-		for (int i = 0; i < size; i++)
-			mask[i] |= otherMask[i];
-	}
+		for (int i = 0; i < newMask.length; i++) {
+			newMask[i] = mask[i] && otherMask[i];
+			if (newMask[i]) {
+				newHeights[i] += heights[i];
+				newHeights[i] += otherHeights[i];
+			}
+		}
 
-	public void subtract(TectonicPlate other) {
-		int size = map.getSize();
-		boolean[] otherMask = other.getMask();
-
-		for (int i = 0; i < size; i++)
-			mask[i] &= !otherMask[i];
-	}
-
-	public void overlap(TectonicPlate other) {
-		int size = map.getSize();
-		boolean[] otherMask = other.getMask();
-
-		for (int i = 0; i < size; i++)
-			mask[i] &= otherMask[i];
-	}
-
-	public TectonicPlate clone() {
-		boolean[] newMask = new boolean[map.getSize()];
-		float[] newHeights = new float[map.getSize()];
-		System.arraycopy(mask, 0, newMask, 0, map.getSize());
-		System.arraycopy(heights, 0, newHeights, 0, map.getSize());
 		return new TectonicPlate(map, newMask, newHeights);
 	}
 
-	public void move(int dx, int dy) {
+	public TectonicPlate merge(TectonicPlate other) {
 		boolean[] newMask = new boolean[mask.length];
+		float[] newHeights = new float[mask.length];
+
+		boolean[] otherMask = other.getMask();
+		float[] otherHeights = other.getHeights();
+
+		System.arraycopy(mask, 0, newMask, 0, mask.length);
+
+		for (int i = 0; i < newMask.length; i++) {
+			newMask[i] |= otherMask[i];
+			if (mask[i])
+				newHeights[i] += heights[i];
+			if (otherMask[i])
+				newHeights[i] += otherHeights[i];
+		}
+
+		return new TectonicPlate(map, newMask, newHeights);
+	}
+
+	public TectonicPlate removeOverlap(TectonicPlate other) {
+		boolean[] newMask = new boolean[mask.length];
+		float[] newHeights = new float[mask.length];
+
+		System.arraycopy(mask, 0, newMask, 0, mask.length);
+		System.arraycopy(heights, 0, newHeights, 0, mask.length);
+
+		TectonicPlate overlap = getOverlap(other);
+
+		boolean[] overlapMask = overlap.getMask();
+
+		for (int i = 0; i < mask.length; i++) {
+			if (overlapMask[i]) {
+				newMask[i] = false;
+				newHeights[i] = Float.MIN_VALUE;
+			}
+		}
+
+		return new TectonicPlate(map, newMask, newHeights);
+	}
+
+	public TectonicPlate move(int dx, int dy) {
+		boolean[] newMask = new boolean[mask.length];
+		float[] newHeights = new float[mask.length];
 
 		for (int x = 0; x < mapWidth; x++)
-			for (int y = 0; y < mapHeight; y++)
+			for (int y = 0; y < mapHeight; y++) {
 				newMask[cellIndex(x + dx, y + dy)] = mask[cellIndex(x, y)];
+				newHeights[cellIndex(x + dx, y + dy)] = heights[cellIndex(x, y)];
+			}
 
-		this.mask = newMask;
+		return new TectonicPlate(map, newMask, newHeights);
 	}
+	
 }
