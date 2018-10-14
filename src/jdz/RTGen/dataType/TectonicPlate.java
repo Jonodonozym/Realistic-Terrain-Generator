@@ -1,7 +1,9 @@
 
 package jdz.RTGen.dataType;
 
+import javafx.geometry.Point2D;
 import lombok.Getter;
+import lombok.Setter;
 
 public class TectonicPlate {
 	@Getter private final Map map;
@@ -9,17 +11,20 @@ public class TectonicPlate {
 
 	@Getter private boolean[] mask;
 	@Getter private float[] heights;
+	
+	@Getter @Setter private Point2D velocity;
 
 	public TectonicPlate(Map map) {
-		this(map, new boolean[map.getSize()], new float[map.getSize()]);
+		this(map, new boolean[map.getSize()], new float[map.getSize()], new Point2D(0, 0));
 	}
 
-	public TectonicPlate(Map map, boolean[] mask, float[] heights) {
+	public TectonicPlate(Map map, boolean[] mask, float[] heights, Point2D speed) {
 		this.map = map;
 		this.mapWidth = map.getWidth();
 		this.mapHeight = map.getHeight();
 		this.mask = mask;
 		this.heights = heights;
+		this.velocity = speed;
 	}
 
 	public final boolean isInPlate(int x, int y) {
@@ -75,7 +80,7 @@ public class TectonicPlate {
 			}
 		}
 
-		return new TectonicPlate(map, newMask, newHeights);
+		return new TectonicPlate(map, newMask, newHeights, velocity);
 	}
 
 	public TectonicPlate merge(TectonicPlate other) {
@@ -95,7 +100,7 @@ public class TectonicPlate {
 				newHeights[i] += otherHeights[i];
 		}
 
-		return new TectonicPlate(map, newMask, newHeights);
+		return new TectonicPlate(map, newMask, newHeights, velocity);
 	}
 
 	public TectonicPlate removeOverlap(TectonicPlate other) {
@@ -116,7 +121,7 @@ public class TectonicPlate {
 			}
 		}
 
-		return new TectonicPlate(map, newMask, newHeights);
+		return new TectonicPlate(map, newMask, newHeights, velocity);
 	}
 
 	public TectonicPlate move(int dx, int dy) {
@@ -129,7 +134,7 @@ public class TectonicPlate {
 				newHeights[cellIndex(x + dx, y + dy)] = heights[cellIndex(x, y)];
 			}
 
-		return new TectonicPlate(map, newMask, newHeights);
+		return new TectonicPlate(map, newMask, newHeights, velocity);
 	}
 	
 }

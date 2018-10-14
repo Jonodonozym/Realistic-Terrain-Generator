@@ -6,6 +6,7 @@ import static org.junit.Assert.assertArrayEquals;
 import org.junit.Before;
 import org.junit.Test;
 
+import javafx.geometry.Point2D;
 import jdz.RTGen.dataType.Map;
 import jdz.RTGen.dataType.TectonicPlate;
 
@@ -32,7 +33,7 @@ public class TectonicPlateTests {
 	public void testSubtract() {
 		plateA = makePlate(map, 1, 1, 1, 1);
 		int[] expected = new int[] { 1, 0, 0, 1 };
-		
+
 		assertEquals(expected, plateA.removeOverlap(plateB));
 	}
 
@@ -57,7 +58,7 @@ public class TectonicPlateTests {
 	}
 
 	private TectonicPlate makePlate(Map map, int... mask) {
-		return new TectonicPlate(map, toBoolean(mask), new float[map.getSize()]);
+		return new TectonicPlate(map, toBoolean(mask), new float[map.getSize()], new Point2D(0, 0));
 	}
 
 	private boolean[] toBoolean(int[] ints) {
