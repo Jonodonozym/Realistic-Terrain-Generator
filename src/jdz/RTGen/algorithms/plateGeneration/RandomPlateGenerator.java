@@ -35,14 +35,11 @@ public class RandomPlateGenerator extends TectonicPlateGenerator {
 			plates.add(new TectonicPlate(map));
 
 		for (int y = 0; y < map.getHeight(); y++)
-			for (int x = 0; x < map.getWidth(); x++) {
-				TectonicPlate plate = plates.get((int) combined.getHeight(x, y));
-				plate.setInPlate(x, y);
-				plate.setHeight(x, y, map.getHeight(x, y));
-			}
+			for (int x = 0; x < map.getWidth(); x++)
+				plates.get((int) combined.getHeight(x, y)).addToPlate(x, y, map.getHeight(x, y));
 
 		map.resetRandom();
-		
+
 		return plates;
 	}
 
@@ -58,8 +55,7 @@ public class RandomPlateGenerator extends TectonicPlateGenerator {
 			}
 
 			randomPoints.add(new PlatePoint(x, y, i));
-			combined.setInPlate(x, y);
-			combined.setHeight(x, y, i);
+			combined.addToPlate(x, y, i);
 		}
 
 		return randomPoints;
@@ -73,23 +69,17 @@ public class RandomPlateGenerator extends TectonicPlateGenerator {
 			List<PlatePoint> points = getUnfilledNeighbours(point, combined);
 
 			for (PlatePoint pp : points) {
-				combined.setInPlate(pp.getX(), pp.getY());
-				combined.setHeight(pp.getX(), pp.getY(), pp.getIndex());
+				combined.addToPlate(pp.getX(), pp.getY(), pp.getIndex());
 				floodQueue.add(pp);
 			}
 		}
 	}
 
 	private List<PlatePoint> getUnfilledNeighbours(PlatePoint point, TectonicPlate combined) {
-		List<PlatePoint> points = new ArrayList<>();
-
-		points.add(new PlatePoint(point.getX() + 1, point.getY(), point.getIndex()));
-		points.add(new PlatePoint(point.getX() - 1, point.getY(), point.getIndex()));
-		points.add(new PlatePoint(point.getX(), point.getY() + 1, point.getIndex()));
-		points.add(new PlatePoint(point.getX(), point.getY() - 1, point.getIndex()));
+		List<PlatePoint> points = point.getAdjacent();
 
 		points.removeIf((p) -> {
-			return combined.isInPlate(p.getX(), p.getY());
+			return p.isIn(combined);
 		});
 
 		return points;
@@ -99,6 +89,19 @@ public class RandomPlateGenerator extends TectonicPlateGenerator {
 	private class PlatePoint {
 		private final int x, y;
 		private final int index;
+
+		public List<PlatePoint> getAdjacent() {
+			List<PlatePoint> points = new ArrayList<>();
+			points.add(new PlatePoint(x + 1, y, index));
+			points.add(new PlatePoint(x - 1, y, index));
+			points.add(new PlatePoint(x, y + 1, index));
+			points.add(new PlatePoint(x, y - 1, index));
+			return points;
+		}
+		
+		public boolean isIn(TectonicPlate plate) {
+			return plate.isInPlate(x, y);
+		}
 	}
 
 }

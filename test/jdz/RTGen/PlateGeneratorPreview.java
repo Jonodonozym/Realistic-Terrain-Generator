@@ -28,6 +28,8 @@ public class PlateGeneratorPreview {
 	}
 
 	public PlateGeneratorPreview() {
+		LoggerConfig.init();
+		
 		List<TectonicPlate> plates = gen.generatePlates(map, 8);		
 		Image image = renderer.render(map, plates);
 
