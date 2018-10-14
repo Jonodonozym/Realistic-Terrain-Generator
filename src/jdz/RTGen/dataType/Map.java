@@ -12,9 +12,9 @@ import lombok.ToString;
 public class Map {
 	@Getter private final int width, height, size;
 
-	private final double[] cellHeight;
-	private final double[] cellTemperature;
-	private final double[] cellPrecipitation;
+	private final float[] cellHeight;
+	private final float[] cellTemperature;
+	private final float[] cellPrecipitation;
 	private final Biome[] cellBiome;
 
 	@Getter private final List<TectonicPlate> plates;
@@ -31,9 +31,9 @@ public class Map {
 		this.height = height;
 		this.size = width * height;
 
-		cellHeight = new double[size];
-		cellTemperature = new double[size];
-		cellPrecipitation = new double[size];
+		cellHeight = new float[size];
+		cellTemperature = new float[size];
+		cellPrecipitation = new float[size];
 		cellBiome = new Biome[size];
 
 		this.plates = new ArrayList<>();
@@ -50,7 +50,7 @@ public class Map {
 		cellHeight[cellIndex(x, y)] = height;
 	}
 
-	public final double getHeight(int x, int y) {
+	public final float getHeight(int x, int y) {
 		return cellHeight[cellIndex(x, y)];
 	}
 
