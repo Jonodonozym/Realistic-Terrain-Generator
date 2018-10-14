@@ -14,7 +14,7 @@ import jdz.RTGen.dataType.Map;
 import jdz.RTGen.dataType.TectonicPlate;
 import jdz.RTGen.renderers.PlateListRenderer;
 
-public class PlateGenerator {
+public class PlateGeneratorPreview {
 	private Map map = new Map(512, 512);
 	private RandomPlateGenerator p = new RandomPlateGenerator(map);
 	private PlateListRenderer r = new PlateListRenderer();
@@ -22,10 +22,10 @@ public class PlateGenerator {
 	private JFrame frame;
 	
 	public static void main(String[] args) {
-		new PlateGenerator();
+		new PlateGeneratorPreview();
 	}
 	
-	public PlateGenerator() {
+	public PlateGeneratorPreview() {
 		p.setAveragePlateArea(200 * 200);
 		List<TectonicPlate> plates = p.generate();
 		BufferedImage image = r.render(map, plates);
