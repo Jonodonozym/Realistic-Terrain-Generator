@@ -28,7 +28,6 @@ public class RandomPlateGenerator extends TectonicPlateGenerator {
 
 	@Override
 	public List<TectonicPlate> generate() {
-		int numPlates = (int) Math.ceil(map.getSize() / averagePlateArea);
 		List<TectonicPlate> plates = new ArrayList<TectonicPlate>();
 
 		TectonicPlate combined = new TectonicPlate(map);

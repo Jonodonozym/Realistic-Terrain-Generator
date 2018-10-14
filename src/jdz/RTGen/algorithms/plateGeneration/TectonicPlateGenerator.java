@@ -14,9 +14,13 @@ public abstract class TectonicPlateGenerator {
 	public static TectonicPlateGenerator getRandom(Map map) {
 		return new RandomPlateGenerator(map);
 	}
-	
+
 	@Getter protected final Map map;
-	@Getter @Setter protected double averagePlateArea;
+	@Getter @Setter protected int numPlates;
+
+	public void setAveragePlateArea(double area) {
+		numPlates = (int) Math.ceil(map.getSize() / area);
+	}
 
 	public abstract List<TectonicPlate> generate();
 }
