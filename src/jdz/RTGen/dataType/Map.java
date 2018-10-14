@@ -1,6 +1,8 @@
 
 package jdz.RTGen.dataType;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import lombok.Getter;
@@ -14,6 +16,8 @@ public class Map {
 	private final double[] cellTemperature;
 	private final double[] cellPrecipitation;
 	private final Biome[] cellBiome;
+
+	@Getter private final List<TectonicPlate> plates;
 
 	@Getter private final long seed;
 	@Getter private final Random random;
@@ -31,6 +35,8 @@ public class Map {
 		cellTemperature = new double[size];
 		cellPrecipitation = new double[size];
 		cellBiome = new Biome[size];
+
+		this.plates = new ArrayList<>();
 
 		this.seed = seed;
 		this.random = new Random(seed);
