@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import jdz.RTGen.dataType.Map;
 import jdz.RTGen.dataType.TectonicPlate;
 import lombok.Data;
 
@@ -22,12 +21,9 @@ import lombok.Data;
  * @author Jaiden Baker
  */
 public class RandomPlateGenerator extends TectonicPlateGenerator {
-	public RandomPlateGenerator(Map map) {
-		super(map, 100 * 100);
-	}
 
 	@Override
-	public List<TectonicPlate> generate() {
+	protected List<TectonicPlate> generate() {
 		List<TectonicPlate> plates = new ArrayList<TectonicPlate>();
 
 		TectonicPlate combined = new TectonicPlate(map);
@@ -46,6 +42,7 @@ public class RandomPlateGenerator extends TectonicPlateGenerator {
 			}
 
 		map.resetRandom();
+		
 		return plates;
 	}
 

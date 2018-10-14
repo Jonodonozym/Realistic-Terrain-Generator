@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 @ToString(of = { "width", "height", "size" })
@@ -17,7 +18,7 @@ public class Map {
 	private final float[] cellPrecipitation;
 	private final Biome[] cellBiome;
 
-	@Getter private final List<TectonicPlate> plates;
+	@Setter @Getter private List<TectonicPlate> plates;
 
 	@Getter private final long seed;
 	@Getter private final Random random;

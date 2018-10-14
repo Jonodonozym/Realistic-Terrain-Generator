@@ -2,7 +2,7 @@
 package jdz.RTGen;
 
 import java.awt.FlowLayout;
-import java.awt.image.BufferedImage;
+import java.awt.Image;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -15,27 +15,31 @@ import jdz.RTGen.dataType.TectonicPlate;
 import jdz.RTGen.renderers.PlateListRenderer;
 
 public class PlateGeneratorPreview {
-	private Map map = new Map(512, 512);
-	private RandomPlateGenerator p = new RandomPlateGenerator(map);
-	private PlateListRenderer r = new PlateListRenderer();
-	
+	private static final int MAP_SIZE = 2048;
+
+	private Map map = new Map(MAP_SIZE * 2, MAP_SIZE);
+	private RandomPlateGenerator gen = new RandomPlateGenerator();
+	private PlateListRenderer renderer = new PlateListRenderer();
+
 	private JFrame frame;
-	
+
 	public static void main(String[] args) {
 		new PlateGeneratorPreview();
 	}
-	
+
 	public PlateGeneratorPreview() {
-		p.setAveragePlateArea(200 * 200);
-		List<TectonicPlate> plates = p.generate();
-		BufferedImage image = r.render(map, plates);
-		
+		List<TectonicPlate> plates = gen.generatePlates(map, 8);		
+		Image image = renderer.render(map, plates);
+
+		image = image.getScaledInstance(1024, 512, Image.SCALE_SMOOTH);
+
 		frame = new JFrame();
 		frame.getContentPane().setLayout(new FlowLayout());
+
 		frame.getContentPane().add(new JLabel(new ImageIcon(image)));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
-		
+
 		frame.setVisible(true);
 	}
 

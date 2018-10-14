@@ -2,25 +2,42 @@
 package jdz.RTGen.algorithms.plateGeneration;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import jdz.RTGen.dataType.Map;
 import jdz.RTGen.dataType.TectonicPlate;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 
-@AllArgsConstructor
 public abstract class TectonicPlateGenerator {
-	public static TectonicPlateGenerator getRandom(Map map) {
-		return new RandomPlateGenerator(map);
+	public static TectonicPlateGenerator getRandom() {
+		return new RandomPlateGenerator();
 	}
 
-	@Getter protected final Map map;
-	@Getter @Setter protected int numPlates;
+	private final Logger logger = Logger.getGlobal();
 
-	public void setAveragePlateArea(double area) {
-		numPlates = (int) Math.ceil(map.getSize() / area);
+	protected Map map;
+	protected int numPlates;
+
+	public List<TectonicPlate> generatePlates(Map map, double averagePlateArea) {
+		return generatePlates(map, (int) Math.ceil(map.getSize() / averagePlateArea));
 	}
 
-	public abstract List<TectonicPlate> generate();
+	public List<TectonicPlate> generatePlates(Map map, int numPlates) {
+		this.map = map;
+		this.numPlates = numPlates;
+
+		long startTime = System.currentTimeMillis();
+
+		logger.log(Level.INFO, "Plate generation started");
+		logger.log(Level.INFO, "Map size: " + map.getSize() + " (" + map.getWidth() + " x " + map.getHeight() + ")");
+
+		List<TectonicPlate> plates = generate();
+
+		logger.log(Level.INFO, "Plate generation completed");
+		logger.log(Level.INFO, "Time: " + ((System.currentTimeMillis() - startTime) / 1000) + "s");
+
+		return plates;
+	}
+
+	protected abstract List<TectonicPlate> generate();
 }
