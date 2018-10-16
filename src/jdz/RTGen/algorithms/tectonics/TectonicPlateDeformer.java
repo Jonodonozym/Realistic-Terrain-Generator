@@ -44,7 +44,7 @@ public abstract class TectonicPlateDeformer {
 			if (shouldStop(plates))
 				break;
 
-			newPlates = deform(plates);
+			newPlates = deform(newPlates);
 
 			if (maxSteps < 100)
 				logger.log(Level.INFO, "Itteration " + i + " done");
