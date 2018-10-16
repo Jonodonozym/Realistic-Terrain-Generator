@@ -21,7 +21,7 @@ public abstract class TectonicPlateGenerator {
 	protected Random random;
 
 	public List<TectonicPlate> generatePlates(Map map, double averagePlateArea) {
-		return generatePlates(map, (int) Math.ceil(map.getSize() / averagePlateArea));
+		return generatePlates(map, (int) Math.ceil(map.size / averagePlateArea));
 	}
 
 	public List<TectonicPlate> generatePlates(Map map, int numPlates) {
@@ -32,7 +32,7 @@ public abstract class TectonicPlateGenerator {
 		long startTime = System.currentTimeMillis();
 
 		logger.log(Level.INFO, "Plate generation started");
-		logger.log(Level.INFO, "Map size: " + map.getSize() + " (" + map.getWidth() + " x " + map.getHeight() + ")");
+		logger.log(Level.INFO, "Map size: " + map.size + " (" + map.width + " x " + map.height + ")");
 
 		List<TectonicPlate> plates = generate();
 

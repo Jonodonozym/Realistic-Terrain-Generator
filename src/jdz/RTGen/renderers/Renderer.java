@@ -30,7 +30,7 @@ public abstract class Renderer<E> {
 	}
 
 	public BufferedImage render(Map map, E object) {
-		BufferedImage image = new BufferedImage(map.getWidth(), map.getHeight(), BufferedImage.TYPE_INT_RGB);
+		BufferedImage image = new BufferedImage(map.width, map.height, BufferedImage.TYPE_INT_RGB);
 
 		Graphics g = image.getGraphics();
 		g.setColor(Color.WHITE);

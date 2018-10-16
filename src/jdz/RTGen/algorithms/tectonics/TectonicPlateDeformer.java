@@ -27,7 +27,7 @@ public abstract class TectonicPlateDeformer {
 
 		logger.log(Level.INFO, "Plate deformation started");
 		logger.log(Level.INFO, "Max itterations: " + maxSteps);
-		logger.log(Level.INFO, "Map size: " + map.getSize() + " (" + map.getWidth() + " x " + map.getHeight() + ")");
+		logger.log(Level.INFO, "Map size: " + map.size + " (" + map.width + " x " + map.height + ")");
 
 		List<TectonicPlate> newPlates = initialize(plates);
 		newPlates = deform(newPlates, maxSteps);

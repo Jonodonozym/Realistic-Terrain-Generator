@@ -22,8 +22,8 @@ public class PlateListRenderer extends Renderer<List<TectonicPlate>> {
 	}
 
 	private void renderPlate(BufferedImage image, TectonicPlate plate) {
-		for (int x = 0; x < plate.getMap().getWidth(); x++)
-			for (int y = 0; y < plate.getMap().getHeight(); y++)
+		for (int x = 0; x < plate.getMap().width; x++)
+			for (int y = 0; y < plate.getMap().height; y++)
 				if (plate.isInPlate(x, y) && isOnEdge(plate, x, y))
 					invertColor(image, x, y);
 	}

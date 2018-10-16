@@ -33,8 +33,8 @@ class RandomPlateGenerator extends TectonicPlateGenerator {
 		for (int i = 0; i < numPlates; i++)
 			plates.add(new TectonicPlate(map));
 
-		for (int y = 0; y < map.getHeight(); y++)
-			for (int x = 0; x < map.getWidth(); x++)
+		for (int y = 0; y < map.height; y++)
+			for (int x = 0; x < map.width; x++)
 				plates.get((int) combined.getHeight(x, y)).addToPlate(x, y, map.getHeight(x, y));
 
 		return plates;
@@ -44,10 +44,10 @@ class RandomPlateGenerator extends TectonicPlateGenerator {
 		List<PlatePoint> randomPoints = new ArrayList<PlatePoint>();
 
 		for (int i = 0; i < numPlates; i++) {
-			int x = random.nextInt(map.getWidth()), y = random.nextInt(map.getHeight());
+			int x = random.nextInt(map.width), y = random.nextInt(map.height);
 			while (combined.isInPlate(x, y)) {
-				x = random.nextInt(map.getWidth());
-				y = random.nextInt(map.getHeight());
+				x = random.nextInt(map.width);
+				y = random.nextInt(map.height);
 			}
 
 			randomPoints.add(new PlatePoint(x, y, i));

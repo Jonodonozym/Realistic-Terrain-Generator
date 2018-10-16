@@ -11,12 +11,12 @@ import lombok.ToString;
 
 @ToString(of = { "width", "height", "size" })
 public class Map {
-	@Getter private final int width, height, size;
+	public final int width, height, size;
 
-	private final float[] cellHeight;
-	private final float[] cellTemperature;
-	private final float[] cellPrecipitation;
-	private final Biome[] cellBiome;
+	public final float[] cellHeight;
+	public final float[] cellTemperature;
+	public final float[] cellPrecipitation;
+	public final Biome[] cellBiome;
 
 	@Setter @Getter private List<TectonicPlate> plates;
 

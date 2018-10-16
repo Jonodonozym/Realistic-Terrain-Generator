@@ -15,13 +15,13 @@ public class TectonicPlate {
 	public Point2D velocity;
 
 	public TectonicPlate(Map map) {
-		this(map, new boolean[map.getSize()], new float[map.getSize()], new Point2D(0, 0), new Point2D(0, 0));
+		this(map, new boolean[map.size], new float[map.size], new Point2D(0, 0), new Point2D(0, 0));
 	}
 
 	public TectonicPlate(Map map, boolean[] mask, float[] heights, Point2D velocity, Point2D fractionOffset) {
 		this.map = map;
-		this.mapWidth = map.getWidth();
-		this.mapHeight = map.getHeight();
+		this.mapWidth = map.width;
+		this.mapHeight = map.height;
 		this.mask = mask;
 		this.heights = heights;
 		this.velocity = velocity;
@@ -71,7 +71,7 @@ public class TectonicPlate {
 		if (y < 0)
 			return cellIndex(mapWidth - x, -1 - y);
 		if (y >= mapHeight)
-			return cellIndex(mapWidth - x, 2 * map.getHeight() - y - 1);
+			return cellIndex(mapWidth - x, 2 * map.height - y - 1);
 		if (x < 0)
 			return cellIndex(mapWidth + x, y);
 		if (x >= mapWidth)
