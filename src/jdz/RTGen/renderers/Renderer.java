@@ -1,6 +1,8 @@
 
 package jdz.RTGen.renderers;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -29,6 +31,12 @@ public abstract class Renderer<E> {
 
 	public BufferedImage render(Map map, E object) {
 		BufferedImage image = new BufferedImage(map.getWidth(), map.getHeight(), BufferedImage.TYPE_INT_RGB);
+
+		Graphics g = image.getGraphics();
+		g.setColor(Color.WHITE);
+		g.fillRect(0, 0, image.getWidth(), image.getHeight());
+		g.dispose();
+		
 		render(image, object);
 		return image;
 	}

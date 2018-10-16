@@ -2,7 +2,6 @@
 package jdz.RTGen.renderers;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
@@ -18,11 +17,6 @@ public class PlateListRenderer extends Renderer<List<TectonicPlate>> {
 
 	@Override
 	public void render(BufferedImage image, List<TectonicPlate> plates) {
-		Graphics g = image.getGraphics();
-		g.setColor(Color.WHITE);
-		g.fillRect(0, 0, image.getWidth(), image.getHeight());
-		g.dispose();
-
 		for (TectonicPlate plate : plates)
 			renderPlate(image, plate);
 	}
