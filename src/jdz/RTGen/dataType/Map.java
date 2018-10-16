@@ -21,7 +21,6 @@ public class Map {
 	@Setter @Getter private List<TectonicPlate> plates;
 
 	@Getter private final long seed;
-	@Getter private final Random random;
 
 	public Map(int width, int height) {
 		this(width, height, new Random().nextLong());
@@ -40,11 +39,13 @@ public class Map {
 		this.plates = new ArrayList<>();
 
 		this.seed = seed;
-		this.random = new Random(seed);
 	}
 
-	public void resetRandom() {
-		random.setSeed(seed);
+	public final void updateHeightFromPlates() {
+		for (TectonicPlate plate : plates)
+			for (int i = 0; i < size; i++)
+				if (plate.mask[i])
+					cellHeight[i] = plate.heights[i];
 	}
 
 	public final void setHeight(int x, int y, int height) {
@@ -79,8 +80,16 @@ public class Map {
 		return cellBiome[cellIndex(x, y)];
 	}
 
-	private final int cellIndex(int x, int y) {
+	public final int cellIndex(int x, int y) {
 		return x * height + y;
+	}
+
+	public final int cellX(int index) {
+		return index / height;
+	}
+
+	public final int cellY(int index) {
+		return index % height;
 	}
 
 }

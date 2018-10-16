@@ -11,19 +11,21 @@ public class TectonicPlate {
 	public boolean[] mask;
 	public float[] heights;
 
+	private Point2D fractionOffset;
 	public Point2D velocity;
 
 	public TectonicPlate(Map map) {
-		this(map, new boolean[map.getSize()], new float[map.getSize()], new Point2D(0, 0));
+		this(map, new boolean[map.getSize()], new float[map.getSize()], new Point2D(0, 0), new Point2D(0, 0));
 	}
 
-	public TectonicPlate(Map map, boolean[] mask, float[] heights, Point2D velocity) {
+	public TectonicPlate(Map map, boolean[] mask, float[] heights, Point2D velocity, Point2D fractionOffset) {
 		this.map = map;
 		this.mapWidth = map.getWidth();
 		this.mapHeight = map.getHeight();
 		this.mask = mask;
 		this.heights = heights;
 		this.velocity = velocity;
+		this.fractionOffset = fractionOffset;
 	}
 
 	public final boolean isInPlate(int x, int y) {
@@ -53,7 +55,7 @@ public class TectonicPlate {
 	public final void setHeight(int x, int y, float height) {
 		heights[cellIndex(x, y)] = height;
 	}
-	
+
 	public void addHeight(int x, int y, float height) {
 		heights[cellIndex(x, y)] += height;
 	}
@@ -77,14 +79,15 @@ public class TectonicPlate {
 		return y * mapWidth + x;
 	}
 
-	public void chopOverlap(TectonicPlate other) {
-		boolean[] overlapMask = getMasksOverlap(other);
+	// Transformations
 
+	public TectonicPlate chopOverlap(boolean[] overlapMask) {
 		for (int i = 0; i < mask.length; i++)
 			if (overlapMask[i]) {
 				mask[i] = false;
 				heights[i] = Float.MIN_VALUE;
 			}
+		return this;
 	}
 
 	public boolean[] getMasksOverlap(TectonicPlate other) {
@@ -107,9 +110,16 @@ public class TectonicPlate {
 		return newMask;
 	}
 
-	public TectonicPlate move(int dx, int dy) {
+	public TectonicPlate step() {
 		boolean[] newMask = new boolean[mask.length];
 		float[] newHeights = new float[mask.length];
+
+		Point2D finalOffset = velocity.add(fractionOffset);
+
+		int dx = (int) Math.round(finalOffset.getX());
+		int dy = (int) Math.round(finalOffset.getY());
+
+		Point2D newFractional = velocity.subtract(dx, dy);
 
 		for (int x = 0; x < mapWidth; x++)
 			for (int y = 0; y < mapHeight; y++) {
@@ -117,7 +127,7 @@ public class TectonicPlate {
 				newHeights[cellIndex(x + dx, y + dy)] = heights[cellIndex(x, y)];
 			}
 
-		return new TectonicPlate(map, newMask, newHeights, velocity);
+		return new TectonicPlate(map, newMask, newHeights, velocity, newFractional);
 	}
 
 	@Override
@@ -128,7 +138,7 @@ public class TectonicPlate {
 		System.arraycopy(mask, 0, newMask, 0, mask.length);
 		System.arraycopy(heights, 0, newHeights, 0, mask.length);
 
-		return new TectonicPlate(map, newMask, newHeights, velocity);
+		return new TectonicPlate(map, newMask, newHeights, velocity, fractionOffset);
 	}
 
 }
