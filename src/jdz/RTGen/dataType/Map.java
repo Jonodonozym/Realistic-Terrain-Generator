@@ -81,7 +81,7 @@ public class Map {
 	}
 
 	public final int cellIndex(int x, int y) {
-		return x * height + y;
+		return y * width + x;
 	}
 
 	public final int cellX(int index) {

@@ -69,9 +69,9 @@ public class TectonicPlate {
 	// Wraps vertically by inverting excess y and mirroring x
 	public final int cellIndex(int x, int y) {
 		if (y < 0)
-			return cellIndex(mapWidth - x, -1 - y);
+			return cellIndex(mapWidth - x - 1, -1 - y);
 		if (y >= mapHeight)
-			return cellIndex(mapWidth - x, 2 * map.height - y - 1);
+			return cellIndex(mapWidth - x - 1, 2 * map.height - y - 1);
 		if (x < 0)
 			return cellIndex(mapWidth + x, y);
 		if (x >= mapWidth)
@@ -121,10 +121,13 @@ public class TectonicPlate {
 
 		Point2D newFractional = velocity.subtract(dx, dy);
 
-		for (int x = 0; x < mapWidth; x++)
-			for (int y = 0; y < mapHeight; y++) {
-				newMask[cellIndex(x + dx, y + dy)] = mask[cellIndex(x, y)];
-				newHeights[cellIndex(x + dx, y + dy)] = heights[cellIndex(x, y)];
+		int newIndex = 0;
+		for (int y = 0; y < mapHeight; y++)
+			for (int x = 0; x < mapWidth; x++) {
+				int oldIndex = cellIndex(x - dx, y - dy);
+				newMask[newIndex] = mask[oldIndex];
+				newHeights[newIndex] = heights[oldIndex];
+				newIndex++;
 			}
 
 		return new TectonicPlate(map, newMask, newHeights, velocity, newFractional);

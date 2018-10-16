@@ -1,7 +1,9 @@
 
 package jdz.RTGen;
 
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.*;
+
+import java.util.Arrays;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,52 +15,60 @@ import jdz.RTGen.dataType.TectonicPlate;
 public class TectonicPlateTests {
 
 	private Map map;
-	private TectonicPlate plateA;
-	private TectonicPlate plateB;
+	private TectonicPlate plate;
 
 	@Before
 	public void setup() {
 		map = new Map(4, 1);
-		plateA = makePlate(map, 1, 0, 0, 1);
-		plateB = makePlate(map, 0, 1, 1, 0);
+	}
+	
+	@Test
+	public void testIndex() {
+		map = new Map(2, 2);
+		plate = makePlate(map, 0, 0, 0, 0);
+		
+		// general
+		assertEquals(0, plate.cellIndex(0, 0));
+		assertEquals(1, plate.cellIndex(1, 0));
+		assertEquals(2, plate.cellIndex(0, 1));
+		assertEquals(3, plate.cellIndex(1, 1));
+		
+		// wrap left
+		assertEquals(1, plate.cellIndex(-1, 0));
+		assertEquals(3, plate.cellIndex(-1, 1));
+		
+		// warp right
+		assertEquals(0, plate.cellIndex(2, 0));
+		assertEquals(2, plate.cellIndex(2, 1));
+		
+		// wrap top
+		assertEquals(0, plate.cellIndex(1, -1));
+		assertEquals(1, plate.cellIndex(0, -1));
+		
+		// wrap bottom
+		assertEquals(3, plate.cellIndex(0, 2));
+		assertEquals(2, plate.cellIndex(1, 2));
 	}
 
 	@Test
-	public void testAdd() {
-		int[] expected = new int[] { 1, 1, 1, 1 };
-		assertEquals(expected, plateA.merge(plateB));
-	}
-
-	@Test
-	public void testSubtract() {
-		plateA = makePlate(map, 1, 1, 1, 1);
-		int[] expected = new int[] { 1, 0, 0, 1 };
-
-		assertEquals(expected, plateA.removeOverlap(plateB));
-	}
-
-	@Test
-	public void testOverlap() {
-		plateA = makePlate(map, new int[] { 1, 1, 1, 1 });
-		int[] expected = new int[] { 0, 1, 1, 0 };
-
-		assertEquals(expected, plateA.getOverlap(plateB));
-	}
-
-	@Test
-	public void testMove() {
-		int[] expected = new int[] { 0, 0, 1, 1 };
-		assertEquals(expected, plateB.move(1, 0));
-	}
-
-	@Test
-	public void testMoveWrap() {
+	public void testMoveHorizontalWrap() {
+		plate = makePlate(map, 1, 0, 0, 1);
 		int[] expected = new int[] { 1, 1, 0, 0 };
-		assertEquals(expected, plateA.move(1, 0));
+		plate.velocity = new Point2D(1, 0);
+		assertPlateEquals(expected, plate.step());
+	}
+
+	@Test
+	public void testMoveVerticalWrap() {
+		map = new Map(2, 2);
+		plate = makePlate(map, 1, 0, 0, 1);
+		int[] expected = new int[] { 0, 1, 1, 0 };
+		plate.velocity = new Point2D(0, -1);
+		assertPlateEquals(expected, plate.step());
 	}
 
 	private TectonicPlate makePlate(Map map, int... mask) {
-		return new TectonicPlate(map, toBoolean(mask), new float[map.getSize()], new Point2D(0, 0));
+		return new TectonicPlate(map, toBoolean(mask), new float[map.size], new Point2D(0, 0), new Point2D(0, 0));
 	}
 
 	private boolean[] toBoolean(int[] ints) {
@@ -68,8 +78,9 @@ public class TectonicPlateTests {
 		return booleans;
 	}
 
-	private void assertEquals(int[] expected, TectonicPlate actual) {
-		assertArrayEquals(expected, toInt(actual.getMask()));
+	private void assertPlateEquals(int[] expected, TectonicPlate actual) {
+		int[] ints = toInt(actual.mask);
+		assertArrayEquals(Arrays.toString(ints) + " != " + Arrays.toString(expected), expected, ints);
 	}
 
 	private int[] toInt(boolean[] bools) {
