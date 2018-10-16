@@ -3,7 +3,6 @@ package jdz.RTGen.algorithms.plateGeneration;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import jdz.RTGen.dataType.TectonicPlate;
 import lombok.Data;
@@ -20,7 +19,7 @@ import lombok.Data;
  *
  * @author Jaiden Baker
  */
-public class RandomPlateGenerator extends TectonicPlateGenerator {
+class RandomPlateGenerator extends TectonicPlateGenerator {
 
 	@Override
 	protected List<TectonicPlate> generate() {
@@ -38,15 +37,12 @@ public class RandomPlateGenerator extends TectonicPlateGenerator {
 			for (int x = 0; x < map.getWidth(); x++)
 				plates.get((int) combined.getHeight(x, y)).addToPlate(x, y, map.getHeight(x, y));
 
-		map.resetRandom();
-
 		return plates;
 	}
 
 	private List<PlatePoint> getRandomPoints(int numPlates, TectonicPlate combined) {
 		List<PlatePoint> randomPoints = new ArrayList<PlatePoint>();
 
-		Random random = map.getRandom();
 		for (int i = 0; i < numPlates; i++) {
 			int x = random.nextInt(map.getWidth()), y = random.nextInt(map.getHeight());
 			while (combined.isInPlate(x, y)) {
@@ -62,8 +58,6 @@ public class RandomPlateGenerator extends TectonicPlateGenerator {
 	}
 
 	private void floodFill(List<PlatePoint> floodQueue, TectonicPlate combined) {
-		Random random = map.getRandom();
-
 		while (!floodQueue.isEmpty()) {
 			PlatePoint point = floodQueue.remove(random.nextInt(floodQueue.size()));
 			List<PlatePoint> points = getUnfilledNeighbours(point, combined);
@@ -98,7 +92,7 @@ public class RandomPlateGenerator extends TectonicPlateGenerator {
 			points.add(new PlatePoint(x, y - 1, index));
 			return points;
 		}
-		
+
 		public boolean isIn(TectonicPlate plate) {
 			return plate.isInPlate(x, y);
 		}

@@ -2,6 +2,7 @@
 package jdz.RTGen.algorithms.plateGeneration;
 
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,6 +18,7 @@ public abstract class TectonicPlateGenerator {
 
 	protected Map map;
 	protected int numPlates;
+	protected Random random;
 
 	public List<TectonicPlate> generatePlates(Map map, double averagePlateArea) {
 		return generatePlates(map, (int) Math.ceil(map.getSize() / averagePlateArea));
@@ -25,6 +27,7 @@ public abstract class TectonicPlateGenerator {
 	public List<TectonicPlate> generatePlates(Map map, int numPlates) {
 		this.map = map;
 		this.numPlates = numPlates;
+		this.random = new Random(map.getSeed());
 
 		long startTime = System.currentTimeMillis();
 
@@ -35,7 +38,7 @@ public abstract class TectonicPlateGenerator {
 
 		logger.log(Level.INFO, "Plate generation completed");
 		logger.log(Level.INFO, "Time: " + ((System.currentTimeMillis() - startTime) / 1000) + "s");
-
+		
 		return plates;
 	}
 
