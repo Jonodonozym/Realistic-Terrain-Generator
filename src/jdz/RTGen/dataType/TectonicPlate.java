@@ -109,6 +109,11 @@ public class TectonicPlate {
 
 		return newMask;
 	}
+	
+	public TectonicPlate invertMask() {
+		mask = getInvertedMask();
+		return this;
+	}
 
 	public TectonicPlate step() {
 		boolean[] newMask = new boolean[mask.length];
