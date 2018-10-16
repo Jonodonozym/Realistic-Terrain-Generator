@@ -23,12 +23,12 @@ public abstract class InitialMapGenerator {
 
 		long startTime = System.currentTimeMillis();
 
-		logger.log(Level.INFO, "Plate generation started");
+		logger.log(Level.INFO, "Initial map generation started");
 		logger.log(Level.INFO, "Map size: " + map.size + " (" + map.width + " x " + map.height + ")");
 
 		this.map = generate();
 
-		logger.log(Level.INFO, "Plate generation completed");
+		logger.log(Level.INFO, "Initial map completed");
 		logger.log(Level.INFO, "Time: " + ((System.currentTimeMillis() - startTime) / 1000) + "s");
 		
 		return map;
