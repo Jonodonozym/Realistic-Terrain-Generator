@@ -1,5 +1,5 @@
 
-package jdz.RTGen.algorithms.tectonics;
+package jdz.RTGen.dataType;
 
 import java.util.Iterator;
 import java.util.List;
