@@ -1,0 +1,81 @@
+
+package jdz.RTGen;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+
+import javafx.geometry.Point2D;
+import jdz.RTGen.algorithms.PlateMetrics;
+import jdz.RTGen.algorithms.plateGeneration.TectonicPlateGenerator;
+import jdz.RTGen.dataType.Biome;
+import jdz.RTGen.dataType.Map;
+import jdz.RTGen.dataType.TectonicPlate;
+import jdz.RTGen.renderers.BiomeRenderer;
+
+public class BiomePreview extends Previewer {
+	private static final int MAP_SIZE = 512;
+
+	private List<Point2D> plateCenters;
+
+	public static void main(String[] args) {
+		new BiomePreview();
+	}
+
+	public BiomePreview() {
+		super(MAP_SIZE);
+	}
+
+	@Override
+	public void init() {
+		map = new Map(map.width, map.height, 300);
+		plateCenters = new ArrayList<Point2D>();
+
+		List<TectonicPlate> plates = TectonicPlateGenerator.getRandom().generatePlates(map, Biome.values().length);
+
+		for (int i = 0; i < plates.size(); i++) {
+			Biome biome = Biome.values()[i];
+			boolean[] mask = plates.get(i).mask;
+
+			for (int j = 0; j < map.size; j++)
+				if (mask[j])
+					map.cellBiome[j] = biome;
+			
+			plateCenters.add(PlateMetrics.getCenterOfMass(plates.get(i)));
+		}
+
+		map.setPlates(plates);
+	}
+
+	@Override
+	public BufferedImage createPreview() {
+		BufferedImage image = new BiomeRenderer().render(map, map);
+		
+		Graphics2D g = (Graphics2D) image.getGraphics();
+
+		g.setColor(Color.BLACK);
+		g.setFont(new Font("Arial", Font.BOLD, 16));
+
+		FontMetrics metrics = g.getFontMetrics();
+
+		for (int i = 0; i < plateCenters.size(); i++) {
+			String[] words = Biome.values()[i].name().toLowerCase().split("_");
+
+			Point2D offset = plateCenters.get(i);
+			int line = 0;
+			for (String s : words) {
+				Point2D wordOffset = offset.add(-metrics.stringWidth(s) / 2,
+						(line++ - (words.length - 1) / 2D) * metrics.getHeight());
+				g.drawString(s, (int) wordOffset.getX(), (int) wordOffset.getY());
+			}
+		}
+
+		g.dispose();
+		return image;
+	}
+
+}
