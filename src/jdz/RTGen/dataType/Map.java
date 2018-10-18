@@ -18,6 +18,8 @@ public class Map {
 	public final float[] cellPrecipitation;
 	public final Biome[] cellBiome;
 
+	@Setter @Getter public float seaLevel;
+
 	@Setter @Getter private List<TectonicPlate> plates;
 
 	@Getter private final long seed;
@@ -37,6 +39,8 @@ public class Map {
 		cellBiome = new Biome[size];
 
 		this.plates = new ArrayList<>();
+
+		this.seaLevel = Float.MIN_VALUE;
 
 		this.seed = seed;
 	}
@@ -90,6 +94,30 @@ public class Map {
 
 	public final int cellY(int index) {
 		return index % height;
+	}
+
+	public final float getMaxHeight() {
+		float maxHeight = Float.MIN_VALUE;
+
+		for (int i = 0; i < size; i++) {
+			float height = cellHeight[i];
+			if (height > maxHeight)
+				maxHeight = height;
+		}
+
+		return maxHeight;
+	}
+
+	public final float getMinHeight() {
+		float minHeight = Float.MAX_VALUE;
+
+		for (int i = 0; i < size; i++) {
+			float height = cellHeight[i];
+			if (height < minHeight)
+				minHeight = height;
+		}
+
+		return minHeight;
 	}
 
 }

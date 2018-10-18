@@ -15,16 +15,8 @@ public class HeightMapRenderer extends Renderer<Map> {
 
 	@Override
 	public void render(BufferedImage image, Map map) {
-		float minHeight = Float.MAX_VALUE;
-		float maxHeight = Float.MIN_VALUE;
-
-		for (int i = 0; i < map.size; i++) {
-			float height = map.cellHeight[i];
-			if (height < minHeight)
-				minHeight = height;
-			if (height > maxHeight)
-				maxHeight = height;
-		}
+		float minHeight = map.getMinHeight();
+		float maxHeight = map.getMaxHeight();
 
 		for (int x = 0; x < map.width; x++)
 			for (int y = 0; y < map.height; y++) {
