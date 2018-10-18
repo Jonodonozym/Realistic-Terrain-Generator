@@ -2,7 +2,9 @@
 package jdz.RTGen.algorithms.tectonics;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import javafx.geometry.Point2D;
 import jdz.RTGen.dataType.TectonicPlate;
@@ -11,15 +13,7 @@ public class BasicPlateDeformer extends TectonicPlateDeformer {
 
 	@Override
 	protected List<TectonicPlate> initialize(List<TectonicPlate> plates) {
-		float initialMagnitude = (float) (Math.sqrt(map.size) / 100f);
-
-		for (TectonicPlate plate : plates) {
-			float magnitude = initialMagnitude * (0.5f + random.nextFloat() * 0.5f);
-			float direction = (float) (random.nextFloat() * 2.f * Math.PI);
-			plate.velocity = new Point2D(Math.cos(direction) * magnitude, 0);
-		}
-
-		return plates;
+		return TectonicVelocityCalculator.randomizeVelocity(new Random(), plates, (float) (Math.sqrt(map.size) / 100f));
 	}
 
 	@Override
@@ -30,6 +24,8 @@ public class BasicPlateDeformer extends TectonicPlateDeformer {
 		return totalSpeed <= 1;
 	}
 
+	Point2D total = new Point2D(0,0);
+	
 	@Override
 	protected List<TectonicPlate> deform(List<TectonicPlate> plates) {
 		List<TectonicPlate> movedPlates = new ArrayList<>();
@@ -38,7 +34,9 @@ public class BasicPlateDeformer extends TectonicPlateDeformer {
 
 		movedPlates = TectonicCompression.performCollision(movedPlates);
 		movedPlates = TectonicSubduction.performSubduction(plates, movedPlates);
-		movedPlates = TectonicCollisionTrajectory.updateVelocity(movedPlates);
+		movedPlates = TectonicVelocityCalculator.updateVelocityFromCollision(movedPlates);
+		
+		Collections.shuffle(movedPlates);
 
 		return movedPlates;
 	}
