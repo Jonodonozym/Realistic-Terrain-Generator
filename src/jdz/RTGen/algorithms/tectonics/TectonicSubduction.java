@@ -11,8 +11,14 @@ public class TectonicSubduction {
 	public static List<TectonicPlate> performSubduction(List<TectonicPlate> beforeMoved,
 			List<TectonicPlate> afterMoved) {
 		Map map = beforeMoved.get(0).getMap();
+		
 		boolean[] combinedSubduction = new boolean[map.size];
-
+		for (int i = 0; i < afterMoved.size(); i++)  {
+			boolean[] plate = afterMoved.get(i).mask;
+			for (int j=0; j<map.size; j++)
+				combinedSubduction[j] |= plate[j];
+		}
+		
 		for (int i = 0; i < beforeMoved.size(); i++) {
 			TectonicPlate before = beforeMoved.get(i);
 			TectonicPlate after = afterMoved.get(i);
@@ -29,6 +35,7 @@ public class TectonicSubduction {
 					continue;
 
 				combinedSubduction[j] = true;
+				after.mask[j] = true;
 				after.heights[j] -= Math.log(dists[j]);
 			}
 		}
