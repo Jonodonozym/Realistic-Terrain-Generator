@@ -11,15 +11,17 @@ import jdz.RTGen.dataType.Map;
 import jdz.RTGen.dataType.TectonicPlate;
 
 public class ContinentGenerator extends InitialMapGenerator {
+	private static int DUMMY_PLATES = 250;
+	private static int PERCENT_LAND = 30;
 
 	@Override
 	protected Map generate() {
 		TectonicPlateGenerator plateGen = TectonicPlateGenerator.getRandom();
-		List<TectonicPlate> plates = plateGen.generatePlates(map, 100);
+		List<TectonicPlate> plates = plateGen.generatePlates(map, DUMMY_PLATES);
 
-		List<TectonicPlate> pickedPlates = new ArrayList<TectonicPlate>(100);
+		List<TectonicPlate> pickedPlates = new ArrayList<TectonicPlate>(DUMMY_PLATES);
 		for (TectonicPlate plate : plates)
-			if (random.nextInt(10) < 3)
+			if (random.nextInt(100) < PERCENT_LAND)
 				pickedPlates.add(plate);
 
 		TectonicPlate continentalCells = TectonicCompression.combineOtherPlates(pickedPlates, 0);
