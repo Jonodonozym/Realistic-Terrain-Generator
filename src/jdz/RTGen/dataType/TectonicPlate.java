@@ -109,7 +109,7 @@ public class TectonicPlate {
 
 		return newMask;
 	}
-	
+
 	public TectonicPlate invertMask() {
 		mask = getInvertedMask();
 		return this;
@@ -147,6 +147,20 @@ public class TectonicPlate {
 		System.arraycopy(heights, 0, newHeights, 0, mask.length);
 
 		return new TectonicPlate(map, newMask, newHeights, velocity, fractionOffset);
+	}
+
+	public void forEachCell(CellItterator iterator) {
+		int index = 0;
+		for (int y = 0; y < map.height; y++)
+			for (int x = 0; x < map.width; x++) {
+				if (mask[index])
+					iterator.execute(x, y, index);
+				index++;
+			}
+	}
+
+	public static interface CellItterator {
+		public void execute(int x, int y, int index);
 	}
 
 }
