@@ -107,6 +107,10 @@ public class Map {
 
 		return maxHeight;
 	}
+	
+	public final Random getNewRandom() {
+		return new Random(seed);
+	}
 
 	public final float getMinHeight() {
 		float minHeight = Float.MAX_VALUE;
