@@ -26,7 +26,7 @@ public class TemperatureModel {
 
 		int i = 0;
 		for (int y = 0; y < map.height; y++) {
-			float distPercent = Math.abs(y - map.height / 2) / map.height / 2;
+			float distPercent = Math.abs(y - map.height / 2) / ((float) map.height / 2.f);
 
 			float longitudeTemp = eqTemp - longitudeTempRange * distPercent;
 			float oceanTemp = longitudeTemp * 0.8f;
@@ -46,7 +46,7 @@ public class TemperatureModel {
 	}
 
 	private static float getPolarTemperature(Random random) {
-		return -30 + 20 * random.nextFloat();
+		return -20 + 10 * random.nextFloat();
 	}
 
 	private static float getSeaLevelTemperature(Random random) {
