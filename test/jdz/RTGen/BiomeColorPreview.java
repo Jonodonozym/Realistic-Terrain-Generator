@@ -17,16 +17,16 @@ import jdz.RTGen.dataType.Map;
 import jdz.RTGen.dataType.TectonicPlate;
 import jdz.RTGen.renderers.BiomeRenderer;
 
-public class BiomePreview extends Previewer {
+public class BiomeColorPreview extends Previewer {
 	private static final int MAP_SIZE = 512;
 
 	private List<Point2D> plateCenters;
 
 	public static void main(String[] args) {
-		new BiomePreview();
+		new BiomeColorPreview();
 	}
 
-	public BiomePreview() {
+	public BiomeColorPreview() {
 		super(MAP_SIZE);
 	}
 
