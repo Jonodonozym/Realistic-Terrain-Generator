@@ -1,13 +1,13 @@
 
-package jdz.RTGen.algorithms.biomeClassifier;
+package jdz.RTGen.algorithms.temperature;
 
 import java.util.Random;
 
 import jdz.RTGen.dataType.Biome;
 import jdz.RTGen.dataType.Map;
 
-public class TemperatureModel {
-	public static void assignTemperatures(Map map, Random random) {
+public class EquatorAndHeight implements TemperatureModel {
+	public void apply(Map map, Random random) {
 		// longitude based temperature
 		float eqTemp = getEquatorTemperature(random);
 		float plTemp = getPolarTemperature(random);
@@ -30,34 +30,32 @@ public class TemperatureModel {
 		for (int y = 0; y < map.height; y++) {
 			float distPercent = Math.abs(y - map.height / 2) / ((float) map.height / 2.f);
 
-			float longitudeTemp = eqTemp - longitudeTempRange * distPercent;
+			float longitudeTemp = eqTemp - longitudeTempRange * distPercent * distPercent;
 			float oceanTemp = longitudeTemp * 0.8f;
 
 			for (int x = 0; x < map.width; x++) {
 				if (biomes[i] == Biome.OCEAN)
 					temps[i] = oceanTemp;
-				else {
+				else
 					temps[i] = longitudeTemp - (heights[i] - heightRange) * heightToTempDiffConst;
-					// System.out.println(temps[i]);
-				}
 				i++;
 			}
 		}
 	}
 
-	private static float getEquatorTemperature(Random random) {
-		return 30 + 10 * random.nextFloat();
+	private float getEquatorTemperature(Random random) {
+		return 40 + 10 * random.nextFloat();
 	}
 
-	private static float getPolarTemperature(Random random) {
+	private float getPolarTemperature(Random random) {
 		return -10 + 10 * random.nextFloat();
 	}
 
-	private static float getSeaLevelTemperatureOffset(Random random) {
+	private float getSeaLevelTemperatureOffset(Random random) {
 		return 0;
 	}
 
-	private static float getHighestMountainTemperatureOffset(Random random) {
+	private float getHighestMountainTemperatureOffset(Random random) {
 		return -10 - random.nextFloat() * 10.f;
 	}
 

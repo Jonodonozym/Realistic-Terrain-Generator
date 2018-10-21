@@ -5,6 +5,8 @@ import static jdz.RTGen.dataType.Biome.*;
 
 import java.util.Random;
 
+import jdz.RTGen.algorithms.precipitation.PrecipitationModel;
+import jdz.RTGen.algorithms.temperature.TemperatureModel;
 import jdz.RTGen.dataType.Biome;
 import jdz.RTGen.dataType.Map;
 
@@ -15,8 +17,8 @@ public class BiomeClassifier {
 
 		assignOcean(map, random);
 
-		PrecipitationModel.assignPrecipitation(map, random);
-		TemperatureModel.assignTemperatures(map, random);
+		PrecipitationModel.oceanDistance().apply(map, random);
+		TemperatureModel.equatorAndHeight().apply(map, random);
 
 		float[] temps = map.cellTemperature;
 		float[] prec = map.cellPrecipitation;
