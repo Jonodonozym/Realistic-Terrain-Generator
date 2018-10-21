@@ -35,72 +35,65 @@ public class CellDepthCalculator {
 	}
 
 	public static void forAllOnEdge(Map map, EdgeListPopulator populator, CellIterator iterator) {
-		map.forAllCells((x, y, index) -> {
+		map.forAllCells((x, y) -> {
 			if (populator.shouldPopulate(x, y))
-				iterator.execute(x, y, index);
+				iterator.execute(x, y);
 		});
 	}
 
-	public static boolean[] getEdgeMask(Map map, EdgeListPopulator populator) {
-		boolean[] mask = new boolean[map.size];
+	public static TectonicPlate getEdgeMask(Map map, EdgeListPopulator populator) {
+		TectonicPlate maskPlate = new TectonicPlate(map);
 
-		map.forAllCells((x, y, index) -> {
+		map.forAllCells((x, y) -> {
 			if (populator.shouldPopulate(x, y))
-				mask[index] = true;
+				maskPlate.addToPlate(x, y);
 		});
 
-		return mask;
+		return maskPlate;
 	}
 
-	public static int[] getDistanceFromEdge(Map map, boolean[] mask, EdgeListPopulator populator) {
-		TectonicPlate maskPlate = new TectonicPlate(map, mask, null, null, null);
-
+	public static TectonicPlate getDistanceFromEdge(Map map, TectonicPlate maskPlate, EdgeListPopulator populator) {
 		IntArrayFIFOQueue cellX = new IntArrayFIFOQueue();
 		IntArrayFIFOQueue cellY = new IntArrayFIFOQueue();
-		IntArrayFIFOQueue cellI = new IntArrayFIFOQueue();
 
-		int[] dists = populateArrays(map, populator, cellX, cellY, cellI);
+		TectonicPlate dists = populateArrays(map, populator, cellX, cellY);
 
 		while (!cellX.isEmpty()) {
-			int i = cellI.dequeueInt();
 			int x = cellX.dequeueInt();
 			int y = cellY.dequeueInt();
-			int depth = dists[i] + 1;
+			int depth = (int) dists.getHeight(x, y) + 1;
 
-			enqueueIfNotSet(maskPlate, dists, x + 1, y, depth, cellX, cellY, cellI);
-			enqueueIfNotSet(maskPlate, dists, x - 1, y, depth, cellX, cellY, cellI);
-			enqueueIfNotSet(maskPlate, dists, x, y + 1, depth, cellX, cellY, cellI);
-			enqueueIfNotSet(maskPlate, dists, x, y - 1, depth, cellX, cellY, cellI);
+			enqueueIfNotSet(maskPlate, dists, x + 1, y, depth, cellX, cellY);
+			enqueueIfNotSet(maskPlate, dists, x - 1, y, depth, cellX, cellY);
+			enqueueIfNotSet(maskPlate, dists, x, y + 1, depth, cellX, cellY);
+			enqueueIfNotSet(maskPlate, dists, x, y - 1, depth, cellX, cellY);
 		}
 
 		return dists;
 	}
 
-	public static int[] populateArrays(Map map, EdgeListPopulator populator, IntArrayFIFOQueue cellX,
-			IntArrayFIFOQueue cellY, IntArrayFIFOQueue cellI) {
-		int[] dists = new int[map.size];
+	public static TectonicPlate populateArrays(Map map, EdgeListPopulator populator, IntArrayFIFOQueue cellX,
+			IntArrayFIFOQueue cellY) {
+		TectonicPlate plate = new TectonicPlate(map);
 
-		forAllOnEdge(map, populator, (x, y, index) -> {
+		forAllOnEdge(map, populator, (x, y) -> {
 			cellX.enqueue(x);
 			cellY.enqueue(y);
-			cellI.enqueue(index);
 
-			dists[index] = 1;
+			plate.setHeight(x, y, 1);
 		});
 
-		return dists;
+		return plate;
 	}
 
-	private static void enqueueIfNotSet(TectonicPlate p, int[] isSet, int x, int y, int depth, IntArrayFIFOQueue xQ,
-			IntArrayFIFOQueue yQ, IntArrayFIFOQueue iQ) {
-		int index = p.cellIndex(x, y);
-		if (!p.mask[index])
+	private static void enqueueIfNotSet(TectonicPlate maskPlate, TectonicPlate distsPlate, int x, int y, int depth,
+			IntArrayFIFOQueue xQ, IntArrayFIFOQueue yQ) {
+		if (!maskPlate.isInPlate(x, y))
 			return;
-		if (isSet[index] == 0) {
-			isSet[index] = depth;
+		if (!distsPlate.isInPlate(x, y)) {
+			distsPlate.setHeight(x, y, depth);
 			xQ.enqueue(x);
 			yQ.enqueue(y);
-			iQ.enqueue(index);
 		}
 	}
 }

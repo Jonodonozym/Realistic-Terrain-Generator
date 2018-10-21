@@ -25,19 +25,20 @@ public class ContinentGenerator extends InitialMapGenerator {
 				pickedPlates.add(plate);
 
 		TectonicPlate continentalCells = new PlateList(pickedPlates).toMergedPlate();
-		TectonicPlate oceanCells = continentalCells.clone().invertMask();
+		TectonicPlate oceanCells = continentalCells.clone().getInvertedMask();
 
-		int[] distToOcean = CellDepthCalculator.getDistanceFromEdge(map, continentalCells.mask,
+		TectonicPlate distToOcean = CellDepthCalculator.getDistanceFromEdge(map, continentalCells,
 				new CellDepthCalculator.IsNextToPlate(continentalCells, oceanCells));
-		int[] distToLand = CellDepthCalculator.getDistanceFromEdge(map, oceanCells.mask,
+		TectonicPlate distToLand = CellDepthCalculator.getDistanceFromEdge(map, oceanCells,
 				new CellDepthCalculator.IsNextToPlate(oceanCells, continentalCells));
 
-		for (int i = 0; i < map.size; i++) {
-			if (continentalCells.mask[i])
-				map.cellHeight[i] = (float) Math.log10(distToOcean[i]);
-			else
-				map.cellHeight[i] = (float) -Math.log10(distToLand[i] * 2 - 0.9);
-		}
+		continentalCells.forEachCell((x, y) -> {
+			map.setHeight(x, y, (float) Math.log10(distToOcean.getHeight(x, y)));
+		});
+
+		oceanCells.forEachCell((x, y) -> {
+			map.setHeight(x, y, (float) -Math.log10(distToLand.getHeight(x, y) * 2 - 0.9));
+		});
 
 		return map;
 	}

@@ -1,32 +1,32 @@
 
 package jdz.RTGen.dataType;
 
+import it.unimi.dsi.fastutil.objects.Object2FloatMap;
+import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 import javafx.geometry.Point2D;
 import lombok.Getter;
 
 public class TectonicPlate {
 	@Getter private final Map map;
 
-	public boolean[] mask;
-	public float[] heights;
+	@Getter private Object2FloatMap<MapCell> heights = new Object2FloatOpenHashMap<>();
 
-	private Point2D fractionOffset;
+	private Point2D offset;
 	public Point2D velocity;
 
 	public TectonicPlate(Map map) {
-		this(map, new boolean[map.size], new float[map.size], new Point2D(0, 0), new Point2D(0, 0));
+		this(map, new Object2FloatOpenHashMap<>(), new Point2D(0, 0), new Point2D(0, 0));
 	}
 
-	public TectonicPlate(Map map, boolean[] mask, float[] heights, Point2D velocity, Point2D fractionOffset) {
+	public TectonicPlate(Map map, Object2FloatMap<MapCell> cells, Point2D velocity, Point2D fractionOffset) {
 		this.map = map;
-		this.mask = mask;
-		this.heights = heights;
+		this.heights = cells;
 		this.velocity = velocity;
-		this.fractionOffset = fractionOffset;
+		this.offset = fractionOffset;
 	}
 
 	public final boolean isInPlate(int x, int y) {
-		return mask[cellIndex(x, y)];
+		return heights.containsKey(getCell(x, y));
 	}
 
 	public final void addToPlate(int x, int y) {
@@ -34,39 +34,28 @@ public class TectonicPlate {
 	}
 
 	public final void addToPlate(int x, int y, float height) {
-		int index = cellIndex(x, y);
-		mask[index] = true;
-		heights[index] = height;
+		heights.put(getCell(x, y), height);
 	}
 
 	public final void removeFromPlate(int x, int y) {
-		int index = cellIndex(x, y);
-		mask[index] = false;
-		heights[index] = Float.MIN_VALUE;
+		heights.removeFloat(getCell(x, y));
 	}
 
 	public final float getHeight(int x, int y) {
-		return heights[cellIndex(x, y)];
+		return heights.getFloat(getCell(x, y));
 	}
 
 	public final void setHeight(int x, int y, float height) {
-		heights[cellIndex(x, y)] = height;
+		heights.put(getCell(x, y), height);
 	}
 
 	public void addHeight(int x, int y, float height) {
-		heights[cellIndex(x, y)] += height;
-	}
-
-	public void addHeights(double[] heights) {
-		for (int i = 0; i < heights.length; i++)
-			this.heights[i] += heights[i];
+		heights.put(getCell(x, y), getHeight(x, y));
 	}
 
 	public void forEachCell(CellIterator iterator) {
-		map.forAllCells((x, y, index) -> {
-			if (mask[index])
-				iterator.execute(x, y, index);
-		});
+		for (MapCell c : heights.keySet())
+			iterator.execute(c.x, c.y);
 	}
 
 	public final int cellIndex(int x, int y) {
@@ -74,78 +63,53 @@ public class TectonicPlate {
 	}
 
 	public int numCells() {
-		int size = 0;
-		for (int i = 0; i < map.size; i++)
-			if (mask[i])
-				size++;
-		return size;
+		return heights.size();
 	}
 
 	// Transformations
 
-	public TectonicPlate chopOverlap(boolean[] overlapMask) {
-		for (int i = 0; i < mask.length; i++)
-			if (overlapMask[i]) {
-				mask[i] = false;
-				heights[i] = Float.MIN_VALUE;
-			}
+	public TectonicPlate chopOverlap(TectonicPlate other) {
+		for (MapCell c : other.getHeights().keySet())
+			heights.removeFloat(c);
+
 		return this;
 	}
 
-	public boolean[] getMasksOverlap(TectonicPlate other) {
-		boolean[] newMask = new boolean[mask.length];
-		System.arraycopy(mask, 0, newMask, 0, mask.length);
+	public TectonicPlate getMasksOverlap(TectonicPlate other) {
+		TectonicPlate newMask = new TectonicPlate(map);
 
-		boolean[] otherMask = other.mask;
-
-		for (int i = 0; i < newMask.length; i++)
-			newMask[i] &= otherMask[i];
+		for (MapCell c : other.heights.keySet())
+			if (heights.containsKey(c))
+				newMask.heights.put(c, 0);
 
 		return newMask;
 	}
 
-	public boolean[] getInvertedMask() {
-		boolean[] newMask = new boolean[mask.length];
-		for (int i = 0; i < mask.length; i++)
-			newMask[i] = !mask[i];
+	public TectonicPlate getInvertedMask() {
+		TectonicPlate newMask = new TectonicPlate(map);
+
+		map.forAllCells((x, y) -> {
+			if (!isInPlate(x, y))
+				newMask.addToPlate(x, y);
+		});
 
 		return newMask;
-	}
-
-	public TectonicPlate invertMask() {
-		mask = getInvertedMask();
-		return this;
 	}
 
 	public TectonicPlate step() {
-		boolean[] newMask = new boolean[mask.length];
-		float[] newHeights = new float[mask.length];
-
-		Point2D finalOffset = velocity.add(fractionOffset);
-
-		int dx = (int) Math.round(finalOffset.getX());
-		int dy = (int) Math.round(finalOffset.getY());
-
-		Point2D newFractional = velocity.subtract(dx, dy);
-
-		forEachCell((x, y, i)->{
-			int newIndex = cellIndex(x + dx, y + dy);
-			newMask[newIndex] = mask[i];
-			newHeights[newIndex] = heights[i];
-		});
-
-		return new TectonicPlate(map, newMask, newHeights, velocity, newFractional);
+		offset.add(velocity);
+		return this;
 	}
 
 	@Override
 	public TectonicPlate clone() {
-		boolean[] newMask = new boolean[mask.length];
-		float[] newHeights = new float[mask.length];
+		return new TectonicPlate(map, new Object2FloatOpenHashMap<MapCell>(heights), velocity, offset);
+	}
 
-		System.arraycopy(mask, 0, newMask, 0, mask.length);
-		System.arraycopy(heights, 0, newHeights, 0, mask.length);
-
-		return new TectonicPlate(map, newMask, newHeights, velocity, fractionOffset);
+	private MapCell getCell(int x, int y) {
+		int dx = x + (int) Math.round(offset.getX());
+		int dy = y + (int) Math.round(offset.getY());
+		return map.getCell(dx, dy);
 	}
 
 }

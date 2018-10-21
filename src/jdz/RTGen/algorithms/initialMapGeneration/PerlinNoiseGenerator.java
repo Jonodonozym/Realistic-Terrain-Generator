@@ -12,10 +12,10 @@ public class PerlinNoiseGenerator extends InitialMapGenerator {
 
 	@Override
 	protected Map generate() {
-		map.forAllCells((x, y, i)->{
+		map.forAllCells((x, y)->{
 			float nx = x / (float) map.width - 0.5f;
 			float ny = y / (float) map.height - 0.5f;
-			map.cellHeight[i++] = noise(nx, ny);
+			map.setHeight(x, y, noise(nx, ny));
 		});
 
 		return map;

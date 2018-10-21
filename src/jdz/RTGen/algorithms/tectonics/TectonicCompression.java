@@ -11,7 +11,7 @@ public class TectonicCompression {
 	public static List<TectonicPlate> performCollision(List<TectonicPlate> plates) {
 		Map map = plates.get(0).getMap();
 
-		boolean[] isProcessed = new boolean[map.size];
+		TectonicPlate isProcessed = new TectonicPlate(map);
 
 		PlateList plateList = new PlateList(plates);
 
@@ -19,27 +19,27 @@ public class TectonicCompression {
 			TectonicPlate plate = plates.get(p);
 			TectonicPlate otherPlates = plateList.toMergedPlate(p + 1);
 
-			boolean[] isOverlap = plate.getMasksOverlap(otherPlates);
+			TectonicPlate overlapPlate = plate.getMasksOverlap(otherPlates);
 
-			TectonicPlate overlapPlate = new TectonicPlate(map, isOverlap, null, null, null);
-
-			int[] distances = CellDepthCalculator.getDistanceFromEdge(map, isOverlap,
+			TectonicPlate distances = CellDepthCalculator.getDistanceFromEdge(map, overlapPlate,
 					new CellDepthCalculator.IsOnEdge(overlapPlate));
 
-			for (int i = 0; i < isOverlap.length; i++) {
-				if (!isOverlap[i] || isProcessed[i])
-					continue;
+			overlapPlate.forEachCell((x, y) -> {
+				if (isProcessed.isInPlate(x, y))
+					return;
 
-				isProcessed[i] = true;
-				plate.heights[i] = (plate.heights[i] + otherPlates.heights[i]) / 2.f;
-				plate.heights[i] += Math.pow(distances[i], 2) / 100f;
-			}
+				isProcessed.addToPlate(x, y);
+				
+				float averageHeight = (plate.getHeight(x, y) + otherPlates.getHeight(x, y)) / 2.f;
+				averageHeight += Math.pow(distances.getHeight(x, y), 2) / 100f;
+				plate.setHeight(x, y, averageHeight);
+			});
 
 			for (TectonicPlate other : plates) {
 				if (other.equals(plate))
 					continue;
 
-				other.chopOverlap(isOverlap);
+				other.chopOverlap(overlapPlate);
 			}
 		}
 

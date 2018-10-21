@@ -28,39 +28,34 @@ public class TectonicSubduction {
 		TectonicPlate mergedPlate = plateList.toMergedPlate();
 		Queue<CellInfo> queue = new ArrayDeque<CellInfo>();
 
-		float[] heights = mergedPlate.heights;
-		boolean[] isSet = mergedPlate.mask;
-
-		CellDepthCalculator.forAllOnEdge(map, new CellDepthCalculator.IsOnEdge(mergedPlate), (x, y, i) -> {
-			queue.add(new CellInfo(x, y, plateList.get(i), heights[i]));
+		CellDepthCalculator.forAllOnEdge(map, new CellDepthCalculator.IsOnEdge(mergedPlate), (x, y) -> {
+			queue.add(new CellInfo(x, y, plateList.get(x, y), mergedPlate.getHeight(x, y)));
 		});
 
 		while (!queue.isEmpty()) {
 			CellInfo cell = queue.poll();
 
-			enqueueIfNotSet(map, isSet, cell.x + 1, cell.y, cell, queue);
-			enqueueIfNotSet(map, isSet, cell.x - 1, cell.y, cell, queue);
-			enqueueIfNotSet(map, isSet, cell.x, cell.y + 1, cell, queue);
-			enqueueIfNotSet(map, isSet, cell.x, cell.y - 1, cell, queue);
+			enqueueIfNotSet(map, mergedPlate, cell.x + 1, cell.y, cell, queue);
+			enqueueIfNotSet(map, mergedPlate, cell.x - 1, cell.y, cell, queue);
+			enqueueIfNotSet(map, mergedPlate, cell.x, cell.y + 1, cell, queue);
+			enqueueIfNotSet(map, mergedPlate, cell.x, cell.y - 1, cell, queue);
 		}
 
 		return afterMoved;
 	}
 
-	private static void enqueueIfNotSet(Map map, boolean[] isSet, int x, int y, CellInfo prevCell,
+	private static void enqueueIfNotSet(Map map, TectonicPlate isSet, int x, int y, CellInfo prevCell,
 			Queue<CellInfo> queue) {
-		int index = map.cellIndex(x, y);
-		if (isSet[index])
+		if (isSet.isInPlate(x, y))
 			return;
 
-		isSet[index] = true;
+		isSet.addToPlate(x, y);
 
 		float newHeight = (prevCell.height - MIN_HEIGHT) * SUBDUCTION_DECAY_RATE + MIN_HEIGHT;
 
 		CellInfo newCell = new CellInfo(x, y, prevCell.plate, newHeight);
 
-		newCell.plate.mask[index] = true;
-		newCell.plate.heights[index] = newHeight;
+		newCell.plate.addToPlate(x, y, newHeight);
 
 		queue.add(newCell);
 	}

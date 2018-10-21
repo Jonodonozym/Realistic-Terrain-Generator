@@ -12,26 +12,25 @@ public class PrecipitationModel {
 	private static float MAX_PRECIPITATION = 450;
 
 	public static void assignPrecipitation(Map map, Random random) {
-		Biome[] biomes = map.cellBiome;
-		float[] precipitation = map.cellPrecipitation;
+		TectonicPlate oceanMask = new TectonicPlate(map);
 
-		boolean[] oceanMask = new boolean[map.size];
-		TectonicPlate mockOceanPlate = new TectonicPlate(map, oceanMask, null, null, null);
-
-		for (int i = 0; i < map.size; i++) {
-			if (biomes[i] == Biome.OCEAN) {
-				oceanMask[i] = true;
-				precipitation[i] = MAX_PRECIPITATION;
+		map.forAllCells((x, y) -> {
+			if (map.getBiome(x, y) == Biome.OCEAN) {
+				oceanMask.addToPlate(x, y);
+				map.setPrecipitation(x, y, MAX_PRECIPITATION);
 			}
-		}
+		});
 
-		int[] landDepth = CellDepthCalculator.getDistanceFromEdge(map, oceanMask,
-				new CellDepthCalculator.IsOnEdge(mockOceanPlate));
+		TectonicPlate landDepth = CellDepthCalculator.getDistanceFromEdge(map, oceanMask,
+				new CellDepthCalculator.IsOnEdge(oceanMask));
 
-		for (int i = 0; i < map.size; i++)
-			if (!oceanMask[i])
-				precipitation[i] = (float) Math.min(MAX_PRECIPITATION,
-						MAX_PRECIPITATION / (Math.sqrt(landDepth[i]) + 1));
+		map.forAllCells((x, y) -> {
+			if (landDepth.isInPlate(x, y)) {
+				float p = (float) Math.min(MAX_PRECIPITATION,
+						MAX_PRECIPITATION / (Math.sqrt(landDepth.getHeight(x, y)) + 1));
+				map.setPrecipitation(x, y, p);
+			}
+		});
 	}
 
 }

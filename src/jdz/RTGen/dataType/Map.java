@@ -47,12 +47,12 @@ public class Map {
 
 	public final void updateHeightFromPlates() {
 		for (TectonicPlate plate : plates)
-			for (int i = 0; i < size; i++)
-				if (plate.mask[i])
-					cellHeight[i] = plate.heights[i];
+			plate.forEachCell((x, y) -> {
+				cellHeight[cellIndex(x, y)] = plate.getHeight(x, y);
+			});
 	}
 
-	public final void setHeight(int x, int y, int height) {
+	public final void setHeight(int x, int y, float height) {
 		cellHeight[cellIndex(x, y)] = height;
 	}
 
@@ -60,7 +60,7 @@ public class Map {
 		return cellHeight[cellIndex(x, y)];
 	}
 
-	public final void setTemperature(int x, int y, int temperature) {
+	public final void setTemperature(int x, int y, float temperature) {
 		cellTemperature[cellIndex(x, y)] = temperature;
 	}
 
@@ -68,7 +68,7 @@ public class Map {
 		return cellTemperature[cellIndex(x, y)];
 	}
 
-	public final void setPrecipitation(int x, int y, int precipitation) {
+	public final void setPrecipitation(int x, int y, float precipitation) {
 		cellPrecipitation[cellIndex(x, y)] = precipitation;
 	}
 
@@ -96,6 +96,19 @@ public class Map {
 		if (x >= width)
 			return cellIndex(x - width, y);
 		return y * width + x;
+	}
+
+	public MapCell getCell(int x, int y) {
+		if (y < 0)
+			return getCell(width - x - 1, -1 - y);
+		if (y >= height)
+			return getCell(width - x - 1, 2 * height - y - 1);
+		if (x < 0)
+			return getCell(width + x, y);
+		if (x >= width)
+			return getCell(x - width, y);
+		
+		return new MapCell(x, y);
 	}
 
 	public final int cellX(int index) {
@@ -135,10 +148,9 @@ public class Map {
 	}
 
 	public void forAllCells(CellIterator iterator) {
-		int index = 0;
 		for (int y = 0; y < height; y++)
 			for (int x = 0; x < width; x++)
-				iterator.execute(x, y, index++);
+				iterator.execute(x, y);
 	}
 
 }

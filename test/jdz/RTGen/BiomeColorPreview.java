@@ -39,11 +39,10 @@ public class BiomeColorPreview extends Previewer {
 
 		for (int i = 0; i < plates.size(); i++) {
 			Biome biome = Biome.values()[i];
-			boolean[] mask = plates.get(i).mask;
-
-			for (int j = 0; j < map.size; j++)
-				if (mask[j])
-					map.cellBiome[j] = biome;
+			
+			plates.get(i).forEachCell((x, y)->{
+				map.setBiome(x, y, biome);
+			});
 			
 			plateCenters.add(PlateMetrics.getCenterOfMass(plates.get(i)));
 		}

@@ -36,21 +36,21 @@ public class PlateList {
 		int plateIndex = 0;
 		for (TectonicPlate plate : plates) {
 			final int finalIndex = plateIndex++;
-			plate.forEachCell((x, y, i) -> {
-				indexMask[i] = finalIndex;
+			plate.forEachCell((x, y) -> {
+				indexMask[map.cellIndex(x, y)] = finalIndex;
 			});
 		}
 	}
 
 	public void forEachCell(CellPlateIterator iterator) {
-		map.forAllCells((x, y, index) -> {
-			int pIndex = indexMask[index++];
-			iterator.execute(x, y, index, pIndex == -1 ? null : plates.get(pIndex));
+		map.forAllCells((x, y) -> {
+			int pIndex = indexMask[map.cellIndex(x, y)];
+			iterator.execute(x, y, pIndex == -1 ? null : plates.get(pIndex));
 		});
 	}
 
 	public static interface CellPlateIterator {
-		public void execute(int x, int y, int index, TectonicPlate plate);
+		public void execute(int x, int y, TectonicPlate plate);
 	}
 
 	public TectonicPlate toMergedPlate() {
@@ -60,13 +60,10 @@ public class PlateList {
 	public TectonicPlate toMergedPlate(int startIndex) {
 		TectonicPlate combined = new TectonicPlate(map);
 
-		for (int i = startIndex; i < plates.size(); i++) {
-			TectonicPlate p = plates.get(i);
-			for (int j = 0; j < map.size; j++)
-				if (p.mask[j]) {
-					combined.mask[j] = true;
-					combined.heights[j] = p.heights[j];
-				}
+		for (TectonicPlate plate : plates) {
+			plate.forEachCell((x, y) -> {
+				combined.addToPlate(x, y, plate.getHeight(x, y));
+			});
 		}
 
 		return combined;
