@@ -8,18 +8,19 @@ import jdz.RTGen.dataType.PlateList;
 import jdz.RTGen.dataType.TectonicPlate;
 
 public class TectonicCompression {
-	public static List<TectonicPlate> performCollision(List<TectonicPlate> plates) {
+	public static List<TectonicPlate> performCompression(List<TectonicPlate> plates) {
 		Map map = plates.get(0).getMap();
 
 		boolean[] isProcessed = new boolean[map.size];
 
 		PlateList plateList = new PlateList(plates);
-
+		
 		for (int p = 0; p < plates.size(); p++) {
 			TectonicPlate plate = plates.get(p);
-			TectonicPlate otherPlates = plateList.toMergedPlate(p + 1);
+			
+			TectonicPlate mergedPlate = plateList.toMergedPlate(p+1);
 
-			boolean[] isOverlap = plate.getMasksOverlap(otherPlates);
+			boolean[] isOverlap = plate.getMasksOverlap(mergedPlate);
 
 			TectonicPlate overlapPlate = new TectonicPlate(map, isOverlap, null, null, null);
 
@@ -31,16 +32,12 @@ public class TectonicCompression {
 					continue;
 
 				isProcessed[i] = true;
-				plate.heights[i] = (plate.heights[i] + otherPlates.heights[i]) / 2.f;
-				plate.heights[i] += Math.pow(distances[i], 2) / 100f;
+				plate.heights[i] = (plate.heights[i] + mergedPlate.heights[i]) / 2.f;
+				plate.heights[i] += distances[i];
 			}
 
-			for (TectonicPlate other : plates) {
-				if (other.equals(plate))
-					continue;
-
-				other.chopOverlap(isOverlap);
-			}
+			for (int p2 = p+1; p2 < plates.size(); p2++)
+				plates.get(p2).chopOverlap(isOverlap);
 		}
 
 		return plates;

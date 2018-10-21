@@ -17,7 +17,7 @@ import lombok.AllArgsConstructor;
  */
 public class TectonicSubduction {
 	private static final float SUBDUCTION_DECAY_RATE = 0.9f;
-	private static final float MIN_HEIGHT = -1000;
+	private static final float MIN_HEIGHT = -10;
 
 	public static List<TectonicPlate> performSubduction(List<TectonicPlate> beforeMoved,
 			List<TectonicPlate> afterMoved) {

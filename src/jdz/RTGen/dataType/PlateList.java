@@ -44,7 +44,7 @@ public class PlateList {
 
 	public void forEachCell(CellPlateIterator iterator) {
 		map.forAllCells((x, y, index) -> {
-			int pIndex = indexMask[index++];
+			int pIndex = indexMask[index];
 			iterator.execute(x, y, index, pIndex == -1 ? null : plates.get(pIndex));
 		});
 	}
@@ -59,14 +59,13 @@ public class PlateList {
 
 	public TectonicPlate toMergedPlate(int startIndex) {
 		TectonicPlate combined = new TectonicPlate(map);
-
-		for (int i = startIndex; i < plates.size(); i++) {
-			TectonicPlate p = plates.get(i);
-			for (int j = 0; j < map.size; j++)
-				if (p.mask[j]) {
-					combined.mask[j] = true;
-					combined.heights[j] = p.heights[j];
-				}
+		
+		for (int i=0; i<map.size; i++) {
+			int pIndex = indexMask[i];
+			if (pIndex >= startIndex) {
+				combined.mask[i] = true;
+				combined.heights[i] = plates.get(pIndex).heights[i];
+			}
 		}
 
 		return combined;

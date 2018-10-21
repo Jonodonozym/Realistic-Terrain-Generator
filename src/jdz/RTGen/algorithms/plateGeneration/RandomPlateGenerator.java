@@ -33,15 +33,17 @@ class RandomPlateGenerator extends TectonicPlateGenerator {
 		for (int i = 0; i < numPlates; i++)
 			plates.add(new TectonicPlate(map));
 
-		for (int y = 0; y < map.height; y++)
-			for (int x = 0; x < map.width; x++)
-				plates.get((int) combined.getHeight(x, y)).addToPlate(x, y, map.getHeight(x, y));
+		map.forAllCells((x, y, i) -> {
+			TectonicPlate plate = plates.get((int) combined.heights[i]);
+			plate.mask[i] = true;
+			plate.heights[i] = map.cellHeight[i];
+		});
 
 		return plates;
 	}
 
 	private List<PlatePoint> getRandomPoints(int numPlates, TectonicPlate combined) {
-		List<PlatePoint> randomPoints = new ArrayList<PlatePoint>();
+		List<PlatePoint> randomPoints = new ArrayList<PlatePoint>(map.size / numPlates);
 
 		for (int i = 0; i < numPlates; i++) {
 			int x = random.nextInt(map.width), y = random.nextInt(map.height);
