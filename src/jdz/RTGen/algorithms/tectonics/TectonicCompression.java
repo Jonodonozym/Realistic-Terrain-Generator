@@ -25,7 +25,7 @@ public class TectonicCompression {
 					new CellDepthCalculator.IsOnEdge(overlapPlate));
 
 			overlapPlate.forEachCell((x, y) -> {
-				if (isProcessed.isInPlate(x, y))
+				if (isProcessed.contains(x, y))
 					return;
 
 				isProcessed.addToPlate(x, y);

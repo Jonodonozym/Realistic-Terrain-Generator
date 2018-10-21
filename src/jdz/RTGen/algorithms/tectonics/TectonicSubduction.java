@@ -46,7 +46,7 @@ public class TectonicSubduction {
 
 	private static void enqueueIfNotSet(Map map, TectonicPlate isSet, int x, int y, CellInfo prevCell,
 			Queue<CellInfo> queue) {
-		if (isSet.isInPlate(x, y))
+		if (isSet.contains(x, y))
 			return;
 
 		isSet.addToPlate(x, y);

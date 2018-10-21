@@ -28,7 +28,7 @@ public class PlateList {
 	}
 
 	public TectonicPlate get(int x, int y) {
-		return get(plates.get(0).cellIndex(x, y));
+		return get(map.cellIndex(x, y));
 	}
 
 	public void updateIndexMask() {
@@ -60,11 +60,8 @@ public class PlateList {
 	public TectonicPlate toMergedPlate(int startIndex) {
 		TectonicPlate combined = new TectonicPlate(map);
 
-		for (TectonicPlate plate : plates) {
-			plate.forEachCell((x, y) -> {
-				combined.addToPlate(x, y, plate.getHeight(x, y));
-			});
-		}
+		for (TectonicPlate plate : plates)
+			combined.getHeights().putAll(plate.getHeights());
 
 		return combined;
 	}

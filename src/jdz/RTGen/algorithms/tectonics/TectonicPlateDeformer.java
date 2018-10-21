@@ -14,7 +14,7 @@ public abstract class TectonicPlateDeformer {
 		return new BasicPlateDeformer();
 	}
 	
-	private final Logger logger = Logger.getGlobal();
+	protected final Logger logger = Logger.getGlobal();
 
 	protected Map map;
 	protected Random random;

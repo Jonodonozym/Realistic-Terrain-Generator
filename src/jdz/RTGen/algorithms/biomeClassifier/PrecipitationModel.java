@@ -25,7 +25,7 @@ public class PrecipitationModel {
 				new CellDepthCalculator.IsOnEdge(oceanMask));
 
 		map.forAllCells((x, y) -> {
-			if (landDepth.isInPlate(x, y)) {
+			if (landDepth.contains(x, y)) {
 				float p = (float) Math.min(MAX_PRECIPITATION,
 						MAX_PRECIPITATION / (Math.sqrt(landDepth.getHeight(x, y)) + 1));
 				map.setPrecipitation(x, y, p);

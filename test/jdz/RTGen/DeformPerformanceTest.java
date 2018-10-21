@@ -11,7 +11,7 @@ import jdz.RTGen.dataType.TectonicPlate;
 public class DeformPerformanceTest {
 	private static final int MAP_SIZE = 512;
 	private static final int NUM_PLATES = 10;
-	private static final int STEPS = 100;
+	private static final int STEPS = 5;
 
 	public static void main(String[] args) {
 		LoggerConfig.init();

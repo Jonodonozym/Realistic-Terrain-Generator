@@ -11,11 +11,11 @@ public class TectonicPlate {
 
 	@Getter private Object2FloatMap<MapCell> heights = new Object2FloatOpenHashMap<>();
 
+	@Getter private Point2D velocity;
 	private Point2D offset;
-	public Point2D velocity;
 
 	public TectonicPlate(Map map) {
-		this(map, new Object2FloatOpenHashMap<>(), new Point2D(0, 0), new Point2D(0, 0));
+		this(map, new Object2FloatOpenHashMap<>(map.size), new Point2D(0, 0), new Point2D(0, 0));
 	}
 
 	public TectonicPlate(Map map, Object2FloatMap<MapCell> cells, Point2D velocity, Point2D fractionOffset) {
@@ -25,7 +25,7 @@ public class TectonicPlate {
 		this.offset = fractionOffset;
 	}
 
-	public final boolean isInPlate(int x, int y) {
+	public final boolean contains(int x, int y) {
 		return heights.containsKey(getCell(x, y));
 	}
 
@@ -58,12 +58,12 @@ public class TectonicPlate {
 			iterator.execute(c.x, c.y);
 	}
 
-	public final int cellIndex(int x, int y) {
-		return map.cellIndex(x, y);
-	}
-
 	public int numCells() {
 		return heights.size();
+	}
+	
+	public void setVelocity(double dx, double dy) {
+		velocity = new Point2D(dx, dy);
 	}
 
 	// Transformations
@@ -89,7 +89,7 @@ public class TectonicPlate {
 		TectonicPlate newMask = new TectonicPlate(map);
 
 		map.forAllCells((x, y) -> {
-			if (!isInPlate(x, y))
+			if (!contains(x, y))
 				newMask.addToPlate(x, y);
 		});
 

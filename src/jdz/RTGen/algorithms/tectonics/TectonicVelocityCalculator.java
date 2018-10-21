@@ -18,7 +18,7 @@ public class TectonicVelocityCalculator {
 		for (TectonicPlate plate : plates) {
 			float plateMag = magnitude * (0.5f + random.nextFloat() * 0.5f);
 			float direction = (float) (random.nextFloat() * 2.f * Math.PI);
-			plate.velocity = new Point2D(Math.cos(direction) * plateMag, Math.sin(direction) * plateMag);
+			plate.setVelocity(Math.cos(direction) * plateMag, Math.sin(direction) * plateMag);
 		}
 
 		return plates;

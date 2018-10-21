@@ -24,12 +24,12 @@ public class PlateListRenderer extends Renderer<List<TectonicPlate>> {
 	private void renderPlate(BufferedImage image, TectonicPlate plate) {
 		for (int x = 0; x < plate.getMap().width; x++)
 			for (int y = 0; y < plate.getMap().height; y++)
-				if (plate.isInPlate(x, y) && isOnEdge(plate, x, y))
+				if (plate.contains(x, y) && isOnEdge(plate, x, y))
 					invertColor(image, x, y);
 	}
 
 	private boolean isOnEdge(TectonicPlate p, int x, int y) {
-		return !p.isInPlate(x - 1, y) || !p.isInPlate(x + 1, y) || !p.isInPlate(x, y - 1) || !p.isInPlate(x, y + 1);
+		return !p.contains(x - 1, y) || !p.contains(x + 1, y) || !p.contains(x, y - 1) || !p.contains(x, y + 1);
 	}
 
 	private void invertColor(BufferedImage image, int x, int y) {

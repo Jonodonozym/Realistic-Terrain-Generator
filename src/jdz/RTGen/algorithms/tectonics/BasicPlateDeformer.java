@@ -20,7 +20,7 @@ public class BasicPlateDeformer extends TectonicPlateDeformer {
 	protected boolean shouldStop(List<TectonicPlate> plates) {
 		float totalSpeed = 0;
 		for (TectonicPlate plate : plates)
-			totalSpeed += plate.velocity.magnitude();
+			totalSpeed += plate.getVelocity().magnitude();
 		return totalSpeed <= 1;
 	}
 
@@ -30,10 +30,10 @@ public class BasicPlateDeformer extends TectonicPlateDeformer {
 	protected List<TectonicPlate> deform(List<TectonicPlate> plates) {
 		List<TectonicPlate> movedPlates = new ArrayList<>();
 		for (TectonicPlate plate : plates)
-			movedPlates.add(plate.step());
+			movedPlates.add(plate.clone().step());
 
 		movedPlates = TectonicSubduction.performSubduction(plates, movedPlates);
-//		movedPlates = TectonicCompression.performCollision(movedPlates);
+		movedPlates = TectonicCompression.performCollision(movedPlates);
 		movedPlates = TectonicVelocityCalculator.updateVelocityFromCollision(movedPlates);
 		
 		Collections.shuffle(movedPlates);

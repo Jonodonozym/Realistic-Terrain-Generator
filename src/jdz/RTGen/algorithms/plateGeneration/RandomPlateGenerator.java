@@ -45,7 +45,7 @@ class RandomPlateGenerator extends TectonicPlateGenerator {
 
 		for (int i = 0; i < numPlates; i++) {
 			int x = random.nextInt(map.width), y = random.nextInt(map.height);
-			while (combined.isInPlate(x, y)) {
+			while (combined.contains(x, y)) {
 				x = random.nextInt(map.width);
 				y = random.nextInt(map.height);
 			}
@@ -94,7 +94,7 @@ class RandomPlateGenerator extends TectonicPlateGenerator {
 		}
 
 		public boolean isIn(TectonicPlate plate) {
-			return plate.isInPlate(x, y);
+			return plate.contains(x, y);
 		}
 	}
 

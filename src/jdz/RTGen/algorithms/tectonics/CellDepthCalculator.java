@@ -18,8 +18,8 @@ public class CellDepthCalculator {
 
 		@Override
 		public boolean shouldPopulate(int x, int y) {
-			return (maskPlate.isInPlate(x, y) && (!maskPlate.isInPlate(x + 1, y) || !maskPlate.isInPlate(x - 1, y)
-					|| !maskPlate.isInPlate(x, y + 1) || !maskPlate.isInPlate(x, y - 1)));
+			return (maskPlate.contains(x, y) && (!maskPlate.contains(x + 1, y) || !maskPlate.contains(x - 1, y)
+					|| !maskPlate.contains(x, y + 1) || !maskPlate.contains(x, y - 1)));
 		}
 	}
 
@@ -29,8 +29,8 @@ public class CellDepthCalculator {
 
 		@Override
 		public boolean shouldPopulate(int x, int y) {
-			return (maskPlate.isInPlate(x, y) && (secondPlate.isInPlate(x + 1, y) || secondPlate.isInPlate(x - 1, y)
-					|| secondPlate.isInPlate(x, y + 1) || secondPlate.isInPlate(x, y - 1)));
+			return (maskPlate.contains(x, y) && (secondPlate.contains(x + 1, y) || secondPlate.contains(x - 1, y)
+					|| secondPlate.contains(x, y + 1) || secondPlate.contains(x, y - 1)));
 		}
 	}
 
@@ -88,9 +88,9 @@ public class CellDepthCalculator {
 
 	private static void enqueueIfNotSet(TectonicPlate maskPlate, TectonicPlate distsPlate, int x, int y, int depth,
 			IntArrayFIFOQueue xQ, IntArrayFIFOQueue yQ) {
-		if (!maskPlate.isInPlate(x, y))
+		if (!maskPlate.contains(x, y))
 			return;
-		if (!distsPlate.isInPlate(x, y)) {
+		if (!distsPlate.contains(x, y)) {
 			distsPlate.setHeight(x, y, depth);
 			xQ.enqueue(x);
 			yQ.enqueue(y);
