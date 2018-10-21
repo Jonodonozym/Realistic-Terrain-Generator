@@ -60,8 +60,13 @@ public class PlateList {
 	public TectonicPlate toMergedPlate(int startIndex) {
 		TectonicPlate combined = new TectonicPlate(map);
 
-		for (TectonicPlate plate : plates)
-			combined.getHeights().putAll(plate.getHeights());
+		System.out.println("");
+		for (int i = startIndex; i < plates.size(); i++) {
+			plates.get(i).forEachCell((x, y)->{
+				combined.addToPlate(x, y);
+			});
+			System.out.println(combined.numCells());
+		}
 
 		return combined;
 	}

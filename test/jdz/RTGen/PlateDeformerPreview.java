@@ -16,7 +16,7 @@ import jdz.RTGen.renderers.PlateListRenderer;
 public class PlateDeformerPreview extends Previewer {
 	private static final int MAP_SIZE = 128;
 	private static final int NUM_PLATES = 24;
-	private static final int MS_PER_STEP = 1000;
+	private static final int MS_PER_STEP = -1;
 
 	public static void main(String[] args) {
 		new PlateDeformerPreview();
@@ -28,7 +28,7 @@ public class PlateDeformerPreview extends Previewer {
 
 	@Override
 	public void init() {
-		Logger.getGlobal().setLevel(Level.SEVERE);
+//		Logger.getGlobal().setLevel(Level.SEVERE);
 		map = new Map(map.width, map.height, 100);
 		List<TectonicPlate> plates = TectonicPlateGenerator.getRandom().generatePlates(map, NUM_PLATES);
 		map.setPlates(plates);
@@ -36,7 +36,7 @@ public class PlateDeformerPreview extends Previewer {
 
 	@Override
 	public BufferedImage createPreview() {
-		List<TectonicPlate> plates = TectonicPlateDeformer.getBasic().deform(map, map.getPlates(), 1);
+		List<TectonicPlate> plates = TectonicPlateDeformer.getBasic().deform(map, map.getPlates(), 100);
 		map.setPlates(plates);
 		map.updateHeightFromPlates();
 		BufferedImage heightmap = new HeightMapRenderer().render(map, map);

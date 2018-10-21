@@ -54,8 +54,12 @@ public class TectonicPlate {
 	}
 
 	public void forEachCell(CellIterator iterator) {
-		for (MapCell c : heights.keySet())
-			iterator.execute(c.x, c.y);
+		int dx = (int)offset.getX();
+		int dy = (int)offset.getY();
+		for (MapCell c : heights.keySet()) {
+			MapCell c2 = map.getCell(c.x+dx, c.y+dy);
+			iterator.execute(c2.x, c2.y);
+		}
 	}
 
 	public int numCells() {
