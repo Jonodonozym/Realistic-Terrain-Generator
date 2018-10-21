@@ -15,14 +15,16 @@ public class TemperatureModel {
 
 		// altigude based temperature
 		float heightRange = map.getMaxHeight() - map.getSeaLevel();
-		float seaTemp = getSeaLevelTemperature(random);
-		float mountTemp = getHighestMountainTemperature(random);
-		float heightToTempDiffConst = heightRange * (mountTemp - seaTemp);
+		float seaTemp = getSeaLevelTemperatureOffset(random);
+		float mountTemp = getHighestMountainTemperatureOffset(random);
+		float heightToTempDiffConst = (mountTemp - seaTemp) / heightRange;
 
 		// de-referencing optimisation
 		float[] temps = map.cellTemperature;
 		float[] heights = map.cellHeight;
 		Biome[] biomes = map.cellBiome;
+
+		System.out.println(heightToTempDiffConst);
 
 		int i = 0;
 		for (int y = 0; y < map.height; y++) {
@@ -34,26 +36,28 @@ public class TemperatureModel {
 			for (int x = 0; x < map.width; x++) {
 				if (biomes[i] == Biome.OCEAN)
 					temps[i] = oceanTemp;
-				else
+				else {
 					temps[i] = longitudeTemp - (heights[i] - heightRange) * heightToTempDiffConst;
+					// System.out.println(temps[i]);
+				}
 				i++;
 			}
 		}
 	}
 
 	private static float getEquatorTemperature(Random random) {
-		return 20 + 20 * random.nextFloat();
+		return 30 + 10 * random.nextFloat();
 	}
 
 	private static float getPolarTemperature(Random random) {
-		return -20 + 10 * random.nextFloat();
+		return -10 + 10 * random.nextFloat();
 	}
 
-	private static float getSeaLevelTemperature(Random random) {
+	private static float getSeaLevelTemperatureOffset(Random random) {
 		return 0;
 	}
 
-	private static float getHighestMountainTemperature(Random random) {
+	private static float getHighestMountainTemperatureOffset(Random random) {
 		return -10 - random.nextFloat() * 10.f;
 	}
 

@@ -84,7 +84,17 @@ public class Map {
 		return cellBiome[cellIndex(x, y)];
 	}
 
+	// Wraps horizontally with no y change
+	// Wraps vertically by inverting excess y and mirroring x
 	public final int cellIndex(int x, int y) {
+		if (y < 0)
+			return cellIndex(width - x - 1, -1 - y);
+		if (y >= height)
+			return cellIndex(width - x - 1, 2 * height - y - 1);
+		if (x < 0)
+			return cellIndex(width + x, y);
+		if (x >= width)
+			return cellIndex(x - width, y);
 		return y * width + x;
 	}
 
@@ -107,7 +117,7 @@ public class Map {
 
 		return maxHeight;
 	}
-	
+
 	public final Random getNewRandom() {
 		return new Random(seed);
 	}
@@ -122,6 +132,13 @@ public class Map {
 		}
 
 		return minHeight;
+	}
+
+	public void forAllCells(CellIterator iterator) {
+		int index = 0;
+		for (int y = 0; y < height; y++)
+			for (int x = 0; x < width; x++)
+				iterator.execute(x, y, index++);
 	}
 
 }

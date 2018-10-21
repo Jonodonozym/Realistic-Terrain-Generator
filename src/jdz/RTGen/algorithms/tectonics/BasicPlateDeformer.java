@@ -13,7 +13,7 @@ public class BasicPlateDeformer extends TectonicPlateDeformer {
 
 	@Override
 	protected List<TectonicPlate> initialize(List<TectonicPlate> plates) {
-		return TectonicVelocityCalculator.randomizeVelocity(new Random(), plates, (float) (Math.sqrt(map.size) / 100f));
+		return TectonicVelocityCalculator.randomizeVelocity(new Random(), plates, (float) (Math.sqrt(map.size) / 250f));
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class BasicPlateDeformer extends TectonicPlateDeformer {
 			movedPlates.add(plate.step());
 
 		movedPlates = TectonicSubduction.performSubduction(plates, movedPlates);
-		movedPlates = TectonicCompression.performCollision(movedPlates);
+//		movedPlates = TectonicCompression.performCollision(movedPlates);
 		movedPlates = TectonicVelocityCalculator.updateVelocityFromCollision(movedPlates);
 		
 		Collections.shuffle(movedPlates);

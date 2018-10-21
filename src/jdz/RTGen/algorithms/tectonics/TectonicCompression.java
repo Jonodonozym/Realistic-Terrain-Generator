@@ -4,6 +4,7 @@ package jdz.RTGen.algorithms.tectonics;
 import java.util.List;
 
 import jdz.RTGen.dataType.Map;
+import jdz.RTGen.dataType.PlateList;
 import jdz.RTGen.dataType.TectonicPlate;
 
 public class TectonicCompression {
@@ -12,23 +13,25 @@ public class TectonicCompression {
 
 		boolean[] isProcessed = new boolean[map.size];
 
+		PlateList plateList = new PlateList(plates);
+
 		for (int p = 0; p < plates.size(); p++) {
 			TectonicPlate plate = plates.get(p);
-			TectonicPlate combined = combineOtherPlates(plates, p + 1);
+			TectonicPlate otherPlates = plateList.toMergedPlate(p + 1);
 
-			boolean[] isOverlap = plate.getMasksOverlap(combined);
+			boolean[] isOverlap = plate.getMasksOverlap(otherPlates);
 
-			TectonicPlate maskPlate = new TectonicPlate(map, isOverlap, null, null, null);
+			TectonicPlate overlapPlate = new TectonicPlate(map, isOverlap, null, null, null);
 
 			int[] distances = CellDepthCalculator.getDistanceFromEdge(map, isOverlap,
-					new CellDepthCalculator.IsOnEdge(maskPlate));
+					new CellDepthCalculator.IsOnEdge(overlapPlate));
 
 			for (int i = 0; i < isOverlap.length; i++) {
 				if (!isOverlap[i] || isProcessed[i])
 					continue;
 
 				isProcessed[i] = true;
-				plate.heights[i] = Math.max(plate.heights[i], combined.heights[i]);
+				plate.heights[i] = (plate.heights[i] + otherPlates.heights[i]) / 2.f;
 				plate.heights[i] += Math.pow(distances[i], 2) / 100f;
 			}
 
@@ -41,21 +44,5 @@ public class TectonicCompression {
 		}
 
 		return plates;
-	}
-
-	public static TectonicPlate combineOtherPlates(List<TectonicPlate> plates, int startIndex) {
-		Map map = plates.get(0).getMap();
-		TectonicPlate combined = new TectonicPlate(map);
-
-		for (int i = startIndex; i < plates.size(); i++) {
-			TectonicPlate p = plates.get(i);
-			for (int j = 0; j < map.size; j++)
-				if (p.mask[j]) {
-					combined.mask[j] = true;
-					combined.heights[j] = p.heights[j];
-				}
-		}
-
-		return combined;
 	}
 }

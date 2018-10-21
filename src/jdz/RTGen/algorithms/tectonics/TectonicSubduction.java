@@ -1,45 +1,74 @@
 
 package jdz.RTGen.algorithms.tectonics;
 
+import java.util.ArrayDeque;
 import java.util.List;
+import java.util.Queue;
 
 import jdz.RTGen.dataType.Map;
+import jdz.RTGen.dataType.PlateList;
 import jdz.RTGen.dataType.TectonicPlate;
+import lombok.AllArgsConstructor;
 
+/**
+ * Uses a flood-fill algorithm
+ *
+ * @author Jaiden Baker
+ */
 public class TectonicSubduction {
+	private static final float SUBDUCTION_DECAY_RATE = 0.9f;
+	private static final float MIN_HEIGHT = -1000;
 
 	public static List<TectonicPlate> performSubduction(List<TectonicPlate> beforeMoved,
 			List<TectonicPlate> afterMoved) {
 		Map map = beforeMoved.get(0).getMap();
-		
-		boolean[] combinedSubduction = new boolean[map.size];
-		for (int i = 0; i < afterMoved.size(); i++)  {
-			boolean[] plate = afterMoved.get(i).mask;
-			for (int j=0; j<map.size; j++)
-				combinedSubduction[j] |= plate[j];
-		}
-		
-		for (int i = 0; i < beforeMoved.size(); i++) {
-			TectonicPlate before = beforeMoved.get(i);
-			TectonicPlate after = afterMoved.get(i);
 
-			boolean[] subductionMask = before.clone().chopOverlap(after.mask).mask;
+		PlateList plateList = new PlateList(afterMoved);
 
-			TectonicPlate maskPlate = new TectonicPlate(map, subductionMask, null, null, null);
+		TectonicPlate mergedPlate = plateList.toMergedPlate();
+		Queue<CellInfo> queue = new ArrayDeque<CellInfo>();
 
-			int[] dists = CellDepthCalculator.getDistanceFromEdge(map, subductionMask,
-					new CellDepthCalculator.IsNextToPlate(maskPlate, after));
+		float[] heights = mergedPlate.heights;
+		boolean[] isSet = mergedPlate.mask;
 
-			for (int j = 0; j < dists.length; j++) {
-				if (dists[j] == 0 || combinedSubduction[j])
-					continue;
+		CellDepthCalculator.forAllOnEdge(map, new CellDepthCalculator.IsOnEdge(mergedPlate), (x, y, i) -> {
+			queue.add(new CellInfo(x, y, plateList.get(i), heights[i]));
+		});
 
-				combinedSubduction[j] = true;
-				after.mask[j] = true;
-				after.heights[j] -= Math.log(dists[j]);
-			}
+		while (!queue.isEmpty()) {
+			CellInfo cell = queue.poll();
+
+			enqueueIfNotSet(map, isSet, cell.x + 1, cell.y, cell, queue);
+			enqueueIfNotSet(map, isSet, cell.x - 1, cell.y, cell, queue);
+			enqueueIfNotSet(map, isSet, cell.x, cell.y + 1, cell, queue);
+			enqueueIfNotSet(map, isSet, cell.x, cell.y - 1, cell, queue);
 		}
 
 		return afterMoved;
+	}
+
+	private static void enqueueIfNotSet(Map map, boolean[] isSet, int x, int y, CellInfo prevCell,
+			Queue<CellInfo> queue) {
+		int index = map.cellIndex(x, y);
+		if (isSet[index])
+			return;
+
+		isSet[index] = true;
+
+		float newHeight = (prevCell.height - MIN_HEIGHT) * SUBDUCTION_DECAY_RATE + MIN_HEIGHT;
+
+		CellInfo newCell = new CellInfo(x, y, prevCell.plate, newHeight);
+
+		newCell.plate.mask[index] = true;
+		newCell.plate.heights[index] = newHeight;
+
+		queue.add(newCell);
+	}
+
+	@AllArgsConstructor
+	private static class CellInfo {
+		public final int x, y;
+		public final TectonicPlate plate;
+		public final float height;
 	}
 }

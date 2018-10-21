@@ -14,7 +14,7 @@ import jdz.RTGen.renderers.HeightMapRenderer;
 import jdz.RTGen.renderers.PlateListRenderer;
 
 public class PlateDeformerPreview extends Previewer {
-	private static final int MAP_SIZE = 256;
+	private static final int MAP_SIZE = 512;
 	private static final int NUM_PLATES = 24;
 	private static final int MS_PER_STEP = 100;
 

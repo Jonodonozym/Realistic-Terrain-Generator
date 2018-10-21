@@ -29,7 +29,7 @@ public abstract class InitialMapGenerator {
 		this.map = generate();
 
 		logger.log(Level.INFO, "Initial map completed");
-		logger.log(Level.INFO, "Time: " + ((System.currentTimeMillis() - startTime) / 1000) + "s");
+		logger.log(Level.INFO, "Time: " + (System.currentTimeMillis() - startTime) + "ms");
 		
 		return map;
 	}

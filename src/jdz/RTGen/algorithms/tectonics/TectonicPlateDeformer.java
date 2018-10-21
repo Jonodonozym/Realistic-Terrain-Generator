@@ -33,7 +33,7 @@ public abstract class TectonicPlateDeformer {
 		newPlates = deform(newPlates, maxSteps);
 
 		logger.log(Level.INFO, "Plate deformation completed");
-		logger.log(Level.INFO, "Time: " + ((System.currentTimeMillis() - startTime) / 1000) + "s");
+		logger.log(Level.INFO, "Time: " + (System.currentTimeMillis() - startTime) + "ms");
 
 		return newPlates;
 	}

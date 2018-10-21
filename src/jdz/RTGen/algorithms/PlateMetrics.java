@@ -7,15 +7,7 @@ import jdz.RTGen.dataType.TectonicPlate;
 
 public class PlateMetrics {
 	public static float getMass(TectonicPlate plate) {
-		return 500f * getNumCells(plate) + getCumulativeHeight(plate);
-	}
-
-	public static int getNumCells(TectonicPlate plate) {
-		int size = 0;
-		for (int i = 0; i < plate.heights.length; i++)
-			if (plate.mask[i])
-				size++;
-		return size;
+		return 500f * plate.numCells() + getCumulativeHeight(plate);
 	}
 
 	public static float getCumulativeHeight(TectonicPlate plate) {

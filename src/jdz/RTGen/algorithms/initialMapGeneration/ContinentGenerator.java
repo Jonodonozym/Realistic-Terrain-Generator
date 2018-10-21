@@ -6,8 +6,8 @@ import java.util.List;
 
 import jdz.RTGen.algorithms.plateGeneration.TectonicPlateGenerator;
 import jdz.RTGen.algorithms.tectonics.CellDepthCalculator;
-import jdz.RTGen.algorithms.tectonics.TectonicCompression;
 import jdz.RTGen.dataType.Map;
+import jdz.RTGen.dataType.PlateList;
 import jdz.RTGen.dataType.TectonicPlate;
 
 public class ContinentGenerator extends InitialMapGenerator {
@@ -24,7 +24,7 @@ public class ContinentGenerator extends InitialMapGenerator {
 			if (random.nextInt(100) < PERCENT_LAND)
 				pickedPlates.add(plate);
 
-		TectonicPlate continentalCells = TectonicCompression.combineOtherPlates(pickedPlates, 0);
+		TectonicPlate continentalCells = new PlateList(pickedPlates).toMergedPlate();
 		TectonicPlate oceanCells = continentalCells.clone().invertMask();
 
 		int[] distToOcean = CellDepthCalculator.getDistanceFromEdge(map, continentalCells.mask,

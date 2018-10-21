@@ -6,7 +6,6 @@ import lombok.Getter;
 
 public class TectonicPlate {
 	@Getter private final Map map;
-	private final int mapWidth, mapHeight;
 
 	public boolean[] mask;
 	public float[] heights;
@@ -20,8 +19,6 @@ public class TectonicPlate {
 
 	public TectonicPlate(Map map, boolean[] mask, float[] heights, Point2D velocity, Point2D fractionOffset) {
 		this.map = map;
-		this.mapWidth = map.width;
-		this.mapHeight = map.height;
 		this.mask = mask;
 		this.heights = heights;
 		this.velocity = velocity;
@@ -65,18 +62,23 @@ public class TectonicPlate {
 			this.heights[i] += heights[i];
 	}
 
-	// Wraps horizontally with no y change
-	// Wraps vertically by inverting excess y and mirroring x
+	public void forEachCell(CellIterator iterator) {
+		map.forAllCells((x, y, index) -> {
+			if (mask[index])
+				iterator.execute(x, y, index);
+		});
+	}
+
 	public final int cellIndex(int x, int y) {
-		if (y < 0)
-			return cellIndex(mapWidth - x - 1, -1 - y);
-		if (y >= mapHeight)
-			return cellIndex(mapWidth - x - 1, 2 * map.height - y - 1);
-		if (x < 0)
-			return cellIndex(mapWidth + x, y);
-		if (x >= mapWidth)
-			return cellIndex(x - mapWidth, y);
-		return y * mapWidth + x;
+		return map.cellIndex(x, y);
+	}
+
+	public int numCells() {
+		int size = 0;
+		for (int i = 0; i < map.size; i++)
+			if (mask[i])
+				size++;
+		return size;
 	}
 
 	// Transformations
@@ -126,14 +128,11 @@ public class TectonicPlate {
 
 		Point2D newFractional = velocity.subtract(dx, dy);
 
-		int newIndex = 0;
-		for (int y = 0; y < mapHeight; y++)
-			for (int x = 0; x < mapWidth; x++) {
-				int oldIndex = cellIndex(x - dx, y - dy);
-				newMask[newIndex] = mask[oldIndex];
-				newHeights[newIndex] = heights[oldIndex];
-				newIndex++;
-			}
+		forEachCell((x, y, i)->{
+			int newIndex = cellIndex(x + dx, y + dy);
+			newMask[newIndex] = mask[i];
+			newHeights[newIndex] = heights[i];
+		});
 
 		return new TectonicPlate(map, newMask, newHeights, velocity, newFractional);
 	}
@@ -147,20 +146,6 @@ public class TectonicPlate {
 		System.arraycopy(heights, 0, newHeights, 0, mask.length);
 
 		return new TectonicPlate(map, newMask, newHeights, velocity, fractionOffset);
-	}
-
-	public void forEachCell(CellItterator iterator) {
-		int index = 0;
-		for (int y = 0; y < map.height; y++)
-			for (int x = 0; x < map.width; x++) {
-				if (mask[index])
-					iterator.execute(x, y, index);
-				index++;
-			}
-	}
-
-	public static interface CellItterator {
-		public void execute(int x, int y, int index);
 	}
 
 }

@@ -37,7 +37,7 @@ public abstract class TectonicPlateGenerator {
 		List<TectonicPlate> plates = generate();
 
 		logger.log(Level.INFO, "Plate generation completed");
-		logger.log(Level.INFO, "Time: " + ((System.currentTimeMillis() - startTime) / 1000) + "s");
+		logger.log(Level.INFO, "Time: " + (System.currentTimeMillis() - startTime) + "ms");
 		
 		return plates;
 	}
