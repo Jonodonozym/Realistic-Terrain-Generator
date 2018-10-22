@@ -7,11 +7,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.SwingWorker;
 
 import jdz.RTGen.GUI.ConfigToolbar;
 import jdz.RTGen.GUI.Console;
 import jdz.RTGen.GUI.RenderPanel;
+import jdz.RTGen.GUI.UIStyleManager;
 import jdz.RTGen.algorithms.biomeClassifier.BiomeClassifier;
 import jdz.RTGen.algorithms.initialMapGeneration.InitialMapGenerator;
 import jdz.RTGen.algorithms.plateGeneration.TectonicPlateGenerator;
@@ -49,6 +51,7 @@ public class Application extends Configurable {
 
 	public Application() {
 		LoggerConfig.init();
+		UIStyleManager.useCleanStyle();
 
 		toolbar = new ConfigToolbar(this, getConfigurables());
 		renderPanel = new RenderPanel(deformedMap, 1024, 512, new BiomeRenderer(), new HeightMapRenderer(),
@@ -61,9 +64,13 @@ public class Application extends Configurable {
 		frame.setSize(PREVIEW_WIDTH, PREVIEW_HEIGHT);
 
 		frame.add(toolbar, BorderLayout.WEST);
-		frame.add(renderPanel, BorderLayout.EAST);
+		
+		JPanel eastPanel = new JPanel(new BorderLayout());
+		eastPanel.add(renderPanel, BorderLayout.PAGE_START);
 
-		frame.add(new Console(), BorderLayout.PAGE_END);
+		eastPanel.add(new Console(), BorderLayout.PAGE_END);
+		
+		frame.add(eastPanel, BorderLayout.EAST);
 
 		frame.setResizable(false);
 		frame.pack();

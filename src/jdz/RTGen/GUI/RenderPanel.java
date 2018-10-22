@@ -51,7 +51,9 @@ public class RenderPanel extends JPanel {
 		if (lastUnscaledImage != null) {
 			Image scaledImage = lastUnscaledImage.getScaledInstance((int) d.getWidth(), (int) d.getHeight(),
 					Image.SCALE_SMOOTH);
-			g.drawImage(scaledImage, 0, 0, null);
+
+			int y = (int) Math.max(0, (getHeight() - scaledImage.getHeight(null)) / 2);
+			g.drawImage(scaledImage, 0, y, null);
 		}
 	}
 
