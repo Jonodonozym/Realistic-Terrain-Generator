@@ -1,5 +1,5 @@
 
-package jdz.RTGen.application;
+package jdz.RTGen.GUI;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 
+import jdz.RTGen.Application;
 import jdz.RTGen.dataType.Config;
 import jdz.RTGen.dataType.Configurable;
 

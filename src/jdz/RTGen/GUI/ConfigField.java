@@ -1,5 +1,5 @@
 
-package jdz.RTGen.application;
+package jdz.RTGen.GUI;
 
 import java.awt.Component;
 import java.awt.Dimension;

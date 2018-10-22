@@ -1,5 +1,5 @@
 
-package jdz.RTGen.application;
+package jdz.RTGen;
 
 import java.awt.BorderLayout;
 import java.util.ArrayList;
@@ -9,7 +9,9 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.SwingWorker;
 
-import jdz.RTGen.LoggerConfig;
+import jdz.RTGen.GUI.ConfigToolbar;
+import jdz.RTGen.GUI.Console;
+import jdz.RTGen.GUI.RenderPanel;
 import jdz.RTGen.algorithms.biomeClassifier.BiomeClassifier;
 import jdz.RTGen.algorithms.initialMapGeneration.InitialMapGenerator;
 import jdz.RTGen.algorithms.plateGeneration.TectonicPlateGenerator;
@@ -109,7 +111,8 @@ public class Application extends Configurable {
 	private class UpdateMapTask extends SwingWorker<Void, Void> {
 		@Override
 		protected Void doInBackground() throws Exception {
-			initialMap = new Map(512, 256, AppConfig.MAP_SEED);
+			initialMap = new Map(AppConfig.MAP_HEIGHT*2, AppConfig.MAP_HEIGHT, AppConfig.MAP_SEED);
+			
 			InitialMapGenerator.getContinent().generateInitialMap(initialMap);
 			initialMap.setPlates(TectonicPlateGenerator.getRandom().generatePlates(initialMap));
 

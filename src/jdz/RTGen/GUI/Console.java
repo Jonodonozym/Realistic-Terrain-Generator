@@ -1,5 +1,5 @@
 
-package jdz.RTGen.application;
+package jdz.RTGen.GUI;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -28,6 +28,7 @@ public class Console extends JScrollPane {
 		textArea.setBackground(Color.WHITE);
 		textArea.setForeground(Color.BLACK);
 		textArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 16));
+		textArea.setEditable(false);
 
 		DefaultCaret caret = (DefaultCaret) textArea.getCaret();
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
@@ -39,7 +40,7 @@ public class Console extends JScrollPane {
 			}
 		});
 
-		System.setOut(stream);
+		System.setErr(stream);
 
 		Logger.getGlobal().addHandler(new StreamHandler() {
 			private SimpleFormatter formatter = LoggerConfig.getFormatter();
