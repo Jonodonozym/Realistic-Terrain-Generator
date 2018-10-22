@@ -84,18 +84,22 @@ public class Map {
 		return cellBiome[cellIndex(x, y)];
 	}
 
-	// Wraps horizontally with no y change
-	// Wraps vertically by inverting excess y and mirroring x
 	public final int cellIndex(int x, int y) {
 		if (y < 0)
-			return cellIndex(width - x - 1, -1 - y);
+			return cellIndex(wrapXVertically(x), -1 - y);
 		if (y >= height)
-			return cellIndex(width - x - 1, 2 * height - y - 1);
+			return cellIndex(wrapXVertically(x), 2 * height - y - 1);
 		if (x < 0)
 			return cellIndex(width + x, y);
 		if (x >= width)
 			return cellIndex(x - width, y);
 		return y * width + x;
+	}
+
+	private int wrapXVertically(int x) {
+		if (x < width / 2)
+			return width / 2 - x - 1;
+		return (int) (width * 1.5) - x - 1;
 	}
 
 	public final int cellX(int index) {

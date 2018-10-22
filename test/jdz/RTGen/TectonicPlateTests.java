@@ -32,6 +32,12 @@ public class TectonicPlateTests {
 		assertEquals(1, plate.cellIndex(1, 0));
 		assertEquals(2, plate.cellIndex(0, 1));
 		assertEquals(3, plate.cellIndex(1, 1));
+	}
+	
+	@Test
+	public void testIndexHorizontalWrap() {
+		map = new Map(2, 2);
+		plate = makePlate(map, 0, 0, 0, 0);
 
 		// wrap left
 		assertEquals(1, plate.cellIndex(-1, 0));
@@ -40,14 +46,24 @@ public class TectonicPlateTests {
 		// warp right
 		assertEquals(0, plate.cellIndex(2, 0));
 		assertEquals(2, plate.cellIndex(2, 1));
+	}
+	
+	@Test
+	public void testIndexVerticalWrap() {
+		map = new Map(4, 2);
+		plate = makePlate(map, 0, 0, 0, 0, 0, 0, 0, 0);
 
 		// wrap top
-		assertEquals(0, plate.cellIndex(1, -1));
 		assertEquals(1, plate.cellIndex(0, -1));
+		assertEquals(0, plate.cellIndex(1, -1));
+		assertEquals(3, plate.cellIndex(2, -1));
+		assertEquals(2, plate.cellIndex(3, -1));
 
 		// wrap bottom
-		assertEquals(3, plate.cellIndex(0, 2));
-		assertEquals(2, plate.cellIndex(1, 2));
+		assertEquals(5, plate.cellIndex(0, 2));
+		assertEquals(4, plate.cellIndex(1, 2));
+		assertEquals(7, plate.cellIndex(2, 2));
+		assertEquals(6, plate.cellIndex(3, 2));
 	}
 
 	@Test
@@ -74,9 +90,11 @@ public class TectonicPlateTests {
 	@Test
 	public void testMoveVerticalWrap() {
 		map = new Map(4, 2);
-		plate = makePlate(map, 0, 0, 0, 0, 0, 1, 0, 1);
-		int[] expected = new int[] { 0, 1, 0, 1, 1, 0, 1, 0 };
-		plate.velocity = new Point2D(0, -1);
+		plate = makePlate(map, 	0, 0, 0, 0,
+								0, 1, 0, 1);
+		int[] expected = new int[] { 1, 0, 1, 0,
+									 0, 0, 0, 0 };
+		plate.velocity = new Point2D(0, 2);
 		assertPlateEquals(expected, plate.step());
 	}
 
