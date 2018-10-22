@@ -7,8 +7,8 @@ import jdz.RTGen.dataType.Map;
 import jdz.RTGen.dataType.PlateList;
 import jdz.RTGen.dataType.TectonicPlate;
 
-public class TectonicCompression {
-	public static List<TectonicPlate> performCompression(List<TectonicPlate> plates) {
+public class TectonicConvergence {
+	public static List<TectonicPlate> performConvergence(List<TectonicPlate> plates) {
 		Map map = plates.get(0).getMap();
 
 		boolean[] isProcessed = new boolean[map.size];
