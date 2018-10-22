@@ -15,7 +15,7 @@ import jdz.RTGen.GUI.Console;
 import jdz.RTGen.GUI.RenderPanel;
 import jdz.RTGen.GUI.UIStyleManager;
 import jdz.RTGen.algorithms.biomeClassifier.BiomeClassifier;
-import jdz.RTGen.algorithms.initialMapGeneration.InitialMapGenerator;
+import jdz.RTGen.algorithms.initialMapGeneration.ContinentGenerator;
 import jdz.RTGen.algorithms.plateGeneration.TectonicPlateGenerator;
 import jdz.RTGen.algorithms.precipitation.PrecipitationModel;
 import jdz.RTGen.algorithms.tectonics.TectonicPlateDeformer;
@@ -82,7 +82,7 @@ public class Application extends Configurable {
 	}
 
 	private List<Configurable> getConfigurables() {
-		return Arrays.asList(this, InitialMapGenerator.getContinent(), TectonicPlateGenerator.getRandom(),
+		return Arrays.asList(this, ContinentGenerator.getContinent(), TectonicPlateGenerator.getRandom(),
 				TectonicPlateDeformer.getBasic(), PrecipitationModel.oceanDistance(),
 				TemperatureModel.equatorAndHeight());
 	}
@@ -120,7 +120,7 @@ public class Application extends Configurable {
 		protected Void doInBackground() throws Exception {
 			initialMap = new Map(AppConfig.MAP_HEIGHT * 2, AppConfig.MAP_HEIGHT, AppConfig.MAP_SEED);
 
-			InitialMapGenerator.getContinent().generateInitialMap(initialMap);
+			ContinentGenerator.getContinent().generateInitialMap(initialMap);
 			initialMap.setPlates(TectonicPlateGenerator.getRandom().generatePlates(initialMap));
 
 			deformedMap = initialMap.clone();

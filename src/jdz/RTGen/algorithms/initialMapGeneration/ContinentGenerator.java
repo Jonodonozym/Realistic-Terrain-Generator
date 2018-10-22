@@ -1,51 +1,44 @@
 
 package jdz.RTGen.algorithms.initialMapGeneration;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Random;
+import java.util.logging.Level;
 
-import jdz.RTGen.algorithms.plateGeneration.TectonicPlateGenerator;
-import jdz.RTGen.algorithms.tectonics.CellDepthCalculator;
+import jdz.RTGen.configuration.Config;
+import jdz.RTGen.configuration.Configurable;
 import jdz.RTGen.dataType.Map;
-import jdz.RTGen.dataType.PlateList;
-import jdz.RTGen.dataType.TectonicPlate;
+import lombok.Getter;
 
-public class ContinentGenerator extends InitialMapGenerator {
-	@Override
-	protected Map generate() {
-		TectonicPlateGenerator plateGen = TectonicPlateGenerator.getRandom();
+public abstract class ContinentGenerator extends Configurable {
+	public static ContinentGenerator getContinent() {
+		return new ContinentFromPlates();
+	}
+	
+	public static ContinentGenerator getNoise() {
+		return new NoiseGenerator();
+	}
 
-		if (InitialMapGenConfig.RANDOMNESS < 2 || InitialMapGenConfig.PERCENT_OCEAN <= 0
-				|| InitialMapGenConfig.PERCENT_OCEAN >= 100)
-			return map;
+	@Getter private final Config config = new ContinentGenConfig();
 
-		List<TectonicPlate> plates = plateGen.generatePlates(map, InitialMapGenConfig.RANDOMNESS);
+	protected Map map;
+	protected Random random;
 
-		List<TectonicPlate> pickedPlates = new ArrayList<>(InitialMapGenConfig.RANDOMNESS);
-		int requiredOceanCells = (int) (map.size * InitialMapGenConfig.PERCENT_OCEAN / 100.f);
-		int numCells = 0;
+	public Map generateInitialMap(Map map) {
+		this.map = map;
+		random = map.getNewRandom();
 
-		while (numCells < requiredOceanCells) {
-			TectonicPlate plate = plates.remove(random.nextInt(plates.size()));
-			pickedPlates.add(plate);
-			numCells += plate.numCells();
-		}
+		long startTime = System.currentTimeMillis();
 
-		TectonicPlate continentalCells = new PlateList(pickedPlates).toMergedPlate();
-		TectonicPlate oceanCells = continentalCells.clone().invertMask();
+		logger.log(Level.INFO, "Initial map generation started");
+		logger.log(Level.INFO, "Map size: " + map.size + " (" + map.width + " x " + map.height + ")");
 
-		int[] distToOcean = CellDepthCalculator.getDistanceFromEdge(map, continentalCells.mask,
-				new CellDepthCalculator.IsNextToPlate(continentalCells, oceanCells));
-		int[] distToLand = CellDepthCalculator.getDistanceFromEdge(map, oceanCells.mask,
-				new CellDepthCalculator.IsNextToPlate(oceanCells, continentalCells));
+		this.map = generate();
 
-		for (int i = 0; i < map.size; i++)
-			if (continentalCells.mask[i])
-				map.cellHeight[i] = (float) Math.log10(distToOcean[i]);
-			else
-				map.cellHeight[i] = (float) -Math.log10(distToLand[i] / 20.f + 0.9) * 10.f;
+		logger.log(Level.INFO, "Initial map completed");
+		logger.log(Level.INFO, "Time: " + (System.currentTimeMillis() - startTime) + "ms");
 
 		return map;
 	}
 
+	protected abstract Map generate();
 }

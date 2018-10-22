@@ -4,7 +4,7 @@ package jdz.RTGen.algorithms.biomeClassifier;
 import java.util.Arrays;
 import java.util.List;
 
-import jdz.RTGen.algorithms.initialMapGeneration.InitialMapGenConfig;
+import jdz.RTGen.algorithms.initialMapGeneration.ContinentGenConfig;
 import jdz.RTGen.dataType.Map;
 import jdz.RTGen.dataType.TectonicPlate;
 
@@ -28,6 +28,6 @@ public class SeaLevelCalculator {
 	}
 
 	public static float getPercentOcean() {
-		return InitialMapGenConfig.PERCENT_OCEAN / 100.f;
+		return ContinentGenConfig.PERCENT_OCEAN / 100.f;
 	}
 }
