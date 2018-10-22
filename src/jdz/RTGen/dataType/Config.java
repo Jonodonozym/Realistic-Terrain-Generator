@@ -21,9 +21,20 @@ public abstract class Config {
 		}
 	}
 
+	public boolean isBoolean(String name) {
+		Field field = getField(name);
+		return field.getType().equals(boolean.class) || field.getType().equals(Boolean.class);
+	}
+
 	public boolean isInteger(String name) {
 		Field field = getField(name);
 		return field.getType().equals(int.class) || field.getType().equals(Integer.class);
+	}
+
+	public boolean isFloat(String name) {
+		Field field = getField(name);
+		return field.getType().equals(float.class) || field.getType().equals(Float.class)
+				|| field.getType().equals(double.class) || field.getGenericType().equals(double.class);
 	}
 
 	public void set(String name, float value) {
@@ -38,13 +49,42 @@ public abstract class Config {
 		}
 	}
 
-	public float get(String name) {
+	public void set(String name, boolean value) {
+		try {
+			getField(name).set(this, value);
+		}
+		catch (ReflectiveOperationException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public int getInt(String name) {
+		try {
+			return getField(name).getInt(this);
+		}
+		catch (ReflectiveOperationException e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
+
+	public float getFloat(String name) {
 		try {
 			return getField(name).getFloat(this);
 		}
 		catch (ReflectiveOperationException e) {
 			e.printStackTrace();
 			return 0;
+		}
+	}
+
+	public boolean getBoolean(String name) {
+		try {
+			return getField(name).getBoolean(this);
+		}
+		catch (ReflectiveOperationException e) {
+			e.printStackTrace();
+			return false;
 		}
 	}
 

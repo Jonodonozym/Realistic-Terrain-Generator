@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -15,14 +16,10 @@ import javax.swing.plaf.basic.BasicSpinnerUI;
 
 import jdz.RTGen.dataType.Config;
 
-public class ConfigField extends JPanel implements ChangeListener {
+public class ConfigField extends JPanel {
 	private static final long serialVersionUID = -4802490707820080860L;
 
 	private final Config config;
-
-	private final JSpinner spinner;
-	private final JLabel label;
-	private final SpinnerNumberModel model;
 	private final String field;
 
 	public ConfigField(Config config, String field) {
@@ -30,42 +27,68 @@ public class ConfigField extends JPanel implements ChangeListener {
 		this.config = config;
 		this.field = field;
 
-		label = new JLabel(field + ":    ");
-
-		if (config.isInteger(field))
-			model = new SpinnerNumberModel((int) config.get(field), Integer.MIN_VALUE, Integer.MAX_VALUE, 1);
-		else
-			model = new SpinnerNumberModel(config.get(field), -Double.MAX_VALUE, Double.MAX_VALUE, 1);
-		spinner = new JSpinner(model);
-		spinner.addChangeListener(this);
-		hideSpinnerArrow(spinner);
-
+		JLabel label = new JLabel(field + ":    ");
 		add(label);
-		add(spinner);
+		if (config.isBoolean(field))
+			add(new BooleanField(config, field));
+		else
+			add(new NumberField(config, field));
 		validate();
 	}
 
-	@Override
-	public void stateChanged(ChangeEvent e) {
-		config.set(field, model.getNumber().floatValue());
+	private class BooleanField extends JCheckBox {
+		private static final long serialVersionUID = -3842682277190511585L;
+
+		public BooleanField(Config config, String field) {
+			setSelected(config.getBoolean(field));
+			addActionListener((e) -> {
+				config.set(field, isSelected());
+			});
+			Dimension d = getPreferredSize();
+			d.height = 24;
+			setPreferredSize(d);
+			d.width = 96;
+			setMaximumSize(d);
+		}
 	}
 
-	public void hideSpinnerArrow(JSpinner spinner) {
-		Dimension d = spinner.getPreferredSize();
-		d.height = 24;
-		spinner.setUI(new BasicSpinnerUI() {
-			@Override
-			protected Component createNextButton() {
-				return null;
-			}
+	private class NumberField extends JSpinner implements ChangeListener {
+		private static final long serialVersionUID = -6278300795636975872L;
+		private final SpinnerNumberModel model;
 
-			@Override
-			protected Component createPreviousButton() {
-				return null;
-			}
-		});
-		spinner.setPreferredSize(d);
-		d.width = 96;
-		spinner.setMaximumSize(d);
+		public NumberField(Config config, String field) {
+			if (config.isInteger(field))
+				model = new SpinnerNumberModel(config.getInt(field), Integer.MIN_VALUE, Integer.MAX_VALUE, 1);
+			else
+				model = new SpinnerNumberModel(config.getFloat(field), -Float.MAX_VALUE, Float.MAX_VALUE, 1);
+			
+			setModel(model);
+			addChangeListener(this);
+			hideSpinnerArrow();
+		}
+
+		public void hideSpinnerArrow() {
+			Dimension d = getPreferredSize();
+			d.height = 24;
+			setUI(new BasicSpinnerUI() {
+				@Override
+				protected Component createNextButton() {
+					return null;
+				}
+
+				@Override
+				protected Component createPreviousButton() {
+					return null;
+				}
+			});
+			setPreferredSize(d);
+			d.width = 96;
+			setMaximumSize(d);
+		}
+
+		@Override
+		public void stateChanged(ChangeEvent e) {
+			config.set(field, model.getNumber().floatValue());
+		}
 	}
 }

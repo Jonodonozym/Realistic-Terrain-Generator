@@ -13,7 +13,12 @@ public class LoggerConfig {
 		logger.setUseParentHandlers(false);
 
 		ConsoleHandler handler = new ConsoleHandler();
-		handler.setFormatter(new SimpleFormatter() {
+		handler.setFormatter(getFormatter());
+		logger.addHandler(handler);
+	}
+	
+	public static SimpleFormatter getFormatter() {
+		return new SimpleFormatter() {
 			private static final String format = "[%1$tT] [%2$-7s] %3$s %n";
 
 			@Override
@@ -21,8 +26,7 @@ public class LoggerConfig {
 				return String.format(format, new Date(lr.getMillis()), lr.getLevel().getLocalizedName(),
 						lr.getMessage());
 			}
-		});
-		logger.addHandler(handler);
+		};
 	}
 
 }
