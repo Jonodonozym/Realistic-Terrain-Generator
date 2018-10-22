@@ -15,10 +15,13 @@ public class NoiseGenerator extends ContinentGenerator {
 		float xOffset = random.nextFloat();
 		float yOffset = random.nextFloat();
 		
+		float r = ContinentGenConfig.RANDOMNESS / 10.f;
+
 		map.forAllCells((x, y, i) -> {
 			double nx = x / (float) map.width - 0.5f + xOffset;
 			double ny = y / (float) map.height - 0.5f + yOffset;
-			map.cellHeight[i] = (float) SimplexNoise.noise(nx, ny)*100;
+			map.cellHeight[i] = (float) SimplexNoise.noise(nx * r,
+					ny * r);
 		});
 
 		return map;

@@ -6,9 +6,9 @@ import jdz.RTGen.configuration.Step;
 
 public class TectonicsConfig extends Config {
 	@Step(1) public static int STEPS = 25;
-
-	public static float COMPRESSION_EXPONENT = 1.1f;
-	public static float SUBDUCTION_EXPONENT = 0.9f;
+	
+	public static float CONVERGENCE_EXPONENT = 1.1f;
+	public static float DIVERGENCE_EXPONENT = 0.9f;
 	public static float MIN_HEIGHT = -10;
 
 	@Step(0.01f) public static float INITIAL_VELOCITY = 0.01f;

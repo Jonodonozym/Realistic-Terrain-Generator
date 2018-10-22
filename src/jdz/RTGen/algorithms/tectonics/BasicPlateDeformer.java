@@ -35,7 +35,7 @@ public class BasicPlateDeformer extends TectonicPlateDeformer {
 		for (TectonicPlate plate : plates)
 			movedPlates.add(plate.step());
 
-		movedPlates = TectonicSubduction.performSubduction(plates, movedPlates);
+		movedPlates = TectonicDivergence.performSubduction(plates, movedPlates);
 		movedPlates = TectonicConvergence.performConvergence(movedPlates);
 		movedPlates = TectonicVelocityCalculator.updateVelocityFromCollision(random, movedPlates);
 

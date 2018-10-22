@@ -24,6 +24,9 @@ public abstract class ContinentGenerator extends Configurable {
 	protected Random random;
 
 	public Map generateInitialMap(Map map) {
+		if (!ContinentGenConfig.ENABLED)
+			return map;
+		
 		this.map = map;
 		random = map.getNewRandom();
 

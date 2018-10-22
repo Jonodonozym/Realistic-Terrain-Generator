@@ -15,7 +15,7 @@ import lombok.AllArgsConstructor;
  *
  * @author Jaiden Baker
  */
-public class TectonicSubduction {
+public class TectonicDivergence {
 	public static List<TectonicPlate> performSubduction(List<TectonicPlate> beforeMoved,
 			List<TectonicPlate> afterMoved) {
 		Map map = beforeMoved.get(0).getMap();
@@ -52,7 +52,7 @@ public class TectonicSubduction {
 
 		isSet[index] = true;
 
-		float newHeight = (prevCell.height - TectonicsConfig.MIN_HEIGHT) * TectonicsConfig.SUBDUCTION_EXPONENT
+		float newHeight = (prevCell.height - TectonicsConfig.MIN_HEIGHT) * TectonicsConfig.DIVERGENCE_EXPONENT
 				+ TectonicsConfig.MIN_HEIGHT;
 
 		CellInfo newCell = new CellInfo(x, y, prevCell.plate, newHeight);

@@ -25,8 +25,6 @@ public class EquatorAndHeight extends TemperatureModel {
 		float[] heights = map.cellHeight;
 		Biome[] biomes = map.cellBiome;
 
-		System.out.println(heightToTempDiffConst);
-
 		int i = 0;
 		for (int y = 0; y < map.height; y++) {
 			float distPercent = Math.abs(y - map.height / 2) / (map.height / 2.f);

@@ -18,9 +18,13 @@ public abstract class TectonicPlateDeformer extends Configurable {
 	private final Logger logger = Logger.getGlobal();
 
 	protected Map map;
-	protected Random random;
+	public Random random;
 
 	public List<TectonicPlate> deform(Map map, List<TectonicPlate> plates) {
+		return deform(map, plates, (p) -> {});
+	}
+
+	public List<TectonicPlate> deform(Map map, List<TectonicPlate> plates, Callback callback) {
 		this.map = map;
 		random = map.getNewRandom();
 
@@ -31,7 +35,7 @@ public abstract class TectonicPlateDeformer extends Configurable {
 		logger.log(Level.INFO, "Map size: " + map.size + " (" + map.width + " x " + map.height + ")");
 
 		List<TectonicPlate> newPlates = initialize(plates);
-		newPlates = deform(newPlates, TectonicsConfig.STEPS);
+		newPlates = deform(newPlates, TectonicsConfig.STEPS, callback);
 
 		logger.log(Level.INFO, "Plate deformation completed");
 		logger.log(Level.INFO, "Time: " + (System.currentTimeMillis() - startTime) + "ms");
@@ -39,7 +43,7 @@ public abstract class TectonicPlateDeformer extends Configurable {
 		return newPlates;
 	}
 
-	private List<TectonicPlate> deform(List<TectonicPlate> plates, int maxSteps) {
+	private List<TectonicPlate> deform(List<TectonicPlate> plates, int maxSteps, Callback c) {
 		List<TectonicPlate> newPlates = plates;
 
 		int lastPercent = 0;
@@ -59,8 +63,14 @@ public abstract class TectonicPlateDeformer extends Configurable {
 						logger.log(Level.INFO, percent + "%");
 					}
 				}
+
+			c.run(newPlates);
 		}
 		return newPlates;
+	}
+
+	public static interface Callback {
+		public void run(List<TectonicPlate> plates);
 	}
 
 	protected abstract List<TectonicPlate> initialize(List<TectonicPlate> plates);

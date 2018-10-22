@@ -109,4 +109,8 @@ public abstract class Config {
 			throw new IllegalArgumentException(name + " is not a field");
 		return fields.get(index);
 	}
+	
+	public int numFields() {
+		return fields.size();
+	}
 }
