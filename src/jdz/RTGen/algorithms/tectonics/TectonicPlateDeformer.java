@@ -22,7 +22,7 @@ public abstract class TectonicPlateDeformer extends Configurable {
 
 	public List<TectonicPlate> deform(Map map, List<TectonicPlate> plates) {
 		this.map = map;
-		random = new Random(map.getSeed());
+		random = map.getNewRandom();
 
 		long startTime = System.currentTimeMillis();
 
