@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@ToString(of = { "width", "height", "size" })
+@ToString(of = { "seed", "width", "height", "size" })
 public class Map {
 	public final int width, height, size;
 
@@ -31,16 +31,16 @@ public class Map {
 	public Map(int width, int height, long seed) {
 		this.width = width;
 		this.height = height;
-		this.size = width * height;
+		size = width * height;
 
 		cellHeight = new float[size];
 		cellTemperature = new float[size];
 		cellPrecipitation = new float[size];
 		cellBiome = new Biome[size];
 
-		this.plates = new ArrayList<>();
+		plates = new ArrayList<>();
 
-		this.seaLevel = Float.MIN_VALUE;
+		seaLevel = Float.MIN_VALUE;
 
 		this.seed = seed;
 	}
@@ -139,6 +139,19 @@ public class Map {
 		for (int y = 0; y < height; y++)
 			for (int x = 0; x < width; x++)
 				iterator.execute(x, y, index++);
+	}
+
+	@Override
+	public Map clone() {
+		Map map = new Map(width, height, seed);
+		System.arraycopy(cellHeight, 0, map.cellHeight, 0, size);
+		System.arraycopy(cellTemperature, 0, map.cellTemperature, 0, size);
+		System.arraycopy(cellPrecipitation, 0, map.cellPrecipitation, 0, size);
+		System.arraycopy(cellBiome, 0, map.cellBiome, 0, size);
+		map.setSeaLevel(seaLevel);
+		for (TectonicPlate plate : plates)
+			map.getPlates().add(plate.clone());
+		return map;
 	}
 
 }

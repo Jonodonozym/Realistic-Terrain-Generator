@@ -36,11 +36,12 @@ public abstract class Renderer {
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, image.getWidth(), image.getHeight());
 		g.dispose();
-		
+
 		render(image, map);
 		return image;
 	}
 
 	public abstract String getName();
+
 	public abstract void render(BufferedImage image, Map object);
 }

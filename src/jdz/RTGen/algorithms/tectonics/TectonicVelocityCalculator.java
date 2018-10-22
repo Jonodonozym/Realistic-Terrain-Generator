@@ -9,7 +9,8 @@ import jdz.RTGen.dataType.TectonicPlate;
 
 public class TectonicVelocityCalculator {
 	public static List<TectonicPlate> updateVelocityFromCollision(List<TectonicPlate> plates) {
-		return randomizeVelocity(new Random(System.currentTimeMillis()), plates, (float) (Math.sqrt(plates.get(0).getMap().size) / 100f)); 
+		return randomizeVelocity(new Random(System.currentTimeMillis()), plates,
+				(float) (Math.sqrt(plates.get(0).getMap().size) / 100f));
 	}
 
 	public static List<TectonicPlate> randomizeVelocity(Random random, List<TectonicPlate> plates, float magnitude) {

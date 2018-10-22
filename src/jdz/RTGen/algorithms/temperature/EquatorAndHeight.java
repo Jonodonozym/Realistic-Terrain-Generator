@@ -4,11 +4,10 @@ package jdz.RTGen.algorithms.temperature;
 import java.util.Random;
 
 import jdz.RTGen.dataType.Biome;
-import jdz.RTGen.dataType.Config;
 import jdz.RTGen.dataType.Map;
-import lombok.Getter;
 
-public class EquatorAndHeight extends TemperatureModel {	
+public class EquatorAndHeight extends TemperatureModel {
+	@Override
 	public void apply(Map map, Random random) {
 		// longitude based temperature
 		float eqTemp = getEquatorTemperature(random);
@@ -30,7 +29,7 @@ public class EquatorAndHeight extends TemperatureModel {
 
 		int i = 0;
 		for (int y = 0; y < map.height; y++) {
-			float distPercent = Math.abs(y - map.height / 2) / ((float) map.height / 2.f);
+			float distPercent = Math.abs(y - map.height / 2) / (map.height / 2.f);
 
 			float longitudeTemp = eqTemp - longitudeTempRange * distPercent * distPercent;
 			float oceanTemp = longitudeTemp * 0.8f;

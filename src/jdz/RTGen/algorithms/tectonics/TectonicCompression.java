@@ -14,11 +14,11 @@ public class TectonicCompression {
 		boolean[] isProcessed = new boolean[map.size];
 
 		PlateList plateList = new PlateList(plates);
-		
+
 		for (int p = 0; p < plates.size(); p++) {
 			TectonicPlate plate = plates.get(p);
-			
-			TectonicPlate mergedPlate = plateList.toMergedPlate(p+1);
+
+			TectonicPlate mergedPlate = plateList.toMergedPlate(p + 1);
 
 			boolean[] isOverlap = plate.getMasksOverlap(mergedPlate);
 
@@ -36,7 +36,7 @@ public class TectonicCompression {
 				plate.heights[i] += Math.pow(distances[i], TectonicsConfig.COMPRESSION_EXPONENT);
 			}
 
-			for (int p2 = p+1; p2 < plates.size(); p2++)
+			for (int p2 = p + 1; p2 < plates.size(); p2++)
 				plates.get(p2).chopOverlap(isOverlap);
 		}
 

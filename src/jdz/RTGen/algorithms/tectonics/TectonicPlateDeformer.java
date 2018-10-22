@@ -14,7 +14,7 @@ public abstract class TectonicPlateDeformer extends Configurable {
 	public static TectonicPlateDeformer getBasic() {
 		return new BasicPlateDeformer();
 	}
-	
+
 	private final Logger logger = Logger.getGlobal();
 
 	protected Map map;

@@ -6,35 +6,35 @@ import java.util.List;
 
 public class ReverseIterator<T> implements Iterator<T>, Iterable<T> {
 	public static <T> ReverseIterator<T> of(List<T> list) {
-		return new ReverseIterator<T>(list);
+		return new ReverseIterator<>(list);
 	}
-	
-    private final List<T> list;
-    private int position;
 
-    public ReverseIterator(List<T> list) {
-        this.list = list;
-        this.position = list.size() - 1;
-    }
+	private final List<T> list;
+	private int position;
 
-    @Override
-    public Iterator<T> iterator() {
-        return this;
-    }
+	public ReverseIterator(List<T> list) {
+		this.list = list;
+		this.position = list.size() - 1;
+	}
 
-    @Override
-    public boolean hasNext() {
-        return position >= 0;
-    }
+	@Override
+	public Iterator<T> iterator() {
+		return this;
+	}
 
-    @Override
-    public T next() {
-        return list.get(position--);
-    }
+	@Override
+	public boolean hasNext() {
+		return position >= 0;
+	}
 
-    @Override
-    public void remove() {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public T next() {
+		return list.get(position--);
+	}
+
+	@Override
+	public void remove() {
+		throw new UnsupportedOperationException();
+	}
 
 }

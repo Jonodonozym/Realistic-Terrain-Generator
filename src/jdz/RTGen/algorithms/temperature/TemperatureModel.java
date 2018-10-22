@@ -14,6 +14,6 @@ public abstract class TemperatureModel extends Configurable {
 	}
 
 	@Getter private Config config = new Config() {};
-	
+
 	public abstract void apply(Map map, Random random);
 }

@@ -1,10 +1,10 @@
 
 package jdz.RTGen.renderers;
 
+import static jdz.RTGen.dataType.Biome.*;
+
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-
-import static jdz.RTGen.dataType.Biome.*;
 
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;

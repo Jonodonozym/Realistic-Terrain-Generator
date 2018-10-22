@@ -28,7 +28,7 @@ public abstract class TectonicPlateGenerator extends Configurable {
 	public List<TectonicPlate> generatePlates(Map map, int numPlates) {
 
 		this.map = map;
-		this.random = new Random(map.getSeed());
+		random = new Random(map.getSeed());
 
 		long startTime = System.currentTimeMillis();
 

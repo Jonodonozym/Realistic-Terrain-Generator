@@ -2,6 +2,11 @@
 package jdz.RTGen.application;
 
 
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Insets;
+
 // ----------------------------------------------------
 // Image Mover
 // (C) Vassili Dzuba, 2000
@@ -11,10 +16,6 @@ package jdz.RTGen.application;
 // package modrcon;
 
 import java.awt.LayoutManager;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Container;
-import java.awt.Insets;
 
 /**
  * A vertical flow layout is similar to a flow layuot but it layouts the
@@ -165,6 +166,7 @@ public class VerticalFlowLayout implements LayoutManager, java.io.Serializable {
 	 * @param name The feature to be added to the LayoutComponent attribute
 	 * @param comp The feature to be added to the LayoutComponent attribute
 	 */
+	@Override
 	public void addLayoutComponent(String name, Component comp) {}
 
 
@@ -173,6 +175,7 @@ public class VerticalFlowLayout implements LayoutManager, java.io.Serializable {
 	 *
 	 * @param comp Description of Parameter
 	 */
+	@Override
 	public void removeLayoutComponent(Component comp) {}
 
 
@@ -182,6 +185,7 @@ public class VerticalFlowLayout implements LayoutManager, java.io.Serializable {
 	 * @param target Description of Parameter
 	 * @return Description of the Returned Value
 	 */
+	@Override
 	public Dimension preferredLayoutSize(Container target) {
 		synchronized (target.getTreeLock()) {
 			Dimension dim = new Dimension(0, 0);
@@ -193,12 +197,10 @@ public class VerticalFlowLayout implements LayoutManager, java.io.Serializable {
 				if (m.isVisible()) {
 					Dimension d = m.getPreferredSize();
 					dim.width = Math.max(dim.width, d.width);
-					if (firstVisibleComponent) {
+					if (firstVisibleComponent)
 						firstVisibleComponent = false;
-					}
-					else {
+					else
 						dim.height += _vgap;
-					}
 					dim.height += d.height;
 				}
 			}
@@ -216,6 +218,7 @@ public class VerticalFlowLayout implements LayoutManager, java.io.Serializable {
 	 * @param target Description of Parameter
 	 * @return Description of the Returned Value
 	 */
+	@Override
 	public Dimension minimumLayoutSize(Container target) {
 		synchronized (target.getTreeLock()) {
 			Dimension dim = new Dimension(0, 0);
@@ -227,12 +230,10 @@ public class VerticalFlowLayout implements LayoutManager, java.io.Serializable {
 				if (m.isVisible()) {
 					Dimension d = m.getPreferredSize();
 					dim.width = Math.max(dim.width, d.width);
-					if (firstVisibleComponent) {
+					if (firstVisibleComponent)
 						firstVisibleComponent = false;
-					}
-					else {
+					else
 						dim.height += _vgap;
-					}
 					dim.height += d.height;
 				}
 			}
@@ -249,6 +250,7 @@ public class VerticalFlowLayout implements LayoutManager, java.io.Serializable {
 	 *
 	 * @param target Description of Parameter
 	 */
+	@Override
 	public void layoutContainer(Container target) {
 		synchronized (target.getTreeLock()) {
 			Insets insets = target.getInsets();
@@ -277,10 +279,9 @@ public class VerticalFlowLayout implements LayoutManager, java.io.Serializable {
 					Dimension d = m.getPreferredSize();
 					m.setSize(d.width, d.height);
 
-					if ((y + d.height) <= maxheight) {
-						if (y > 0) {
+					if (y + d.height <= maxheight) {
+						if (y > 0)
 							y += _vgap;
-						}
 
 						int x = 0;
 						switch (_halign) {
@@ -300,9 +301,8 @@ public class VerticalFlowLayout implements LayoutManager, java.io.Serializable {
 						y += d.getHeight();
 
 					}
-					else {
+					else
 						break;
-					}
 				}
 			}
 		}

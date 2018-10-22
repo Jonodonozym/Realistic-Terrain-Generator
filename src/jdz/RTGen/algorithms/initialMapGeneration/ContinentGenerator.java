@@ -17,7 +17,7 @@ public class ContinentGenerator extends InitialMapGenerator {
 
 		List<TectonicPlate> plates = plateGen.generatePlates(map, InitialMapGenConfig.RANDOMNESS);
 
-		List<TectonicPlate> pickedPlates = new ArrayList<TectonicPlate>(InitialMapGenConfig.RANDOMNESS);
+		List<TectonicPlate> pickedPlates = new ArrayList<>(InitialMapGenConfig.RANDOMNESS);
 		for (TectonicPlate plate : plates)
 			if (random.nextInt(100) < InitialMapGenConfig.PERCENT_LAND)
 				pickedPlates.add(plate);
@@ -30,12 +30,11 @@ public class ContinentGenerator extends InitialMapGenerator {
 		int[] distToLand = CellDepthCalculator.getDistanceFromEdge(map, oceanCells.mask,
 				new CellDepthCalculator.IsNextToPlate(oceanCells, continentalCells));
 
-		for (int i = 0; i < map.size; i++) {
+		for (int i = 0; i < map.size; i++)
 			if (continentalCells.mask[i])
 				map.cellHeight[i] = (float) Math.log10(distToOcean[i]);
 			else
 				map.cellHeight[i] = (float) -Math.log10(distToLand[i] / 20.f + 0.9) * 10.f;
-		}
 
 		return map;
 	}

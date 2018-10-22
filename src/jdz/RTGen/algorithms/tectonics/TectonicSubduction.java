@@ -23,7 +23,7 @@ public class TectonicSubduction {
 		PlateList plateList = new PlateList(afterMoved);
 
 		TectonicPlate mergedPlate = plateList.toMergedPlate();
-		Queue<CellInfo> queue = new ArrayDeque<CellInfo>();
+		Queue<CellInfo> queue = new ArrayDeque<>();
 
 		float[] heights = mergedPlate.heights;
 		boolean[] isSet = mergedPlate.mask;

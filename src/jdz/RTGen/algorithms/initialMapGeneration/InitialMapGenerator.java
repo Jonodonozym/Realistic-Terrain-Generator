@@ -15,13 +15,13 @@ public abstract class InitialMapGenerator extends Configurable {
 	}
 
 	@Getter private final Config config = new InitialMapGenConfig();
-	
+
 	protected Map map;
 	protected Random random;
 
 	public Map generateInitialMap(Map map) {
 		this.map = map;
-		this.random = new Random(map.getSeed());
+		random = new Random(map.getSeed());
 
 		long startTime = System.currentTimeMillis();
 
@@ -32,9 +32,9 @@ public abstract class InitialMapGenerator extends Configurable {
 
 		logger.log(Level.INFO, "Initial map completed");
 		logger.log(Level.INFO, "Time: " + (System.currentTimeMillis() - startTime) + "ms");
-		
+
 		return map;
 	}
-	
+
 	protected abstract Map generate();
 }

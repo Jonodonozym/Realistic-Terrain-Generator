@@ -12,7 +12,7 @@ import lombok.Getter;
 /**
  * Inspiration from here:
  * http://experilous.com/1/blog/post/procedural-planet-generation
- * 
+ *
  * Randomly generates techtonic plates by:
  * - Get the number of plates (n) by map size / averagePlateArea
  * - Pick n random points in the map. These represent one plate each.
@@ -26,7 +26,7 @@ class RandomPlateGenerator extends TectonicPlateGenerator {
 
 	@Override
 	protected List<TectonicPlate> generate(int numPlates) {
-		List<TectonicPlate> plates = new ArrayList<TectonicPlate>();
+		List<TectonicPlate> plates = new ArrayList<>();
 
 		TectonicPlate combined = new TectonicPlate(map);
 
@@ -46,7 +46,7 @@ class RandomPlateGenerator extends TectonicPlateGenerator {
 	}
 
 	private List<PlatePoint> getRandomPoints(int numPlates, TectonicPlate combined) {
-		List<PlatePoint> randomPoints = new ArrayList<PlatePoint>(map.size / numPlates);
+		List<PlatePoint> randomPoints = new ArrayList<>(map.size / numPlates);
 
 		for (int i = 0; i < numPlates; i++) {
 			int x = random.nextInt(map.width), y = random.nextInt(map.height);

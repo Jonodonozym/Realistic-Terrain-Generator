@@ -18,7 +18,7 @@ import lombok.Setter;
 
 public class RenderPanel extends JPanel {
 	private static final long serialVersionUID = -1623002607424939250L;
-	
+
 	@Getter @Setter private List<Renderer> renderStack = new ArrayList<>();
 	@Setter private Map map;
 	private ImageIcon icon;

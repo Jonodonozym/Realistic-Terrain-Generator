@@ -22,7 +22,7 @@ public class Application {
 	protected Map initialMap;
 
 	private JFrame frame;
-	
+
 	public static void main(String[] args) {
 		new Application();
 	}

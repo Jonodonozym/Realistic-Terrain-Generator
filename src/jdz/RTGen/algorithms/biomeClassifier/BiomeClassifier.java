@@ -43,7 +43,7 @@ public class BiomeClassifier {
 			seaLevel += stepSize;
 			oceanCells = assignOcean(map, seaLevel);
 		}
-		
+
 		map.setSeaLevel(seaLevel);
 	}
 

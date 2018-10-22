@@ -18,8 +18,8 @@ public class CellDepthCalculator {
 
 		@Override
 		public boolean shouldPopulate(int x, int y) {
-			return (maskPlate.isInPlate(x, y) && !(maskPlate.isInPlate(x + 1, y) && maskPlate.isInPlate(x - 1, y)
-					&& maskPlate.isInPlate(x, y + 1) && maskPlate.isInPlate(x, y - 1)));
+			return maskPlate.isInPlate(x, y) && !(maskPlate.isInPlate(x + 1, y) && maskPlate.isInPlate(x - 1, y)
+					&& maskPlate.isInPlate(x, y + 1) && maskPlate.isInPlate(x, y - 1));
 		}
 	}
 
@@ -29,8 +29,8 @@ public class CellDepthCalculator {
 
 		@Override
 		public boolean shouldPopulate(int x, int y) {
-			return (maskPlate.isInPlate(x, y) && (secondPlate.isInPlate(x + 1, y) || secondPlate.isInPlate(x - 1, y)
-					|| secondPlate.isInPlate(x, y + 1) || secondPlate.isInPlate(x, y - 1)));
+			return maskPlate.isInPlate(x, y) && (secondPlate.isInPlate(x + 1, y) || secondPlate.isInPlate(x - 1, y)
+					|| secondPlate.isInPlate(x, y + 1) || secondPlate.isInPlate(x, y - 1));
 		}
 	}
 

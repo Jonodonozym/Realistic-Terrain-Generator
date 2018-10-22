@@ -13,7 +13,7 @@ import lombok.Getter;
 
 public class BasicPlateDeformer extends TectonicPlateDeformer {
 	@Getter private final Config config = new TectonicsConfig();
-	
+
 	@Override
 	protected List<TectonicPlate> initialize(List<TectonicPlate> plates) {
 		return TectonicVelocityCalculator.randomizeVelocity(new Random(), plates, (float) (Math.sqrt(map.size) / 100f));
@@ -27,8 +27,8 @@ public class BasicPlateDeformer extends TectonicPlateDeformer {
 		return totalSpeed <= 1;
 	}
 
-	Point2D total = new Point2D(0,0);
-	
+	Point2D total = new Point2D(0, 0);
+
 	@Override
 	protected List<TectonicPlate> deform(List<TectonicPlate> plates) {
 		List<TectonicPlate> movedPlates = new ArrayList<>();
@@ -38,7 +38,7 @@ public class BasicPlateDeformer extends TectonicPlateDeformer {
 		movedPlates = TectonicSubduction.performSubduction(plates, movedPlates);
 		movedPlates = TectonicCompression.performCompression(movedPlates);
 		movedPlates = TectonicVelocityCalculator.updateVelocityFromCollision(movedPlates);
-		
+
 		Collections.shuffle(movedPlates);
 
 		return movedPlates;

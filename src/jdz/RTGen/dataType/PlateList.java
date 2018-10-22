@@ -59,8 +59,8 @@ public class PlateList {
 
 	public TectonicPlate toMergedPlate(int startIndex) {
 		TectonicPlate combined = new TectonicPlate(map);
-		
-		for (int i=0; i<map.size; i++) {
+
+		for (int i = 0; i < map.size; i++) {
 			int pIndex = indexMask[i];
 			if (pIndex >= startIndex) {
 				combined.mask[i] = true;

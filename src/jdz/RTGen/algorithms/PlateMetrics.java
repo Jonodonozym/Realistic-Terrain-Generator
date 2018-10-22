@@ -43,17 +43,16 @@ public class PlateMetrics {
 		}
 
 		if (leftSize > 0)
-			leftCenter = leftCenter.multiply(1D / (double) leftSize);
+			leftCenter = leftCenter.multiply(1D / leftSize);
 
 		if (rightSize > 0)
-			rightCenter = rightCenter.multiply(1D / (double) rightSize);
+			rightCenter = rightCenter.multiply(1D / rightSize);
 
-		if (leftSize > 0 && rightSize > 0 && rightCenter.getX() - leftCenter.getX() > m.width / 4) {
+		if (leftSize > 0 && rightSize > 0 && rightCenter.getX() - leftCenter.getX() > m.width / 4)
 			if (leftSize > rightSize)
 				return leftCenter;
 			else
 				return rightCenter;
-		}
 
 		return leftCenter.multiply(leftSize).add(rightCenter.multiply(rightSize))
 				.multiply(1 / (double) (leftSize + rightSize));

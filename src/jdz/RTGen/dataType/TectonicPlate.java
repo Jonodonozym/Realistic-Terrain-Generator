@@ -128,7 +128,7 @@ public class TectonicPlate {
 
 		Point2D newFractional = velocity.subtract(dx, dy);
 
-		forEachCell((x, y, i)->{
+		forEachCell((x, y, i) -> {
 			int newIndex = cellIndex(x + dx, y + dy);
 			newMask[newIndex] = mask[i];
 			newHeights[newIndex] = heights[i];

@@ -19,7 +19,7 @@ public class ConfigField extends JPanel implements ChangeListener {
 	private static final long serialVersionUID = -4802490707820080860L;
 
 	private final Config config;
-	
+
 	private final JSpinner spinner;
 	private final JLabel label;
 	private final SpinnerNumberModel model;
@@ -30,7 +30,7 @@ public class ConfigField extends JPanel implements ChangeListener {
 		this.config = config;
 		this.field = field;
 
-		label = new JLabel(field+":    ");
+		label = new JLabel(field + ":    ");
 
 		if (config.isInteger(field))
 			model = new SpinnerNumberModel((int) config.get(field), Integer.MIN_VALUE, Integer.MAX_VALUE, 1);
@@ -39,7 +39,7 @@ public class ConfigField extends JPanel implements ChangeListener {
 		spinner = new JSpinner(model);
 		spinner.addChangeListener(this);
 		hideSpinnerArrow(spinner);
-		
+
 		add(label);
 		add(spinner);
 		validate();
@@ -54,10 +54,12 @@ public class ConfigField extends JPanel implements ChangeListener {
 		Dimension d = spinner.getPreferredSize();
 		d.height = 24;
 		spinner.setUI(new BasicSpinnerUI() {
+			@Override
 			protected Component createNextButton() {
 				return null;
 			}
 
+			@Override
 			protected Component createPreviousButton() {
 				return null;
 			}
