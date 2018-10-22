@@ -33,7 +33,7 @@ public class TectonicCompression {
 
 				isProcessed[i] = true;
 				plate.heights[i] = (plate.heights[i] + mergedPlate.heights[i]) / 2.f;
-				plate.heights[i] += distances[i];
+				plate.heights[i] += Math.pow(distances[i], TectonicsConfig.COMPRESSION_EXPONENT);
 			}
 
 			for (int p2 = p+1; p2 < plates.size(); p2++)

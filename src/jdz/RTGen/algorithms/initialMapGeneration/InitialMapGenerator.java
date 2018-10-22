@@ -3,17 +3,19 @@ package jdz.RTGen.algorithms.initialMapGeneration;
 
 import java.util.Random;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import jdz.RTGen.dataType.Config;
+import jdz.RTGen.dataType.Configurable;
 import jdz.RTGen.dataType.Map;
+import lombok.Getter;
 
-public abstract class InitialMapGenerator {
+public abstract class InitialMapGenerator extends Configurable {
 	public static InitialMapGenerator getContinent() {
 		return new ContinentGenerator();
 	}
-	
-	private final Logger logger = Logger.getGlobal();
 
+	@Getter private final Config config = new InitialMapGenConfig();
+	
 	protected Map map;
 	protected Random random;
 

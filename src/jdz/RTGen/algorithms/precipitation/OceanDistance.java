@@ -8,7 +8,7 @@ import jdz.RTGen.dataType.Biome;
 import jdz.RTGen.dataType.Map;
 import jdz.RTGen.dataType.TectonicPlate;
 
-public class OceanDistance implements PrecipitationModel{
+public class OceanDistance extends PrecipitationModel{
 	private static float MAX_PRECIPITATION = 450;
 
 	public void apply(Map map, Random random) {

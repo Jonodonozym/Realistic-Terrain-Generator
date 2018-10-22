@@ -4,9 +4,11 @@ package jdz.RTGen.algorithms.temperature;
 import java.util.Random;
 
 import jdz.RTGen.dataType.Biome;
+import jdz.RTGen.dataType.Config;
 import jdz.RTGen.dataType.Map;
+import lombok.Getter;
 
-public class EquatorAndHeight implements TemperatureModel {
+public class EquatorAndHeight extends TemperatureModel {	
 	public void apply(Map map, Random random) {
 		// longitude based temperature
 		float eqTemp = getEquatorTemperature(random);

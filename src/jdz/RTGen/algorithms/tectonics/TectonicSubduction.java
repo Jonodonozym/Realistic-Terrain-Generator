@@ -16,9 +16,6 @@ import lombok.AllArgsConstructor;
  * @author Jaiden Baker
  */
 public class TectonicSubduction {
-	private static final float SUBDUCTION_DECAY_RATE = 0.9f;
-	private static final float MIN_HEIGHT = -10;
-
 	public static List<TectonicPlate> performSubduction(List<TectonicPlate> beforeMoved,
 			List<TectonicPlate> afterMoved) {
 		Map map = beforeMoved.get(0).getMap();
@@ -55,7 +52,8 @@ public class TectonicSubduction {
 
 		isSet[index] = true;
 
-		float newHeight = (prevCell.height - MIN_HEIGHT) * SUBDUCTION_DECAY_RATE + MIN_HEIGHT;
+		float newHeight = (prevCell.height - TectonicsConfig.MIN_HEIGHT) * TectonicsConfig.SUBDUCTION_EXPONENT
+				+ TectonicsConfig.MIN_HEIGHT;
 
 		CellInfo newCell = new CellInfo(x, y, prevCell.plate, newHeight);
 

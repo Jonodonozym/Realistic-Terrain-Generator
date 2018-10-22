@@ -8,8 +8,6 @@ import javafx.geometry.Point2D;
 import jdz.RTGen.dataType.TectonicPlate;
 
 public class TectonicVelocityCalculator {
-	private static final float FRICTION_PER_TILE = 0.001f;
-
 	public static List<TectonicPlate> updateVelocityFromCollision(List<TectonicPlate> plates) {
 		return randomizeVelocity(new Random(System.currentTimeMillis()), plates, (float) (Math.sqrt(plates.get(0).getMap().size) / 100f)); 
 	}

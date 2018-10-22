@@ -4,8 +4,10 @@ package jdz.RTGen.algorithms.plateGeneration;
 import java.util.ArrayList;
 import java.util.List;
 
+import jdz.RTGen.dataType.Config;
 import jdz.RTGen.dataType.TectonicPlate;
 import lombok.Data;
+import lombok.Getter;
 
 /**
  * Inspiration from here:
@@ -20,9 +22,10 @@ import lombok.Data;
  * @author Jaiden Baker
  */
 class RandomPlateGenerator extends TectonicPlateGenerator {
+	@Getter private final Config config = new PlateGenConfig();
 
 	@Override
-	protected List<TectonicPlate> generate() {
+	protected List<TectonicPlate> generate(int numPlates) {
 		List<TectonicPlate> plates = new ArrayList<TectonicPlate>();
 
 		TectonicPlate combined = new TectonicPlate(map);

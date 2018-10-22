@@ -7,13 +7,16 @@ import java.util.List;
 import java.util.Random;
 
 import javafx.geometry.Point2D;
+import jdz.RTGen.dataType.Config;
 import jdz.RTGen.dataType.TectonicPlate;
+import lombok.Getter;
 
 public class BasicPlateDeformer extends TectonicPlateDeformer {
-
+	@Getter private final Config config = new TectonicsConfig();
+	
 	@Override
 	protected List<TectonicPlate> initialize(List<TectonicPlate> plates) {
-		return TectonicVelocityCalculator.randomizeVelocity(new Random(), plates, (float) (Math.sqrt(map.size) / 250f));
+		return TectonicVelocityCalculator.randomizeVelocity(new Random(), plates, (float) (Math.sqrt(map.size) / 100f));
 	}
 
 	@Override
@@ -33,7 +36,7 @@ public class BasicPlateDeformer extends TectonicPlateDeformer {
 			movedPlates.add(plate.step());
 
 		movedPlates = TectonicSubduction.performSubduction(plates, movedPlates);
-//		movedPlates = TectonicCompression.performCollision(movedPlates);
+		movedPlates = TectonicCompression.performCompression(movedPlates);
 		movedPlates = TectonicVelocityCalculator.updateVelocityFromCollision(movedPlates);
 		
 		Collections.shuffle(movedPlates);

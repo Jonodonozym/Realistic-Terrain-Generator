@@ -6,10 +6,11 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jdz.RTGen.dataType.Configurable;
 import jdz.RTGen.dataType.Map;
 import jdz.RTGen.dataType.TectonicPlate;
 
-public abstract class TectonicPlateDeformer {
+public abstract class TectonicPlateDeformer extends Configurable {
 	public static TectonicPlateDeformer getBasic() {
 		return new BasicPlateDeformer();
 	}
@@ -19,18 +20,18 @@ public abstract class TectonicPlateDeformer {
 	protected Map map;
 	protected Random random;
 
-	public List<TectonicPlate> deform(Map map, List<TectonicPlate> plates, int maxSteps) {
+	public List<TectonicPlate> deform(Map map, List<TectonicPlate> plates) {
 		this.map = map;
 		random = new Random(map.getSeed());
 
 		long startTime = System.currentTimeMillis();
 
 		logger.log(Level.INFO, "Plate deformation started");
-		logger.log(Level.INFO, "Max itterations: " + maxSteps);
+		logger.log(Level.INFO, "Max itterations: " + TectonicsConfig.STEPS);
 		logger.log(Level.INFO, "Map size: " + map.size + " (" + map.width + " x " + map.height + ")");
 
 		List<TectonicPlate> newPlates = initialize(plates);
-		newPlates = deform(newPlates, maxSteps);
+		newPlates = deform(newPlates, TectonicsConfig.STEPS);
 
 		logger.log(Level.INFO, "Plate deformation completed");
 		logger.log(Level.INFO, "Time: " + (System.currentTimeMillis() - startTime) + "ms");
