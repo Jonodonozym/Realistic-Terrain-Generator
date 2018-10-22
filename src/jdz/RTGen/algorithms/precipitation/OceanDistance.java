@@ -9,7 +9,6 @@ import jdz.RTGen.dataType.Map;
 import jdz.RTGen.dataType.TectonicPlate;
 
 public class OceanDistance extends PrecipitationModel {
-	private static float MAX_PRECIPITATION = 450;
 
 	@Override
 	public void apply(Map map, Random random) {

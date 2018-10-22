@@ -17,7 +17,7 @@ public class BiomeClassifier {
 
 		assignOcean(map, random);
 
-		PrecipitationModel.oceanDistance().apply(map, random);
+		PrecipitationModel.getModel().apply(map, random);
 		TemperatureModel.equatorAndHeight().apply(map, random);
 
 		float[] temps = map.cellTemperature;
