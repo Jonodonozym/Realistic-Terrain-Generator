@@ -34,7 +34,7 @@ public class BiomeRenderer extends Renderer {
 
 		colorMap.put(DESERT, 0xdbb600);
 
-		colorMap.put(TAIGA, 0xdfffd8);
+		colorMap.put(TAIGA, 0x00cebd);
 		colorMap.put(TUNDRA, 0xbafffd);
 
 		for (Biome biome : Biome.values())
