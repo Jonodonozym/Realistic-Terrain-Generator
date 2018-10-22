@@ -4,8 +4,8 @@ package jdz.RTGen.algorithms.initialMapGeneration;
 import java.util.Random;
 import java.util.logging.Level;
 
-import jdz.RTGen.dataType.Config;
-import jdz.RTGen.dataType.Configurable;
+import jdz.RTGen.configuration.Config;
+import jdz.RTGen.configuration.Configurable;
 import jdz.RTGen.dataType.Map;
 import lombok.Getter;
 
@@ -21,7 +21,7 @@ public abstract class InitialMapGenerator extends Configurable {
 
 	public Map generateInitialMap(Map map) {
 		this.map = map;
-		random = new Random(map.getSeed());
+		random = map.getNewRandom();
 
 		long startTime = System.currentTimeMillis();
 

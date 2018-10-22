@@ -6,7 +6,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jdz.RTGen.dataType.Configurable;
+import jdz.RTGen.configuration.Configurable;
 import jdz.RTGen.dataType.Map;
 import jdz.RTGen.dataType.TectonicPlate;
 
@@ -41,14 +41,25 @@ public abstract class TectonicPlateDeformer extends Configurable {
 
 	private List<TectonicPlate> deform(List<TectonicPlate> plates, int maxSteps) {
 		List<TectonicPlate> newPlates = plates;
+
+		int lastPercent = 0;
 		for (int i = 0; i < maxSteps; i++) {
 			if (shouldStop(plates))
 				break;
 
 			newPlates = deform(newPlates);
 
-			if (maxSteps < 100)
-				logger.log(Level.INFO, "Itteration " + i + " done");
+			if (maxSteps > 5) {
+				if (maxSteps < 100)
+					logger.log(Level.INFO, "Itteration " + i + " done");
+				else {
+					int percent = (int) (i / (maxSteps / 100.f));
+					if (percent > lastPercent) {
+						lastPercent = percent;
+						logger.log(Level.INFO, percent + "%");
+					}
+				}
+			}
 		}
 		return newPlates;
 	}

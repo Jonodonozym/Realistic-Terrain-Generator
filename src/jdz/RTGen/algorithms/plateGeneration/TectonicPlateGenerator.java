@@ -6,7 +6,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jdz.RTGen.dataType.Configurable;
+import jdz.RTGen.configuration.Configurable;
 import jdz.RTGen.dataType.Map;
 import jdz.RTGen.dataType.TectonicPlate;
 
@@ -28,7 +28,7 @@ public abstract class TectonicPlateGenerator extends Configurable {
 	public List<TectonicPlate> generatePlates(Map map, int numPlates) {
 
 		this.map = map;
-		random = new Random(map.getSeed());
+		random = map.getNewRandom();
 
 		long startTime = System.currentTimeMillis();
 

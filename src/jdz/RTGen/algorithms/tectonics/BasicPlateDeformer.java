@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javafx.geometry.Point2D;
-import jdz.RTGen.dataType.Config;
+import jdz.RTGen.configuration.Config;
 import jdz.RTGen.dataType.TectonicPlate;
 import lombok.Getter;
 
@@ -15,7 +15,7 @@ public class BasicPlateDeformer extends TectonicPlateDeformer {
 
 	@Override
 	protected List<TectonicPlate> initialize(List<TectonicPlate> plates) {
-		return TectonicVelocityCalculator.randomizeVelocity(random, plates, (float) (Math.sqrt(map.size) / 100f));
+		return TectonicVelocityCalculator.randomizeVelocity(random, plates, (float) (map.height * TectonicsConfig.INITIAL_VELOCITY));
 	}
 
 	@Override

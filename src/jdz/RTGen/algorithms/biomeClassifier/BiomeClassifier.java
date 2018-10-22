@@ -3,8 +3,10 @@ package jdz.RTGen.algorithms.biomeClassifier;
 
 import static jdz.RTGen.dataType.Biome.*;
 
+import java.util.Arrays;
 import java.util.Random;
 
+import jdz.RTGen.algorithms.initialMapGeneration.InitialMapGenConfig;
 import jdz.RTGen.algorithms.precipitation.PrecipitationModel;
 import jdz.RTGen.algorithms.temperature.TemperatureModel;
 import jdz.RTGen.dataType.Biome;
@@ -30,25 +32,32 @@ public class BiomeClassifier {
 	}
 
 	private static void assignOcean(Map map, Random random) {
-		float minHeight = map.getMinHeight();
-		float maxHeight = map.getMaxHeight();
+		float[] sortedHeights = new float[map.size];
+		System.arraycopy(map.cellHeight, 0, sortedHeights, 0, map.size);
+		Arrays.sort(sortedHeights);
 
-		float seaLevel = minHeight + (maxHeight - minHeight) * getPercentOcean(map, random) * 0.9f;
-		float stepSize = (maxHeight - minHeight) / 100f;
 
-		int requiredCells = (int) (map.size * getPercentOcean(map, random));
-		int oceanCells = 0;
-
-		while (oceanCells < requiredCells) {
-			seaLevel += stepSize;
-			oceanCells = assignOcean(map, seaLevel);
+		float percentOcean = getPercentOcean(map, random);
+		if (percentOcean <= 0) {
+			map.forAllCells((x, y, i) -> {
+				map.cellBiome[i] = NONE;
+			});
+			return;
+		}
+		if (percentOcean >= 100) {
+			map.forAllCells((x, y, i) -> {
+				map.cellBiome[i] = OCEAN;
+			});
+			return;
 		}
 
+		float seaLevel = sortedHeights[(int) (map.size * percentOcean)];
 		map.setSeaLevel(seaLevel);
+		assignOcean(map, seaLevel);
 	}
 
 	private static float getPercentOcean(Map map, Random random) {
-		return 0.25f + 0.25f * random.nextFloat();
+		return InitialMapGenConfig.PERCENT_OCEAN / 100.f;
 	}
 
 	private static int assignOcean(Map map, float seaLevel) {

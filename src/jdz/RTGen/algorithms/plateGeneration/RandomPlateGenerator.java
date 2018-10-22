@@ -2,9 +2,10 @@
 package jdz.RTGen.algorithms.plateGeneration;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import jdz.RTGen.dataType.Config;
+import jdz.RTGen.configuration.Config;
 import jdz.RTGen.dataType.TectonicPlate;
 import lombok.Data;
 import lombok.Getter;
@@ -27,6 +28,16 @@ class RandomPlateGenerator extends TectonicPlateGenerator {
 	@Override
 	protected List<TectonicPlate> generate(int numPlates) {
 		List<TectonicPlate> plates = new ArrayList<>();
+
+		if (numPlates < 2) {
+			TectonicPlate mapPlate = new TectonicPlate(map);
+			Arrays.fill(mapPlate.mask, true);
+			map.forAllCells((x, y, i) -> {
+				mapPlate.heights[i] = map.cellHeight[i];
+			});
+			plates.add(mapPlate);
+			return plates;
+		}
 
 		TectonicPlate combined = new TectonicPlate(map);
 

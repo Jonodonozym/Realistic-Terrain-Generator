@@ -15,8 +15,8 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 
 import jdz.RTGen.Application;
-import jdz.RTGen.dataType.Config;
-import jdz.RTGen.dataType.Configurable;
+import jdz.RTGen.configuration.Config;
+import jdz.RTGen.configuration.Configurable;
 
 public class ConfigToolbar extends JPanel {
 	private static final long serialVersionUID = 1282619261646310143L;

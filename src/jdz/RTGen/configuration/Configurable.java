@@ -1,5 +1,5 @@
 
-package jdz.RTGen.dataType;
+package jdz.RTGen.configuration;
 
 import java.util.logging.Logger;
 

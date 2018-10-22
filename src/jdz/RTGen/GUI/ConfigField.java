@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 
 import javax.swing.JCheckBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -14,7 +15,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicSpinnerUI;
 
-import jdz.RTGen.dataType.Config;
+import jdz.RTGen.configuration.Config;
 
 public class ConfigField extends JPanel {
 	private static final long serialVersionUID = -4802490707820080860L;
@@ -57,12 +58,15 @@ public class ConfigField extends JPanel {
 		private final SpinnerNumberModel model;
 
 		public NumberField(Config config, String field) {
+			setEditor(new JSpinner.NumberEditor(this, "#.#####"));
+
 			if (config.isInteger(field))
 				model = new SpinnerNumberModel(config.getInt(field), Integer.MIN_VALUE, Integer.MAX_VALUE, 1);
 			else
 				model = new SpinnerNumberModel(config.getFloat(field), -Float.MAX_VALUE, Float.MAX_VALUE, 1);
-			
+
 			setModel(model);
+			setText(config.getFloat(field));
 			addChangeListener(this);
 			hideSpinnerArrow();
 		}
@@ -89,6 +93,13 @@ public class ConfigField extends JPanel {
 		@Override
 		public void stateChanged(ChangeEvent e) {
 			config.set(field, model.getNumber().floatValue());
+			setText(model.getNumber().floatValue());
+		}
+
+		private void setText(float value) {
+			JFormattedTextField f = ((JFormattedTextField) ((JSpinner.NumberEditor) getEditor()).getComponent(0));
+			f.setValue(config.isInteger(field) ? new Integer(config.getInt(field)) : new Double(config.getFloat(field)));
+			System.out.println(f.getValue());
 		}
 	}
 }
