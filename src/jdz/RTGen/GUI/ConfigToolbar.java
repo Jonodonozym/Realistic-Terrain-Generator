@@ -31,6 +31,8 @@ public class ConfigToolbar extends JPanel {
 		l.setAlignment(VerticalFlowLayout.RIGHT, VerticalFlowLayout.TOP);
 
 		for (Configurable configurable : configurables) {
+			if (configurable.getConfig().numFields() == 0)
+				continue;
 			JPanel labelPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			JLabel label = new JLabel(configurable.getName());
 			label.setFont(label.getFont().deriveFont(Font.BOLD, label.getFont().getSize() + 6));
