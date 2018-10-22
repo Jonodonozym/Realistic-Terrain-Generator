@@ -36,7 +36,7 @@ public class PlateList {
 		int plateIndex = 0;
 		for (TectonicPlate plate : plates) {
 			final int finalIndex = plateIndex++;
-			plate.forEachCell((x, y, i) -> {
+			plate.forEachCell((i) -> {
 				indexMask[i] = finalIndex;
 			});
 		}

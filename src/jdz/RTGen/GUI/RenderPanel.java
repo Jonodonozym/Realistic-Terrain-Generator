@@ -34,12 +34,11 @@ public class RenderPanel extends JPanel {
 	public void updateRender() {
 		lastUnscaledImage = null;
 
-		for (Renderer r : renderers) {
+		for (Renderer r : renderers)
 			if (lastUnscaledImage == null)
 				lastUnscaledImage = r.render(map);
 			else
 				r.render(lastUnscaledImage, map);
-		}
 
 		repaint();
 	}
@@ -52,7 +51,7 @@ public class RenderPanel extends JPanel {
 			Image scaledImage = lastUnscaledImage.getScaledInstance((int) d.getWidth(), (int) d.getHeight(),
 					Image.SCALE_SMOOTH);
 
-			int y = (int) Math.max(0, (getHeight() - scaledImage.getHeight(null)) / 2);
+			int y = Math.max(0, (getHeight() - scaledImage.getHeight(null)) / 2);
 			g.drawImage(scaledImage, 0, y, null);
 		}
 	}

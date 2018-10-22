@@ -43,6 +43,7 @@ public class ConfigToolbar extends JPanel {
 		}
 
 		JPanel panel = new JPanel();
+		panel.setBorder(BorderFactory.createEmptyBorder(32, 0, 32, 0));
 		panel.add(new RedrawButton(app));
 		panel.add(new GenerateButton(app));
 		add(panel);
@@ -65,7 +66,7 @@ public class ConfigToolbar extends JPanel {
 		private static final long serialVersionUID = 5838577886884493106L;
 
 		public GenerateButton(Application app) {
-			this.setText("Generate Map");
+			setText("Generate Map");
 			addActionListener((event) -> {
 				app.updateMap();
 			});
@@ -77,7 +78,7 @@ public class ConfigToolbar extends JPanel {
 		private static final long serialVersionUID = 5838577886884493106L;
 
 		public RedrawButton(Application app) {
-			this.setText("Redraw Map");
+			setText("Redraw Map");
 			addActionListener((event) -> {
 				app.redraw();
 			});

@@ -11,5 +11,6 @@ import java.lang.annotation.Target;
 @Target(FIELD)
 public @interface Slider {
 	public float min();
+
 	public float max();
 }

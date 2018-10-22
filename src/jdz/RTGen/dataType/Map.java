@@ -47,9 +47,9 @@ public class Map {
 
 	public final void updateHeightFromPlates() {
 		for (TectonicPlate plate : plates)
-			for (int i = 0; i < size; i++)
-				if (plate.mask[i])
-					cellHeight[i] = plate.heights[i];
+			plate.forEachCell((i) -> {
+				cellHeight[i] = plate.heights[i];
+			});
 	}
 
 	public final void setHeight(int x, int y, int height) {
@@ -137,6 +137,17 @@ public class Map {
 		for (int y = 0; y < height; y++)
 			for (int x = 0; x < width; x++)
 				iterator.execute(x, y, index++);
+	}
+
+	public void forAllCells(CellIndexIterator iterator) {
+		for (int i = 0; i < size; i++)
+			iterator.execute(i);
+	}
+
+	public void forAllCells(CellCoordinateIterator iterator) {
+		for (int y = 0; y < height; y++)
+			for (int x = 0; x < width; x++)
+				iterator.execute(x, y);
 	}
 
 	@Override

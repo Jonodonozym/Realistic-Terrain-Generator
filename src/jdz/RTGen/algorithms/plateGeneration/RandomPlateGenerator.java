@@ -32,7 +32,7 @@ class RandomPlateGenerator extends TectonicPlateGenerator {
 		if (numPlates < 2) {
 			TectonicPlate mapPlate = new TectonicPlate(map);
 			Arrays.fill(mapPlate.mask, true);
-			map.forAllCells((x, y, i) -> {
+			map.forAllCells((i) -> {
 				mapPlate.heights[i] = map.cellHeight[i];
 			});
 			plates.add(mapPlate);

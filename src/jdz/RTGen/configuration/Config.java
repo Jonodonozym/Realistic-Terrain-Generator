@@ -87,20 +87,20 @@ public abstract class Config {
 			return false;
 		}
 	}
-	
+
 	public boolean hasStep(String name) {
 		return getField(name).getAnnotation(Step.class) != null;
 	}
-	
+
 	public float getStepFloat(String name) {
 		Field field = getField(name);
 		if (field.getAnnotation(Step.class) == null)
-			return 0;
+			return 1.f;
 		return field.getAnnotation(Step.class).value();
 	}
-	
+
 	public int getStepInt(String name) {
-		return (int)getStepFloat(name);
+		return (int) getStepFloat(name);
 	}
 
 	private Field getField(String name) {

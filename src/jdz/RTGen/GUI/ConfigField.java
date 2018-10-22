@@ -4,15 +4,13 @@ package jdz.RTGen.GUI;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.text.DecimalFormat;
 
 import javax.swing.JCheckBox;
-import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicSpinnerUI;
 
 import jdz.RTGen.configuration.Config;
@@ -20,13 +18,8 @@ import jdz.RTGen.configuration.Config;
 public class ConfigField extends JPanel {
 	private static final long serialVersionUID = -4802490707820080860L;
 
-	private final Config config;
-	private final String field;
-
 	public ConfigField(Config config, String field) {
 		super(new FlowLayout(FlowLayout.RIGHT, 0, 0));
-		this.config = config;
-		this.field = field;
 
 		JLabel label = new JLabel(field + ":    ");
 		add(label);
@@ -53,27 +46,36 @@ public class ConfigField extends JPanel {
 		}
 	}
 
-	private class NumberField extends JSpinner implements ChangeListener {
+	private class NumberField extends JSpinner {
 		private static final long serialVersionUID = -6278300795636975872L;
 		private final SpinnerNumberModel model;
 
 		public NumberField(Config config, String field) {
-			setEditor(new JSpinner.NumberEditor(this, "#.#####"));
-
 			if (config.isInteger(field))
-				model = new SpinnerNumberModel(config.getInt(field), Integer.MIN_VALUE, Integer.MAX_VALUE, 1);
+				model = new SpinnerNumberModel(config.getInt(field), Integer.MIN_VALUE, Integer.MAX_VALUE,
+						config.getStepInt(field));
 			else
-				model = new SpinnerNumberModel(config.getFloat(field), -Float.MAX_VALUE, Float.MAX_VALUE, 1);
+				model = new SpinnerNumberModel(config.getFloat(field), -Float.MAX_VALUE, Float.MAX_VALUE,
+						config.getStepFloat(field));
 
 			setModel(model);
-			setText(config.getFloat(field));
-			addChangeListener(this);
-			hideSpinnerArrow();
+
+			JSpinner.NumberEditor editor = (JSpinner.NumberEditor) getEditor();
+			DecimalFormat format = editor.getFormat();
+			format.setMaximumFractionDigits(3);
+			format.setGroupingUsed(false);
+
+			addChangeListener((e) -> {
+				config.set(field, model.getNumber().floatValue());
+			});
+
+			if (!config.hasStep(field))
+				hideSpinnerArrow();
+
+			resize();
 		}
 
 		public void hideSpinnerArrow() {
-			Dimension d = getPreferredSize();
-			d.height = 24;
 			setUI(new BasicSpinnerUI() {
 				@Override
 				protected Component createNextButton() {
@@ -85,21 +87,15 @@ public class ConfigField extends JPanel {
 					return null;
 				}
 			});
-			setPreferredSize(d);
+		}
+
+		public void resize() {
+			Dimension d = getPreferredSize();
+			d.height = 24;
 			d.width = 96;
+			setPreferredSize(d);
+			setMinimumSize(d);
 			setMaximumSize(d);
-		}
-
-		@Override
-		public void stateChanged(ChangeEvent e) {
-			config.set(field, model.getNumber().floatValue());
-			setText(model.getNumber().floatValue());
-		}
-
-		private void setText(float value) {
-			JFormattedTextField f = ((JFormattedTextField) ((JSpinner.NumberEditor) getEditor()).getComponent(0));
-			f.setValue(config.isInteger(field) ? new Integer(config.getInt(field)) : new Double(config.getFloat(field)));
-			System.out.println(f.getValue());
 		}
 	}
 }

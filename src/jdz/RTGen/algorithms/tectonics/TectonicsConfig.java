@@ -2,14 +2,15 @@
 package jdz.RTGen.algorithms.tectonics;
 
 import jdz.RTGen.configuration.Config;
+import jdz.RTGen.configuration.Step;
 
 public class TectonicsConfig extends Config {
-	public static int STEPS = 25;
+	@Step(1) public static int STEPS = 25;
 
 	public static float COMPRESSION_EXPONENT = 1.1f;
 	public static float SUBDUCTION_EXPONENT = 0.9f;
 	public static float MIN_HEIGHT = -10;
-	
-	public static float INITIAL_VELOCITY = 0.1f;
+
+	@Step(0.01f) public static float INITIAL_VELOCITY = 0.01f;
 	public static float FRICTION_PER_CELL = 0.001f;
 }

@@ -49,7 +49,7 @@ public abstract class TectonicPlateDeformer extends Configurable {
 
 			newPlates = deform(newPlates);
 
-			if (maxSteps > 5) {
+			if (maxSteps > 5)
 				if (maxSteps < 100)
 					logger.log(Level.INFO, "Itteration " + i + " done");
 				else {
@@ -59,7 +59,6 @@ public abstract class TectonicPlateDeformer extends Configurable {
 						logger.log(Level.INFO, percent + "%");
 					}
 				}
-			}
 		}
 		return newPlates;
 	}

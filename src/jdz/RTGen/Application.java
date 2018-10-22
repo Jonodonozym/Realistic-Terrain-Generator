@@ -64,12 +64,12 @@ public class Application extends Configurable {
 		frame.setSize(PREVIEW_WIDTH, PREVIEW_HEIGHT);
 
 		frame.add(toolbar, BorderLayout.WEST);
-		
+
 		JPanel eastPanel = new JPanel(new BorderLayout());
 		eastPanel.add(renderPanel, BorderLayout.PAGE_START);
 
 		eastPanel.add(new Console(), BorderLayout.PAGE_END);
-		
+
 		frame.add(eastPanel, BorderLayout.EAST);
 
 		frame.setResizable(false);
@@ -86,7 +86,7 @@ public class Application extends Configurable {
 				TectonicPlateDeformer.getBasic(), PrecipitationModel.oceanDistance(),
 				TemperatureModel.equatorAndHeight());
 	}
-	
+
 	private List<Renderer> getRenderers() {
 		List<Renderer> renderers = new ArrayList<>();
 		if (AppConfig.RENDER_BIOME)
@@ -97,7 +97,7 @@ public class Application extends Configurable {
 			renderers.add(new PlateListRenderer());
 		return renderers;
 	}
-	
+
 	public void updateMap() {
 		if (currentUpdateTask == null || currentUpdateTask.isDone() || currentUpdateTask.isCancelled()) {
 			currentUpdateTask = new UpdateMapTask();
@@ -118,8 +118,8 @@ public class Application extends Configurable {
 	private class UpdateMapTask extends SwingWorker<Void, Void> {
 		@Override
 		protected Void doInBackground() throws Exception {
-			initialMap = new Map(AppConfig.MAP_HEIGHT*2, AppConfig.MAP_HEIGHT, AppConfig.MAP_SEED);
-			
+			initialMap = new Map(AppConfig.MAP_HEIGHT * 2, AppConfig.MAP_HEIGHT, AppConfig.MAP_SEED);
+
 			InitialMapGenerator.getContinent().generateInitialMap(initialMap);
 			initialMap.setPlates(TectonicPlateGenerator.getRandom().generatePlates(initialMap));
 

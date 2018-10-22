@@ -69,6 +69,19 @@ public class TectonicPlate {
 		});
 	}
 
+	public void forEachCell(CellIndexIterator iterator) {
+		for (int i = 0; i < map.size; i++)
+			if (mask[i])
+				iterator.execute(i);
+	}
+
+	public void forEachCell(CellCoordinateIterator iterator) {
+		map.forAllCells((x, y, i) -> {
+			if (mask[i])
+				iterator.execute(x, y);
+		});
+	}
+
 	public final int cellIndex(int x, int y) {
 		return map.cellIndex(x, y);
 	}

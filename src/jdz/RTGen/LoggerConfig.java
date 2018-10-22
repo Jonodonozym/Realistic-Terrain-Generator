@@ -16,7 +16,7 @@ public class LoggerConfig {
 		handler.setFormatter(getFormatter());
 		logger.addHandler(handler);
 	}
-	
+
 	public static SimpleFormatter getFormatter() {
 		return new SimpleFormatter() {
 			private static final String format = "[%1$tT] [%2$-7s] %3$s %n";

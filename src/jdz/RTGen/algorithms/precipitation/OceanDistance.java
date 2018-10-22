@@ -30,11 +30,10 @@ public class OceanDistance extends PrecipitationModel {
 		if (landCells == map.size)
 			return;
 
-		if (landCells == 0) {
-			map.forAllCells((x, y, i) -> {
+		if (landCells == 0)
+			map.forAllCells((i) -> {
 				map.cellPrecipitation[i] = MAX_PRECIPITATION;
 			});
-		}
 
 		int[] landDepth = CellDepthCalculator.getDistanceFromEdge(map, landMask,
 				new CellDepthCalculator.IsOnEdge(landPlate));
