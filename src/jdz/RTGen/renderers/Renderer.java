@@ -11,15 +11,15 @@ import javax.imageio.ImageIO;
 
 import jdz.RTGen.dataType.Map;
 
-public abstract class Renderer<E> {
+public abstract class Renderer {
 	private static final File ROOT_FOLDER = new File("Renders");
 
-	public void exportPNG(Map map, E object) {
+	public void exportPNG(Map map) {
 		if (!ROOT_FOLDER.exists())
 			ROOT_FOLDER.mkdirs();
 
 		File file = new File(ROOT_FOLDER, "Render - " + getName() + " - " + map.getSeed());
-		BufferedImage image = render(map, object);
+		BufferedImage image = render(map);
 
 		try {
 			ImageIO.write(image, "png", file);
@@ -29,7 +29,7 @@ public abstract class Renderer<E> {
 		}
 	}
 
-	public BufferedImage render(Map map, E object) {
+	public BufferedImage render(Map map) {
 		BufferedImage image = new BufferedImage(map.width, map.height, BufferedImage.TYPE_INT_RGB);
 
 		Graphics g = image.getGraphics();
@@ -37,10 +37,10 @@ public abstract class Renderer<E> {
 		g.fillRect(0, 0, image.getWidth(), image.getHeight());
 		g.dispose();
 		
-		render(image, object);
+		render(image, map);
 		return image;
 	}
 
 	public abstract String getName();
-	public abstract void render(BufferedImage image, E object);
+	public abstract void render(BufferedImage image, Map object);
 }

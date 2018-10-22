@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 
 import jdz.RTGen.dataType.Map;
 
-public class HeightMapRenderer extends Renderer<Map> {
+public class HeightMapRenderer extends Renderer {
 
 	@Override
 	public String getName() {

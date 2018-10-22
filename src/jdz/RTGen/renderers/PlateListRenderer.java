@@ -3,12 +3,12 @@ package jdz.RTGen.renderers;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.util.List;
 
+import jdz.RTGen.dataType.Map;
 import jdz.RTGen.dataType.TectonicPlate;
 
 
-public class PlateListRenderer extends Renderer<List<TectonicPlate>> {
+public class PlateListRenderer extends Renderer {
 
 	@Override
 	public String getName() {
@@ -16,8 +16,8 @@ public class PlateListRenderer extends Renderer<List<TectonicPlate>> {
 	}
 
 	@Override
-	public void render(BufferedImage image, List<TectonicPlate> plates) {
-		for (TectonicPlate plate : plates)
+	public void render(BufferedImage image, Map map) {
+		for (TectonicPlate plate : map.getPlates())
 			renderPlate(image, plate);
 	}
 

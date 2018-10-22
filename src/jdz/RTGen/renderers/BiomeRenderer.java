@@ -11,7 +11,7 @@ import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import jdz.RTGen.dataType.Biome;
 import jdz.RTGen.dataType.Map;
 
-public class BiomeRenderer extends Renderer<Map> {
+public class BiomeRenderer extends Renderer {
 	Reference2IntMap<Biome> colorMap = new Reference2IntOpenHashMap<>();
 
 	public BiomeRenderer() {
