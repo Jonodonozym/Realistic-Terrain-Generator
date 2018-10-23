@@ -1,11 +1,12 @@
 
-package jdz.RTGen.renderers;
+package jdz.RTGen.rendering.renderers;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
 import jdz.RTGen.dataType.Biome;
 import jdz.RTGen.dataType.Map;
+import jdz.RTGen.rendering.Renderer;
 
 public class HeightMapRenderer extends Renderer {
 
@@ -21,6 +22,11 @@ public class HeightMapRenderer extends Renderer {
 
 		float minOceanHeight = map.getMinHeight();
 		float maxOceanHeight = map.getSeaLevel();
+		
+		if (minLandHeight == maxLandHeight) {
+			minLandHeight -= 1;
+			maxLandHeight += 1f;
+		}
 
 		for (int x = 0; x < map.width; x++)
 			for (int y = 0; y < map.height; y++) {

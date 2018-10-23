@@ -1,11 +1,12 @@
 
-package jdz.RTGen.renderers;
+package jdz.RTGen.rendering.renderers;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
 import jdz.RTGen.dataType.Map;
 import jdz.RTGen.dataType.TectonicPlate;
+import jdz.RTGen.rendering.Renderer;
 
 
 public class PlateListRenderer extends Renderer {
