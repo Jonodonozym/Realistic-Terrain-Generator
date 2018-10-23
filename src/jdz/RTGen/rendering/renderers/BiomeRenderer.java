@@ -16,7 +16,7 @@ public class BiomeRenderer extends Renderer {
 	Reference2IntMap<Biome> colorMap = new Reference2IntOpenHashMap<>();
 
 	public BiomeRenderer() {
-		colorMap.put(OCEAN, 0x0077be); // Blue
+		colorMap.put(OCEAN, 0x0077be);
 
 		colorMap.put(TROPICAL_RAINFOREST, 0x008439);
 		colorMap.put(TEMPERATE_RAINFOREST, 0x005123);
@@ -50,14 +50,9 @@ public class BiomeRenderer extends Renderer {
 
 	@Override
 	public void render(BufferedImage image, Map map) {
-		for (int x = 0; x < map.width; x++)
-			for (int y = 0; y < map.height; y++)
-				image.setRGB(x, y, getColor(map, x, y));
-	}
-
-	private int getColor(Map map, int x, int y) {
-		Biome biome = map.getBiome(x, y);
-		return colorMap.getInt(biome);
+		map.forAllCells((x, y, i) -> {
+			image.setRGB(x, y, colorMap.getInt(map.cellBiome[i]));
+		});
 	}
 
 }

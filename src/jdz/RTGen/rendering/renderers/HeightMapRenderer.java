@@ -17,25 +17,19 @@ public class HeightMapRenderer extends Renderer {
 
 	@Override
 	public void render(BufferedImage image, Map map) {
-		float minLandHeight = map.getSeaLevel();
-		float maxLandHeight = map.getMaxHeight();
+		final float minLandHeight = map.getSeaLevel();
+		final float maxLandHeight = map.getMaxHeight() == minLandHeight ? minLandHeight + 1 : map.getMaxHeight();
 
-		float minOceanHeight = map.getMinHeight();
-		float maxOceanHeight = map.getSeaLevel();
-		
-		if (minLandHeight == maxLandHeight) {
-			minLandHeight -= 1;
-			maxLandHeight += 1f;
-		}
+		final float minOceanHeight = map.getMinHeight();
+		final float maxOceanHeight = map.getSeaLevel();
 
-		for (int x = 0; x < map.width; x++)
-			for (int y = 0; y < map.height; y++) {
-				float height = map.getHeight(x, y);
-				float ratio = map.getBiome(x, y) == Biome.OCEAN
-						? (height - minOceanHeight) / (maxOceanHeight - minOceanHeight)
-						: (height - minLandHeight) / (maxLandHeight - minLandHeight);
-				image.setRGB(x, y, multiplyValue(image.getRGB(x, y), ratio));
-			}
+		map.forAllCells((x, y, i) -> {
+			float height = map.cellHeight[i];
+			float ratio = map.cellBiome[i] == Biome.OCEAN
+					? (height - minOceanHeight) / (maxOceanHeight - minOceanHeight)
+					: (height - minLandHeight) / (maxLandHeight - minLandHeight);
+			image.setRGB(x, y, multiplyValue(image.getRGB(x, y), ratio));
+		});
 	}
 
 	private int multiplyValue(int rgb, float ratio) {

@@ -23,17 +23,17 @@ public class PlateListRenderer extends Renderer {
 	}
 
 	private void renderPlate(BufferedImage image, TectonicPlate plate) {
-		for (int x = 0; x < plate.getMap().width; x++)
-			for (int y = 0; y < plate.getMap().height; y++)
-				if (plate.isInPlate(x, y) && isOnEdge(plate, x, y))
-					invertColor(image, x, y);
+		plate.forEachCell((x, y) -> {
+			if (isOnEdge(plate, x, y))
+				highlightPixel(image, x, y);
+		});
 	}
 
 	private boolean isOnEdge(TectonicPlate p, int x, int y) {
 		return !p.isInPlate(x - 1, y) || !p.isInPlate(x + 1, y) || !p.isInPlate(x, y - 1) || !p.isInPlate(x, y + 1);
 	}
 
-	private void invertColor(BufferedImage image, int x, int y) {
+	private void highlightPixel(BufferedImage image, int x, int y) {
 		image.setRGB(x, y, invert(image.getRGB(x, y)));
 	}
 
