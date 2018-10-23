@@ -9,13 +9,12 @@ import jdz.RTGen.algorithms.plateGeneration.TectonicPlateGenerator;
 import jdz.RTGen.algorithms.tectonics.TectonicPlateDeformer;
 import jdz.RTGen.dataType.Map;
 import jdz.RTGen.dataType.TectonicPlate;
-import jdz.RTGen.renderers.BiomeRenderer;
-import jdz.RTGen.renderers.HeightMapRenderer;
+import jdz.RTGen.rendering.renderers.BiomeRenderer;
+import jdz.RTGen.rendering.renderers.HeightMapRenderer;
 
 public class BiomeClassPreview extends Previewer {
 	private static final int MAP_SIZE = 256;
-	private static final int NUM_PLATES = 16;
-	private static final int STEPS = 100;
+	private static final int NUM_PLATES = 20;
 
 	public static void main(String[] args) {
 		new BiomeClassPreview();
@@ -29,10 +28,9 @@ public class BiomeClassPreview extends Previewer {
 	public void init() {
 		map = new Map(map.width, map.height, 300);
 		
-		//InitialMapGenerator.getContinent().generateInitialMap(map);
+		List<TectonicPlate> plates = TectonicPlateGenerator.getGenerator().generatePlates(map, NUM_PLATES);
 		
-		List<TectonicPlate> plates = TectonicPlateGenerator.getRandom().generatePlates(map, NUM_PLATES);
-		plates = TectonicPlateDeformer.getBasic().deform(map, plates, STEPS);
+		plates = TectonicPlateDeformer.getBasic().deform(map, plates);
 		map.setPlates(plates);
 		map.updateHeightFromPlates();
 		
@@ -41,7 +39,7 @@ public class BiomeClassPreview extends Previewer {
 
 	@Override
 	public BufferedImage createPreview() {
-		BufferedImage image = new BiomeRenderer().render(map, map);
+		BufferedImage image = new BiomeRenderer().render(map);
 		new HeightMapRenderer().render(image, map);
 		return image;
 	}

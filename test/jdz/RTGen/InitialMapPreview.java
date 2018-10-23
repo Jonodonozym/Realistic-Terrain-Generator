@@ -3,8 +3,8 @@ package jdz.RTGen;
 
 import java.awt.image.BufferedImage;
 
-import jdz.RTGen.algorithms.initialMapGeneration.InitialMapGenerator;
-import jdz.RTGen.renderers.HeightMapRenderer;
+import jdz.RTGen.algorithms.initialMapGeneration.ContinentGenerator;
+import jdz.RTGen.rendering.renderers.HeightMapRenderer;
 
 public class InitialMapPreview extends Previewer {
 	private static final int MAP_SIZE = 512;
@@ -19,8 +19,8 @@ public class InitialMapPreview extends Previewer {
 
 	@Override
 	public BufferedImage createPreview() {
-		map = InitialMapGenerator.getContinent().generateInitialMap(map);
-		return new HeightMapRenderer().render(map, map);
+		map = ContinentGenerator.getContinent().generateInitialMap(map);
+		return new HeightMapRenderer().render(map);
 	}
 
 }

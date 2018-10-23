@@ -14,6 +14,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import jdz.RTGen.dataType.Map;
+import jdz.RTGen.rendering.renderers.HeightMapRenderer;
 
 public abstract class Previewer {
 	private static final int PREVIEW_WIDTH = 1024, PREVIEW_HEIGHT = 512;
@@ -41,7 +42,7 @@ public abstract class Previewer {
 
 		frame.setSize(PREVIEW_WIDTH, PREVIEW_HEIGHT);
 
-		lastUnscaledImage = createPreview();
+		lastUnscaledImage = new HeightMapRenderer().render(map);
 		icon = new ImageIcon();
 		redrawImage();
 
@@ -50,12 +51,6 @@ public abstract class Previewer {
 		frame.setSize(PREVIEW_WIDTH, PREVIEW_HEIGHT);
 		frame.setVisible(true);
 
-		if (updateMS > 0)
-			new Timer(updateMS, (e) -> {
-				lastUnscaledImage = createPreview();
-				redrawImage();
-			}).start();
-
 		frame.addComponentListener(new ComponentAdapter() {
 			public void componentResized(ComponentEvent e) {
 				redrawImage();
@@ -63,6 +58,17 @@ public abstract class Previewer {
 		});
 
 		frame.setResizable(false);
+
+		if (updateMS > 0)
+			new Timer(updateMS, (e) -> {
+				lastUnscaledImage = createPreview();
+				redrawImage();
+			}).start();
+		else {
+			lastUnscaledImage = createPreview();
+			redrawImage();
+		}
+
 	}
 
 	protected void init() {}

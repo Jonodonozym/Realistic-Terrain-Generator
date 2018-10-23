@@ -6,7 +6,7 @@ import java.util.List;
 
 import jdz.RTGen.algorithms.plateGeneration.TectonicPlateGenerator;
 import jdz.RTGen.dataType.TectonicPlate;
-import jdz.RTGen.renderers.PlateListRenderer;
+import jdz.RTGen.rendering.renderers.PlateListRenderer;
 
 public class PlateGeneratorPreview extends Previewer {
 	private static final int MAP_SIZE = 512;
@@ -22,8 +22,9 @@ public class PlateGeneratorPreview extends Previewer {
 
 	@Override
 	public BufferedImage createPreview() {
-		List<TectonicPlate> plates = TectonicPlateGenerator.getRandom().generatePlates(map, NUM_PLATES);
-		return new PlateListRenderer().render(map, plates);
+		List<TectonicPlate> plates = TectonicPlateGenerator.getGenerator().generatePlates(map, NUM_PLATES);
+		map.setPlates(plates);
+		return new PlateListRenderer().render(map);
 	}
 
 }

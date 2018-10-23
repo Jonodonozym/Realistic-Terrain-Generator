@@ -15,7 +15,7 @@ import jdz.RTGen.algorithms.plateGeneration.TectonicPlateGenerator;
 import jdz.RTGen.dataType.Biome;
 import jdz.RTGen.dataType.Map;
 import jdz.RTGen.dataType.TectonicPlate;
-import jdz.RTGen.renderers.BiomeRenderer;
+import jdz.RTGen.rendering.renderers.BiomeRenderer;
 
 public class BiomeColorPreview extends Previewer {
 	private static final int MAP_SIZE = 512;
@@ -35,26 +35,23 @@ public class BiomeColorPreview extends Previewer {
 		map = new Map(map.width, map.height, 300);
 		plateCenters = new ArrayList<Point2D>();
 
-		List<TectonicPlate> plates = TectonicPlateGenerator.getRandom().generatePlates(map, Biome.values().length);
+		List<TectonicPlate> plates = TectonicPlateGenerator.getGenerator().generatePlates(map, Biome.values().length);
+
+		map.setPlates(plates);
 
 		for (int i = 0; i < plates.size(); i++) {
 			Biome biome = Biome.values()[i];
-			boolean[] mask = plates.get(i).mask;
-
-			for (int j = 0; j < map.size; j++)
-				if (mask[j])
-					map.cellBiome[j] = biome;
-			
+			plates.get(i).forEachCell((j) -> {
+				map.cellBiome[j] = biome;
+			});
 			plateCenters.add(PlateMetrics.getCenterOfMass(plates.get(i)));
 		}
-
-		map.setPlates(plates);
 	}
 
 	@Override
 	public BufferedImage createPreview() {
-		BufferedImage image = new BiomeRenderer().render(map, map);
-		
+		BufferedImage image = new BiomeRenderer().render(map);
+
 		Graphics2D g = (Graphics2D) image.getGraphics();
 
 		g.setColor(Color.BLACK);
