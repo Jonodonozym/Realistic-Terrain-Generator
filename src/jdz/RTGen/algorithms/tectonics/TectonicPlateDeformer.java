@@ -35,7 +35,9 @@ public abstract class TectonicPlateDeformer extends Configurable {
 		logger.log(Level.INFO, "Map size: " + map.size + " (" + map.width + " x " + map.height + ")");
 
 		List<TectonicPlate> newPlates = initialize(plates);
-		newPlates = deform(newPlates, TectonicsConfig.STEPS, callback);
+		if (TectonicsConfig.STEPS < 0)
+			TectonicsConfig.STEPS = 0;
+		newPlates = deform(newPlates, TectonicsConfig.STEPS + 1, callback);
 
 		logger.log(Level.INFO, "Plate deformation completed");
 		logger.log(Level.INFO, "Time: " + (System.currentTimeMillis() - startTime) + "ms");
@@ -57,7 +59,7 @@ public abstract class TectonicPlateDeformer extends Configurable {
 				if (maxSteps < 100)
 					logger.log(Level.INFO, "Itteration " + i + " done");
 				else {
-					int percent = (int) (i / (maxSteps / 100.f));
+					int percent = (int) (i / (maxSteps / 10.f)) * 10;
 					if (percent > lastPercent) {
 						lastPercent = percent;
 						logger.log(Level.INFO, percent + "%");

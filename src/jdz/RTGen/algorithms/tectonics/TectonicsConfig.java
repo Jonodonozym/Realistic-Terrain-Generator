@@ -11,6 +11,6 @@ public class TectonicsConfig extends Config {
 	public static float DIVERGENCE_EXPONENT = 0.9f;
 	public static float MIN_HEIGHT = -10;
 
-	@Step(0.01f) public static float INITIAL_VELOCITY = 0.01f;
+	@Step(1) public static float AVERAGE_SPEED = 10;
 	public static float FRICTION_PER_CELL = 0.001f;
 }

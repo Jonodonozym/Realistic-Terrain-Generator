@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Random;
 
 import javafx.geometry.Point2D;
+import jdz.RTGen.dataType.Map;
 import jdz.RTGen.dataType.TectonicPlate;
 
 public class TectonicVelocityCalculator {
 	public static List<TectonicPlate> updateVelocityFromCollision(Random random, List<TectonicPlate> plates) {
-		return randomizeVelocity(random, plates, (float) (Math.sqrt(plates.get(0).getMap().size) / 100f));
+		Map map = plates.get(0).getMap();
+		return randomizeVelocity(random, plates, map.height * TectonicsConfig.AVERAGE_SPEED / 1000f);
 	}
 
 	public static List<TectonicPlate> randomizeVelocity(Random random, List<TectonicPlate> plates, float magnitude) {

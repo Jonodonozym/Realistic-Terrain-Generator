@@ -3,6 +3,9 @@ package jdz.RTGen.algorithms.tectonics;
 
 import java.util.List;
 
+import jdz.RTGen.algorithms.cellDepthCalculator.CellDepthCalculator;
+import jdz.RTGen.algorithms.cellDepthCalculator.DepthFunction;
+import jdz.RTGen.algorithms.cellDepthCalculator.EdgeListPopulator;
 import jdz.RTGen.dataType.Map;
 import jdz.RTGen.dataType.PlateList;
 import jdz.RTGen.dataType.TectonicPlate;
@@ -24,8 +27,8 @@ public class TectonicConvergence {
 
 			TectonicPlate overlapPlate = new TectonicPlate(map, isOverlap, null, null, null);
 
-			int[] distances = CellDepthCalculator.getDistanceFromEdge(map, isOverlap,
-					new CellDepthCalculator.IsOnEdge(overlapPlate));
+			float[] distances = CellDepthCalculator.getDistanceFromEdge(map, isOverlap,
+					new EdgeListPopulator.IsOnEdge(overlapPlate), DepthFunction::sum);
 
 			for (int i = 0; i < isOverlap.length; i++) {
 				if (!isOverlap[i] || isProcessed[i])

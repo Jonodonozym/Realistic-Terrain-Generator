@@ -11,7 +11,7 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import jdz.RTGen.dataType.Map;
-import jdz.RTGen.renderers.Renderer;
+import jdz.RTGen.rendering.Renderer;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,7 +21,7 @@ public class RenderPanel extends JPanel {
 	@Getter @Setter private List<Renderer> renderers;
 	@Setter private Map map;
 
-	private BufferedImage lastUnscaledImage;
+	@Getter private BufferedImage lastUnscaledImage;
 
 	public RenderPanel(Map map, int displayWidth, int displayHeight, Renderer... renderers) {
 		this.map = map;

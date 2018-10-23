@@ -20,6 +20,7 @@ import lombok.Getter;
  * - Randomly flood fill the map for all points untill all locations on the map
  * belong to a plate.
  *
+ * TODO change queue list to balanced binary tree
  * @author Jaiden Baker
  */
 class RandomPlateGenerator extends TectonicPlateGenerator {
@@ -57,7 +58,7 @@ class RandomPlateGenerator extends TectonicPlateGenerator {
 	}
 
 	private List<PlatePoint> getRandomPoints(int numPlates, TectonicPlate combined) {
-		List<PlatePoint> randomPoints = new ArrayList<>(map.size / numPlates);
+		List<PlatePoint> randomPoints = new ArrayList<>(map.size);
 
 		for (int i = 0; i < numPlates; i++) {
 			int x = random.nextInt(map.width), y = random.nextInt(map.height);
@@ -86,13 +87,7 @@ class RandomPlateGenerator extends TectonicPlateGenerator {
 	}
 
 	private List<PlatePoint> getUnfilledNeighbours(PlatePoint point, TectonicPlate combined) {
-		List<PlatePoint> points = point.getAdjacent();
-
-		points.removeIf((p) -> {
-			return p.isIn(combined);
-		});
-
-		return points;
+		return point.getAdjacent(combined, PlateGenConfig.RUGGEDNESS);
 	}
 
 	@Data
@@ -100,17 +95,33 @@ class RandomPlateGenerator extends TectonicPlateGenerator {
 		private final int x, y;
 		private final int index;
 
-		public List<PlatePoint> getAdjacent() {
-			List<PlatePoint> points = new ArrayList<>();
-			points.add(new PlatePoint(x + 1, y, index));
-			points.add(new PlatePoint(x - 1, y, index));
-			points.add(new PlatePoint(x, y + 1, index));
-			points.add(new PlatePoint(x, y - 1, index));
+		public List<PlatePoint> getAdjacent(TectonicPlate combined, int ruggedness) {
+			List<PlatePoint> points = new ArrayList<>(4);
+
+//			if (ruggedness < 1) {
+				addPoint(points, combined, x + 1, y);
+				addPoint(points, combined, x - 1, y);
+				addPoint(points, combined, x, y + 1);
+				addPoint(points, combined, x, y - 1);
+//				return points;
+//			}
+
+//			int x1 = this.x - ruggedness;
+//			int x2 = this.x + ruggedness;
+//			for (int d = 0; d < ruggedness; d++) {
+//				for (int y = this.y - d; y < this.y + d; y++) {
+//					addPoint(points, combined, x1, y);
+//					addPoint(points, combined, x2, y);
+//				}
+//				x1++;
+//				x2--;
+//			}
 			return points;
 		}
 
-		public boolean isIn(TectonicPlate plate) {
-			return plate.isInPlate(x, y);
+		private void addPoint(List<PlatePoint> points, TectonicPlate combined, int x, int y) {
+			if (!combined.isInPlate(x, y))
+				points.add(new PlatePoint(x, y, index));
 		}
 	}
 

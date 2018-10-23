@@ -44,10 +44,16 @@ public class ConfigToolbar extends JPanel {
 			add(new JSeparator(SwingConstants.HORIZONTAL));
 		}
 
-		JPanel panel = new JPanel();
-		panel.setBorder(BorderFactory.createEmptyBorder(32, 0, 32, 0));
+		JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		panel.setBorder(BorderFactory.createEmptyBorder(8, 0, 8, 32));
 		panel.add(new RedrawButton(app));
+		panel.add(new ExportButton(app));
+		add(panel);
+
+		panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 8, 16));
 		panel.add(new GenerateButton(app));
+		panel.add(new InterruptButton(app));
 		add(panel);
 	}
 
@@ -77,7 +83,7 @@ public class ConfigToolbar extends JPanel {
 	}
 
 	private class RedrawButton extends JButton {
-		private static final long serialVersionUID = 5838577886884493106L;
+		private static final long serialVersionUID = 8471482167329652168L;
 
 		public RedrawButton(Application app) {
 			setText("Redraw Map");
@@ -86,6 +92,28 @@ public class ConfigToolbar extends JPanel {
 			});
 		}
 
+	}
+	
+	private class ExportButton extends JButton {
+		private static final long serialVersionUID = -1988737878122065456L;
+
+		public ExportButton(Application app) {
+			setText("Export PNG");
+			addActionListener((event)->{
+				app.exportToFile();
+			});
+		}
+	}
+	
+	private class InterruptButton extends JButton {
+		private static final long serialVersionUID = -8434443391519132056L;
+
+		public InterruptButton(Application app) {
+			setText("Halt Generation");
+			addActionListener((event)->{
+				app.interrupt();
+			});
+		}
 	}
 
 }

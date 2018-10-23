@@ -3,7 +3,9 @@ package jdz.RTGen.algorithms.precipitation;
 
 import java.util.Random;
 
-import jdz.RTGen.algorithms.tectonics.CellDepthCalculator;
+import jdz.RTGen.algorithms.cellDepthCalculator.CellDepthCalculator;
+import jdz.RTGen.algorithms.cellDepthCalculator.DepthFunction;
+import jdz.RTGen.algorithms.cellDepthCalculator.EdgeListPopulator;
 import jdz.RTGen.dataType.Biome;
 import jdz.RTGen.dataType.Map;
 import jdz.RTGen.dataType.TectonicPlate;
@@ -34,12 +36,14 @@ public class OceanDistance extends PrecipitationModel {
 				map.cellPrecipitation[i] = MAX_PRECIPITATION;
 			});
 
-		int[] landDepth = CellDepthCalculator.getDistanceFromEdge(map, landMask,
-				new CellDepthCalculator.IsOnEdge(landPlate));
+		float stretch = 32.f / map.height;
+
+		float[] landDepth = CellDepthCalculator.getDistanceFromEdge(map, landMask,
+				new EdgeListPopulator.IsOnEdge(landPlate), DepthFunction::hypot);
 
 		for (int i = 0; i < map.size; i++)
 			if (landMask[i])
-				precipitation[i] = MAX_PRECIPITATION / (float) (Math.pow(landDepth[i], 0.4) + 1);
+				precipitation[i] = MAX_PRECIPITATION / (float) (stretch * landDepth[i] + 1);
 	}
 
 }

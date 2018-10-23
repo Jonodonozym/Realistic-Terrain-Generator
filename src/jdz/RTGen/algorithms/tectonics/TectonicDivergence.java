@@ -5,6 +5,8 @@ import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Queue;
 
+import jdz.RTGen.algorithms.cellDepthCalculator.CellDepthCalculator;
+import jdz.RTGen.algorithms.cellDepthCalculator.EdgeListPopulator;
 import jdz.RTGen.dataType.Map;
 import jdz.RTGen.dataType.PlateList;
 import jdz.RTGen.dataType.TectonicPlate;
@@ -28,7 +30,7 @@ public class TectonicDivergence {
 		float[] heights = mergedPlate.heights;
 		boolean[] isSet = mergedPlate.mask;
 
-		CellDepthCalculator.forAllOnEdge(map, new CellDepthCalculator.IsOnEdge(mergedPlate), (x, y, i) -> {
+		CellDepthCalculator.forAllOnEdge(map, new EdgeListPopulator.IsOnEdge(mergedPlate), (x, y, i) -> {
 			queue.add(new CellInfo(x, y, plateList.get(i), heights[i]));
 		});
 

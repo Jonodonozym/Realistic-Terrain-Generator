@@ -9,7 +9,7 @@ import jdz.RTGen.dataType.Map;
 import lombok.Getter;
 
 public abstract class PrecipitationModel extends Configurable {
-	protected static final float MAX_PRECIPITATION = 450;
+	public static final float MAX_PRECIPITATION = 450;
 	
 	public static PrecipitationModel getModel() {
 		if (PrecipitationConfig.USE_NOISE)

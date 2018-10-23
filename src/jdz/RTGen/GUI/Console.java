@@ -27,7 +27,7 @@ public class Console extends JScrollPane {
 		textArea = (JTextArea) getViewport().getView();
 		textArea.setBackground(Color.WHITE);
 		textArea.setForeground(Color.BLACK);
-		textArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 16));
+		textArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));
 		textArea.setEditable(false);
 
 		DefaultCaret caret = (DefaultCaret) textArea.getCaret();
