@@ -2,10 +2,11 @@
 package jdz.RTGen;
 
 import java.awt.BorderLayout;
-import java.util.ArrayList;
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
@@ -15,6 +16,7 @@ import jdz.RTGen.GUI.Console;
 import jdz.RTGen.GUI.RenderPanel;
 import jdz.RTGen.GUI.UIStyleManager;
 import jdz.RTGen.algorithms.biomeClassifier.BiomeClassifier;
+import jdz.RTGen.algorithms.initialMapGeneration.ContinentGenConfig;
 import jdz.RTGen.algorithms.initialMapGeneration.ContinentGenerator;
 import jdz.RTGen.algorithms.plateGeneration.TectonicPlateGenerator;
 import jdz.RTGen.algorithms.precipitation.PrecipitationModel;
@@ -23,17 +25,18 @@ import jdz.RTGen.algorithms.temperature.TemperatureModel;
 import jdz.RTGen.configuration.Config;
 import jdz.RTGen.configuration.Configurable;
 import jdz.RTGen.dataType.Map;
-import jdz.RTGen.renderers.BiomeRenderer;
-import jdz.RTGen.renderers.HeightMapRenderer;
-import jdz.RTGen.renderers.PlateListRenderer;
-import jdz.RTGen.renderers.Renderer;
+import jdz.RTGen.rendering.ActiveRenderers;
+import jdz.RTGen.rendering.ImageExporter;
+import jdz.RTGen.rendering.renderers.BiomeRenderer;
+import jdz.RTGen.rendering.renderers.HeightMapRenderer;
+import jdz.RTGen.rendering.renderers.PlateListRenderer;
 import lombok.Getter;
 
 public class Application extends Configurable {
 	private static final int PREVIEW_WIDTH = 1024, PREVIEW_HEIGHT = 512;
 
-	@Getter private Config config = new AppConfig();
-	@Getter private String name = "General config";
+	@Getter private Config config = new MapConfig();
+	@Getter private String name = "Map Config";
 
 	protected Map initialMap;
 	protected Map deformedMap;
@@ -82,20 +85,9 @@ public class Application extends Configurable {
 	}
 
 	private List<Configurable> getConfigurables() {
-		return Arrays.asList(this, ContinentGenerator.getContinent(), TectonicPlateGenerator.getRandom(),
-				TectonicPlateDeformer.getBasic(), PrecipitationModel.oceanDistance(),
+		return Arrays.asList(this, new ActiveRenderers(), ContinentGenerator.getContinent(),
+				TectonicPlateGenerator.getGenerator(), TectonicPlateDeformer.getBasic(), PrecipitationModel.getModel(),
 				TemperatureModel.equatorAndHeight());
-	}
-
-	private List<Renderer> getRenderers() {
-		List<Renderer> renderers = new ArrayList<>();
-		if (AppConfig.RENDER_BIOME)
-			renderers.add(new BiomeRenderer());
-		if (AppConfig.RENDER_HEIGHT)
-			renderers.add(new HeightMapRenderer());
-		if (AppConfig.RENDER_PLATES)
-			renderers.add(new PlateListRenderer());
-		return renderers;
 	}
 
 	public void updateMap() {
@@ -106,7 +98,7 @@ public class Application extends Configurable {
 	}
 
 	public void redraw() {
-		renderPanel.setRenderers(getRenderers());
+		renderPanel.setRenderers(ActiveRenderers.getRenderers());
 		renderPanel.updateRender();
 	}
 
@@ -118,22 +110,41 @@ public class Application extends Configurable {
 	private class UpdateMapTask extends SwingWorker<Void, Void> {
 		@Override
 		protected Void doInBackground() throws Exception {
-			initialMap = new Map(AppConfig.MAP_HEIGHT * 2, AppConfig.MAP_HEIGHT, AppConfig.MAP_SEED);
+			Map initialMap = new Map(MapConfig.MAP_HEIGHT * 2, MapConfig.MAP_HEIGHT, MapConfig.MAP_SEED);
 
-			ContinentGenerator.getContinent().generateInitialMap(initialMap);
-			initialMap.setPlates(TectonicPlateGenerator.getRandom().generatePlates(initialMap));
+			if (ContinentGenConfig.SIMPLEX_NOISE)
+				ContinentGenerator.getNoise().generateInitialMap(initialMap);
+			else
+				ContinentGenerator.getContinent().generateInitialMap(initialMap);
+			initialMap.setPlates(TectonicPlateGenerator.getGenerator().generatePlates(initialMap));
 
-			deformedMap = initialMap.clone();
-
+			Map deformedMap = initialMap.clone();
 			deformedMap.setPlates(TectonicPlateDeformer.getBasic().deform(deformedMap, deformedMap.getPlates()));
 			deformedMap.updateHeightFromPlates();
-
 			BiomeClassifier.assignBiomes(deformedMap);
-
 			renderPanel.setMap(deformedMap);
 			redraw();
+
+			Application.this.initialMap = initialMap;
+			Application.this.deformedMap = deformedMap;
+
 			return null;
 		}
+	}
+
+	public void exportToFile() {
+		if (!ImageExporter.ROOT_FOLDER.exists())
+			ImageExporter.ROOT_FOLDER.mkdirs();
+		JFileChooser fileChooser = new JFileChooser(ImageExporter.ROOT_FOLDER);
+		fileChooser.showSaveDialog(frame);
+
+		File file = fileChooser.getSelectedFile();
+		ImageExporter.exportPNG(renderPanel.getLastUnscaledImage(), file);
+	}
+
+	public void interrupt() {
+		if (currentUpdateTask != null)
+			currentUpdateTask.cancel(true);
 	}
 
 }
