@@ -11,7 +11,9 @@ import jdz.RTGen.dataType.Map;
 import jdz.RTGen.dataType.TectonicPlate;
 
 public abstract class TectonicPlateGenerator extends Configurable {
-	public static TectonicPlateGenerator getRandom() {
+	public static TectonicPlateGenerator getGenerator() {
+		if (PlateGenConfig.VORONOI_CELLS)
+			return new VoronoiCellGenerator();
 		return new RandomPlateGenerator();
 	}
 

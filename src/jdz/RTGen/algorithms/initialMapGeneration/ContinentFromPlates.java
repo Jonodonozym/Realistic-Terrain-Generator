@@ -4,8 +4,10 @@ package jdz.RTGen.algorithms.initialMapGeneration;
 import java.util.ArrayList;
 import java.util.List;
 
+import jdz.RTGen.algorithms.cellDepthCalculator.CellDepthCalculator;
+import jdz.RTGen.algorithms.cellDepthCalculator.DepthFunction;
+import jdz.RTGen.algorithms.cellDepthCalculator.EdgeListPopulator;
 import jdz.RTGen.algorithms.plateGeneration.TectonicPlateGenerator;
-import jdz.RTGen.algorithms.tectonics.CellDepthCalculator;
 import jdz.RTGen.dataType.Map;
 import jdz.RTGen.dataType.PlateList;
 import jdz.RTGen.dataType.TectonicPlate;
@@ -13,7 +15,7 @@ import jdz.RTGen.dataType.TectonicPlate;
 public class ContinentFromPlates extends ContinentGenerator {
 	@Override
 	protected Map generate() {
-		TectonicPlateGenerator plateGen = TectonicPlateGenerator.getRandom();
+		TectonicPlateGenerator plateGen = TectonicPlateGenerator.getGenerator();
 
 		if (ContinentGenConfig.RANDOMNESS < 2 || ContinentGenConfig.PERCENT_OCEAN <= 0
 				|| ContinentGenConfig.PERCENT_OCEAN >= 100)
@@ -34,16 +36,16 @@ public class ContinentFromPlates extends ContinentGenerator {
 		TectonicPlate continentalCells = new PlateList(pickedPlates).toMergedPlate();
 		TectonicPlate oceanCells = continentalCells.clone().invertMask();
 
-		int[] distToOcean = CellDepthCalculator.getDistanceFromEdge(map, continentalCells.mask,
-				new CellDepthCalculator.IsNextToPlate(continentalCells, oceanCells));
-		int[] distToLand = CellDepthCalculator.getDistanceFromEdge(map, oceanCells.mask,
-				new CellDepthCalculator.IsNextToPlate(oceanCells, continentalCells));
+		float[] distToOcean = CellDepthCalculator.getDistanceFromEdge(map, continentalCells.mask,
+				new EdgeListPopulator.IsNextToPlate(continentalCells, oceanCells), DepthFunction::sum);
+		float[] distToLand = CellDepthCalculator.getDistanceFromEdge(map, oceanCells.mask,
+				new EdgeListPopulator.IsNextToPlate(oceanCells, continentalCells), DepthFunction::sum);
 
 		for (int i = 0; i < map.size; i++)
 			if (continentalCells.mask[i])
-				map.cellHeight[i] = (float) Math.log10(distToOcean[i]);
+				map.cellHeight[i] = (float) Math.log10(distToOcean[i] + 1f);
 			else
-				map.cellHeight[i] = (float) -Math.log10(distToLand[i] / 20.f + 0.9) * 10.f;
+				map.cellHeight[i] = (float) -Math.log10(distToLand[i] / 20.f + 1f) * 10.f;
 
 		return map;
 	}
