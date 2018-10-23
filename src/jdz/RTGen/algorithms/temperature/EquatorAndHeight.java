@@ -30,7 +30,7 @@ public class EquatorAndHeight extends TemperatureModel {
 			float distPercent = Math.abs(y - map.height / 2) / (map.height / 2.f);
 
 			float longitudeTemp = eqTemp - longitudeTempRange * distPercent * distPercent;
-			float oceanTemp = longitudeTemp * 0.8f;
+			float oceanTemp = longitudeTemp * 0.8f - 5f;
 
 			for (int x = 0; x < map.width; x++) {
 				if (biomes[i] == Biome.OCEAN)
