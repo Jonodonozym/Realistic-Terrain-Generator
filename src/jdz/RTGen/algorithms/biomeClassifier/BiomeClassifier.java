@@ -25,7 +25,7 @@ public class BiomeClassifier {
 		Biome[] biomes = map.cellBiome;
 
 		for (int i = 0; i < map.size; i++)
-			if (biomes[i] == NONE)
+			if (biomes[i] == LAND)
 				biomes[i] = getLandBiome(temps[i], prec[i]);
 	}
 
@@ -33,7 +33,7 @@ public class BiomeClassifier {
 		float percentOcean = SeaLevelCalculator.getPercentOcean();
 		if (percentOcean <= 0) {
 			map.forAllCells((i) -> {
-				map.cellBiome[i] = NONE;
+				map.cellBiome[i] = LAND;
 			});
 			return;
 		}
@@ -59,7 +59,7 @@ public class BiomeClassifier {
 				cells++;
 			}
 			else
-				biomes[i] = NONE;
+				biomes[i] = LAND;
 
 		return cells;
 	}
