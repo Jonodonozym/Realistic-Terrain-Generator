@@ -18,11 +18,11 @@ public class BiomeRenderer extends Renderer {
 	public BiomeRenderer() {
 		colorMap.put(OCEAN, 0x0077be);
 
-		colorMap.put(TROPICAL_RAINFOREST, 0x008439);
-		colorMap.put(TEMPERATE_RAINFOREST, 0x005123);
+		colorMap.put(TROPICAL_RAINFOREST, 0x095000);
+		colorMap.put(TEMPERATE_RAINFOREST, 0x197010);
 
 		colorMap.put(TROPICAL_SEASONAL_FOREST, 0x0d7500);
-		colorMap.put(TEMPERATE_FOREST, 0x095000);
+		colorMap.put(TEMPERATE_FOREST, 0x008439);
 
 		colorMap.put(WOODLAND, 0x446325);
 		colorMap.put(SHRUBLAND, 0x76b735);
@@ -35,7 +35,7 @@ public class BiomeRenderer extends Renderer {
 
 		colorMap.put(DESERT, 0xdbb600);
 
-		colorMap.put(TAIGA, 0x00cebd);
+		colorMap.put(TAIGA, 0x207153);
 		colorMap.put(TUNDRA, 0xbafffd);
 
 		for (Biome biome : Biome.values())
