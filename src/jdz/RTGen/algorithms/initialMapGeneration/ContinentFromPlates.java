@@ -43,9 +43,9 @@ public class ContinentFromPlates extends ContinentGenerator {
 
 		for (int i = 0; i < map.size; i++)
 			if (continentalCells.mask[i])
-				map.cellHeight[i] = (float) Math.log10(distToOcean[i] + 1f);
+				map.cellHeight[i] = (float) Math.pow(distToOcean[i] + 1f, 0.2);
 			else
-				map.cellHeight[i] = (float) -Math.log10(distToLand[i] / 20.f + 1f) * 10.f;
+				map.cellHeight[i] = (float) -Math.sqrt(distToLand[i] + 1f);
 
 		return map;
 	}
