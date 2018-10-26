@@ -10,7 +10,7 @@ import jdz.RTGen.dataType.Biome;
 import jdz.RTGen.dataType.Map;
 import jdz.RTGen.dataType.TectonicPlate;
 
-public class OceanDistance extends PrecipitationModel {
+public class OceanDistanceAndLattitudePrecipitation extends PrecipitationModel {
 
 	@Override
 	public void apply(Map map, Random random) {
@@ -41,9 +41,25 @@ public class OceanDistance extends PrecipitationModel {
 		float[] landDepth = CellDepthCalculator.getDistanceFromEdge(map, landMask,
 				new EdgeListPopulator.IsOnEdge(landPlate), DepthFunction::hypot);
 
-		for (int i = 0; i < map.size; i++)
-			if (landMask[i])
-				precipitation[i] = MAX_PRECIPITATION / (float) (stretch * landDepth[i] + 1);
+		float r1 = MAX_PRECIPITATION * (1 - PrecipitationConfig.LATTITUDE_EFFECT_PERCENT / 100.f);
+		if (r1 < 0)
+			r1 = 0;
+		if (r1 > MAX_PRECIPITATION)
+			r1 = MAX_PRECIPITATION;
+
+		float r2 = r1 / PrecipitationConfig.MOISTURE_LOSS_RATE;
+
+		int i = 0;
+		for (int y = 0; y < map.height; y++) {
+			float equatorRatio = 1 - Math.abs(y - map.height / 2) / (map.height / 2.f);
+			float lattitudeOffset = equatorRatio * equatorRatio * (MAX_PRECIPITATION - r1) - 50.f;
+
+			for (int x = 0; x < map.width; x++) {
+				if (landMask[i])
+					precipitation[i] = lattitudeOffset + r2 / (float) (stretch * landDepth[i] + 1);
+				i++;
+			}
+		}
 	}
 
 }

@@ -13,8 +13,8 @@ public abstract class PrecipitationModel extends Configurable {
 	
 	public static PrecipitationModel getModel() {
 		if (PrecipitationConfig.USE_NOISE)
-			return new NoisePrecipitation();
-		return new OceanDistance();
+			return new NoiseAndLattitudePrecipitation();
+		return new OceanDistanceAndLattitudePrecipitation();
 	}
 	
 
