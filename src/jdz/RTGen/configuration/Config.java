@@ -15,6 +15,8 @@ public abstract class Config {
 		for (Field field : getClass().getDeclaredFields()) {
 			if (field.getName().startsWith("this"))
 				continue;
+			if (field.getAnnotation(Ignore.class) != null)
+				continue;
 			field.setAccessible(true);
 			fields.add(field);
 			fieldNames.add(field.getName().toLowerCase().replaceAll("_", " "));
@@ -109,7 +111,7 @@ public abstract class Config {
 			throw new IllegalArgumentException(name + " is not a field");
 		return fields.get(index);
 	}
-	
+
 	public int numFields() {
 		return fields.size();
 	}
