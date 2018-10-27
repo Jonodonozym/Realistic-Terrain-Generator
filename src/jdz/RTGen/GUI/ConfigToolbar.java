@@ -11,8 +11,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSeparator;
-import javax.swing.SwingConstants;
 
 import jdz.RTGen.Application;
 import jdz.RTGen.configuration.Config;
@@ -30,20 +28,6 @@ public class ConfigToolbar extends JPanel {
 		setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 16));
 		l.setAlignment(VerticalFlowLayout.RIGHT, VerticalFlowLayout.TOP);
 
-		for (Configurable configurable : configurables) {
-			if (configurable.getConfig().numFields() == 0)
-				continue;
-			JPanel labelPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-			JLabel label = new JLabel(configurable.getName());
-			label.setFont(label.getFont().deriveFont(Font.BOLD, label.getFont().getSize() + 6));
-			labelPanel.add(label);
-			labelPanel.setPreferredSize(new Dimension(TOOLBAR_WIDTH, 28));
-			add(labelPanel);
-
-			add(new ConfigPanel(configurable));
-			add(new JSeparator(SwingConstants.HORIZONTAL));
-		}
-
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		panel.setBorder(BorderFactory.createEmptyBorder(8, 0, 8, 32));
 		panel.add(new RedrawButton(app));
@@ -55,6 +39,18 @@ public class ConfigToolbar extends JPanel {
 		panel.add(new GenerateButton(app));
 		panel.add(new InterruptButton(app));
 		add(panel);
+
+		for (Configurable configurable : configurables) {
+			if (configurable.getConfig().numFields() == 0)
+				continue;
+			JPanel labelPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+			JLabel label = new JLabel(configurable.getName());
+			label.setFont(label.getFont().deriveFont(Font.BOLD, label.getFont().getSize() + 6));
+			labelPanel.add(label);
+			labelPanel.setPreferredSize(new Dimension(TOOLBAR_WIDTH, 24));
+			add(labelPanel);
+			add(new ConfigPanel(configurable));
+		}
 	}
 
 	private class ConfigPanel extends JPanel {

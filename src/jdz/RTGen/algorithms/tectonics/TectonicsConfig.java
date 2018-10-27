@@ -13,5 +13,5 @@ public class TectonicsConfig extends Config {
 	@Ignore public static float MIN_HEIGHT = -10;
 
 	@Step(1) public static float AVERAGE_SPEED = 10;
-	public static float FRICTION_PER_CELL = 0.001f;
+	@Ignore public static float FRICTION_PER_CELL = 0.001f;
 }
