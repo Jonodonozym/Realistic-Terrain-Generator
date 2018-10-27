@@ -37,7 +37,7 @@ public abstract class TectonicPlateDeformer extends Configurable {
 		List<TectonicPlate> newPlates = initialize(plates);
 		if (TectonicsConfig.STEPS < 0)
 			TectonicsConfig.STEPS = 0;
-		newPlates = deform(newPlates, TectonicsConfig.STEPS + 1, callback);
+		newPlates = deform(newPlates, TectonicsConfig.STEPS, callback);
 
 		logger.log(Level.INFO, "Plate deformation completed");
 		logger.log(Level.INFO, "Time: " + (System.currentTimeMillis() - startTime) + "ms");

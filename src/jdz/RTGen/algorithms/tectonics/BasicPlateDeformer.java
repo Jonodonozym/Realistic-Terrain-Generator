@@ -15,8 +15,7 @@ public class BasicPlateDeformer extends TectonicPlateDeformer {
 
 	@Override
 	protected List<TectonicPlate> initialize(List<TectonicPlate> plates) {
-		return TectonicVelocityCalculator.randomizeVelocity(random, plates,
-				map.height * 2.5f);
+		return TectonicVelocityCalculator.randomizeVelocity(random, plates, map.height * TectonicsConfig.AVERAGE_SPEED / 1000f);
 	}
 
 	@Override

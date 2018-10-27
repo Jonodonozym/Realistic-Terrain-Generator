@@ -43,11 +43,11 @@ public class EquatorAndHeight extends TemperatureModel {
 	}
 
 	private float getEquatorTemperature(Random random) {
-		return 40 + 10 * random.nextFloat();
+		return 30 + 10 * random.nextFloat();
 	}
 
 	private float getPolarTemperature(Random random) {
-		return -10 + 10 * random.nextFloat();
+		return -15 + 10 * random.nextFloat();
 	}
 
 	private float getSeaLevelTemperatureOffset(Random random) {

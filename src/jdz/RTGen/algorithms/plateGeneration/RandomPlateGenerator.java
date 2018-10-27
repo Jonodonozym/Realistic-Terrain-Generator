@@ -15,8 +15,7 @@ import lombok.Getter;
  * http://experilous.com/1/blog/post/procedural-planet-generation
  *
  * Randomly generates techtonic plates by:
- * - Get the number of plates (n) by map size / averagePlateArea
- * - Pick n random points in the map. These represent one plate each.
+ * - Pick numPlates random points in the map. These represent one plate each. Add them to 
  * - Randomly flood fill the map for all points untill all locations on the map
  * belong to a plate.
  *
